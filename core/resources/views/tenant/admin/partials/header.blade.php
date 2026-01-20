@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="{{global_asset('assets/common/css/custom-style.css')}}">
 
     <!-- Eazola Tenant Admin Custom Override -->
-    @if(tenant())
+    {{-- @if(tenant()) --}}
         <link href="{{ global_asset('assets/tenant/admin/css/tenant-admin-override.css') }}" rel="stylesheet">
         <!-- Additional Override for Inline Styles -->
         <style>
@@ -118,7 +118,7 @@
                 color: #000000 !important;
             }
         </style>
-    @endif
+    {{-- @endif --}}
 
     @if(!empty(get_static_option('dark_mode_for_admin_panel')))
         <link href="{{ global_asset('assets/landlord/admin/css/dark-mode.css') }}" rel="stylesheet">
