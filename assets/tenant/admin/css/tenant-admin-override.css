@@ -119,6 +119,22 @@ body {
 }
 
 /* ============================================
+   Global Purple Color Override
+   ============================================
+   تغيير أي استخدام للون البنفسجي (#b66dff) إلى الأخضر
+   ============================================ */
+[style*="#b66dff"],
+[style*="rgb(182, 109, 255)"],
+[style*="rgba(182, 109, 255"],
+*[style*="color: #b66dff"],
+*[style*="background-color: #b66dff"],
+*[style*="border-color: #b66dff"] {
+    color: var(--bs-primary) !important;
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+/* ============================================
    Sidebar Customization
    ============================================ */
 .sidebar {
@@ -169,6 +185,16 @@ body {
     font-size: 1.25rem;
     width: 24px;
     text-align: center;
+}
+
+/* Sidebar Plugin Badge Override (Purple to Green) */
+.sidebar .nav .nav-item .nav-link .menu-title.plugin-menu:before {
+    background-color: var(--bs-primary) !important;
+}
+
+/* Sidebar Menu Icon Color (Purple to Green) */
+.sidebar .nav .nav-item .nav-link i.menu-icon {
+    color: var(--eazola-text-secondary) !important;
 }
 
 /* Sidebar Profile Section */
@@ -522,6 +548,22 @@ a.text-primary:hover {
 }
 
 /* ============================================
+   Tenant Info Icon Override
+   ============================================ */
+.tenant_info_icon {
+    color: var(--bs-primary) !important;
+}
+
+.tenant_info_icon i {
+    color: var(--bs-primary) !important;
+}
+
+.tenant_info_icon:hover {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--bs-primary-dark) !important;
+}
+
+/* ============================================
    Utilities & Helpers
    ============================================ */
 .text-primary {
@@ -657,4 +699,125 @@ a.text-primary:hover {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* ============================================
+   Purple Color Override - Comprehensive
+   ============================================
+   تغيير أي استخدام للون البنفسجي (#b66dff, #d286ff) إلى الأخضر
+   ============================================ */
+
+/* Tenant Info Icon - Purple to Green */
+.tenant_info_icon {
+    color: var(--bs-primary) !important;
+}
+
+.tenant_info_icon i,
+.tenant_info_icon i.mdi,
+.tenant_info_icon i.mdi-lightbulb-on-outline {
+    color: var(--bs-primary) !important;
+}
+
+.tenant_info_icon:hover {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--bs-primary-dark) !important;
+}
+
+.tenant_info_icon:hover i {
+    color: var(--bs-primary-dark) !important;
+}
+
+/* Sidebar Plugin Badge - Purple to Green */
+.sidebar .nav .nav-item .nav-link .menu-title.plugin-menu:before {
+    background-color: var(--bs-primary) !important;
+    color: var(--eazola-white) !important;
+}
+
+/* Sidebar Badge - Any purple badge */
+.sidebar .nav .nav-item .nav-link .badge {
+    background-color: var(--bs-primary) !important;
+    color: var(--eazola-white) !important;
+}
+
+/* Global Purple Color Override - Inline Styles */
+[style*="#b66dff"],
+[style*="#d286ff"],
+[style*="rgb(182, 109, 255)"],
+[style*="rgb(210, 134, 255)"] {
+    color: var(--bs-primary) !important;
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+/* Specific Elements with Purple Color */
+span[style*="#b66dff"],
+div[style*="#b66dff"],
+p[style*="#b66dff"],
+a[style*="#b66dff"],
+i[style*="#b66dff"],
+button[style*="#b66dff"] {
+    color: var(--bs-primary) !important;
+}
+
+/* Background Colors */
+[style*="background-color: #b66dff"],
+[style*="background-color:#b66dff"],
+[style*="background: #b66dff"],
+[style*="background:#b66dff"] {
+    background-color: var(--bs-primary) !important;
+}
+
+/* Border Colors */
+[style*="border-color: #b66dff"],
+[style*="border-color:#b66dff"],
+[style*="border: 1px solid #b66dff"],
+[style*="border:1px solid #b66dff"] {
+    border-color: var(--bs-primary) !important;
+}
+
+/* Text Colors */
+[style*="color: #b66dff"],
+[style*="color:#b66dff"] {
+    color: var(--bs-primary) !important;
+}
+
+/* ============================================
+   Additional Purple Color Overrides
+   ============================================
+   تغيير أي لون بنفسجي مشابه (#b66dff, #d286ff, etc.) إلى الأخضر
+   ============================================ */
+
+/* Purple shades commonly used */
+[style*="#d286ff"],
+[style*="rgb(210, 134, 255)"],
+[style*="rgba(210, 134, 255"] {
+    background-color: var(--bs-primary-light) !important;
+    color: var(--bs-primary) !important;
+}
+
+/* Any element with purple/pink colors in sidebar */
+.sidebar [style*="purple"],
+.sidebar [style*="#b66dff"],
+.sidebar [style*="#d286ff"],
+.sidebar [style*="rgb(182"],
+.sidebar [style*="rgb(210"] {
+    color: var(--bs-primary) !important;
+    background-color: transparent !important;
+}
+
+/* Badge with purple background */
+.badge[style*="#b66dff"],
+.badge[style*="#d286ff"],
+.nav-link .badge[style*="#b66dff"] {
+    background-color: var(--bs-primary) !important;
+    color: var(--eazola-white) !important;
+}
+
+/* Text with purple color */
+span[style*="#b66dff"],
+div[style*="#b66dff"],
+p[style*="#b66dff"],
+a[style*="#b66dff"],
+i[style*="#b66dff"] {
+    color: var(--bs-primary) !important;
 }
