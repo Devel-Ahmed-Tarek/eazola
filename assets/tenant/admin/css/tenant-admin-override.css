@@ -795,13 +795,13 @@ body span.tenant_info_icon:hover,
 body div.tenant_info_icon:hover,
 body .navbar .tenant_info_icon:hover {
     background-color: rgba(46, 204, 113, 0.1) !important;
-    color: var(--bs-primary-dark) !important;
+    color: #000000 !important;
 }
 
 body .tenant_info_icon:hover i,
 body .tenant_info_icon:hover i.mdi,
 body .navbar .tenant_info_icon:hover i {
-    color: var(--bs-primary-dark) !important;
+    color: #000000 !important;
 }
 
 /* Force override with element + class specificity */

@@ -17,10 +17,10 @@
     }
     .tenant_info_icon:hover {
         background-color: rgba(46, 204, 113, 0.1) !important;
-        color: #27AE60 !important;
+        color: #000000 !important;
     }
     .tenant_info_icon:hover i {
-        color: #27AE60 !important;
+        color: #000000 !important;
     }
     /* Override any purple color inline styles */
     [style*="#b66dff"],
