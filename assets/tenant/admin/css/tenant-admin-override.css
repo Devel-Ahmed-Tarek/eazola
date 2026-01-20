@@ -75,6 +75,37 @@
     --eazola-sidebar-text: var(--eazola-text-primary);
     --eazola-sidebar-hover: var(--eazola-light-gray);
     --eazola-sidebar-active: var(--eazola-primary);
+    
+    /* ============================================
+       Bootstrap Variables Override
+       ============================================
+       هذه المتغيرات تغير ألوان Bootstrap لتناسب
+       نظام الألوان الأخضر
+       ============================================ */
+    --bs-primary: #2ECC71;              /* Primary Green */
+    --bs-primary-rgb: 46, 204, 113;     /* RGB values for Primary */
+    --bs-primary-dark: #27AE60;         /* Darker shade for hover/active */
+    --bs-primary-light: #58D68D;        /* Lighter shade */
+    
+    /* Secondary Bootstrap Colors */
+    --bs-secondary: #1ABC9C;            /* Accent Mint */
+    --bs-secondary-rgb: 26, 188, 156;   /* RGB values for Secondary */
+    
+    /* Success Color (Green) */
+    --bs-success: #2ECC71;
+    --bs-success-rgb: 46, 204, 113;
+    
+    /* Info Color */
+    --bs-info: #1ABC9C;
+    --bs-info-rgb: 26, 188, 156;
+    
+    /* Warning Color */
+    --bs-warning: #F1C40F;
+    --bs-warning-rgb: 241, 196, 15;
+    
+    /* Danger Color */
+    --bs-danger: #E74C3C;
+    --bs-danger-rgb: 231, 76, 60;
 }
 
 /* ============================================
@@ -239,9 +270,11 @@ body {
 /* ============================================
    Buttons - Primary Actions
    ============================================ */
-.btn-primary {
-    background-color: var(--eazola-primary);
-    border-color: var(--eazola-primary);
+/* Bootstrap Primary Button Override */
+.btn-primary,
+.btn-primary:not(:disabled):not(.disabled) {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
     color: var(--eazola-white);
     font-size: var(--eazola-font-size-base);
     font-weight: 600;
@@ -251,17 +284,35 @@ body {
 }
 
 .btn-primary:hover,
-.btn-primary:focus {
-    background-color: var(--eazola-primary-dark);
-    border-color: var(--eazola-primary-dark);
+.btn-primary:focus,
+.btn-primary:not(:disabled):not(.disabled):hover,
+.btn-primary:not(:disabled):not(.disabled):focus {
+    background-color: var(--bs-primary-dark, #27AE60);
+    border-color: var(--bs-primary-dark, #27AE60);
     color: var(--eazola-white);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
 }
 
-.btn-primary:active {
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active {
+    background-color: var(--bs-primary-dark, #27AE60);
+    border-color: var(--bs-primary-dark, #27AE60);
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+}
+
+/* Bootstrap Primary Link Style */
+a.btn-primary,
+.btn-primary-link {
+    color: var(--bs-primary);
+}
+
+a.btn-primary:hover,
+.btn-primary-link:hover {
+    color: var(--bs-primary-dark, #27AE60);
 }
 
 /* Secondary Button */
@@ -308,10 +359,23 @@ body {
 }
 
 .form-control:focus,
-.form-select:focus {
-    border-color: var(--eazola-primary);
+.form-select:focus,
+.form-check-input:focus,
+.form-range:focus {
+    border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.15);
     outline: none;
+}
+
+/* Bootstrap Form Check */
+.form-check-input:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.form-check-input:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.15);
 }
 
 .form-label {
@@ -437,21 +501,31 @@ body {
    Links & Navigation
    ============================================ */
 a {
-    color: var(--eazola-primary);
+    color: var(--bs-primary);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 a:hover {
-    color: var(--eazola-primary-dark);
+    color: var(--bs-primary-dark, #27AE60);
     text-decoration: underline;
+}
+
+/* Bootstrap Link Primary */
+a.text-primary,
+.text-primary {
+    color: var(--bs-primary) !important;
+}
+
+a.text-primary:hover {
+    color: var(--bs-primary-dark, #27AE60) !important;
 }
 
 /* ============================================
    Utilities & Helpers
    ============================================ */
 .text-primary {
-    color: var(--eazola-primary) !important;
+    color: var(--bs-primary) !important;
 }
 
 .text-secondary {
@@ -459,7 +533,7 @@ a:hover {
 }
 
 .bg-primary {
-    background-color: var(--eazola-primary) !important;
+    background-color: var(--bs-primary) !important;
 }
 
 .bg-light {
@@ -467,7 +541,51 @@ a:hover {
 }
 
 .border-primary {
-    border-color: var(--eazola-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+/* Bootstrap Badge Primary */
+.badge-primary,
+.badge.bg-primary {
+    background-color: var(--bs-primary) !important;
+    color: var(--eazola-white) !important;
+}
+
+/* Bootstrap Alert Primary */
+.alert-primary {
+    background-color: rgba(46, 204, 113, 0.1);
+    border-color: var(--bs-primary);
+    color: var(--bs-primary-dark, #27AE60);
+}
+
+/* Pagination Primary */
+.page-link {
+    color: var(--bs-primary);
+}
+
+.page-link:hover {
+    color: var(--bs-primary-dark, #27AE60);
+}
+
+.page-item.active .page-link {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+/* Progress Bar Primary */
+.progress-bar {
+    background-color: var(--bs-primary);
+}
+
+/* Spinner Primary */
+.spinner-border-primary {
+    border-color: var(--bs-primary);
+}
+
+/* Nav Tabs Active */
+.nav-tabs .nav-link.active {
+    color: var(--bs-primary);
+    border-color: var(--bs-primary) var(--bs-primary) transparent;
 }
 
 /* ============================================
