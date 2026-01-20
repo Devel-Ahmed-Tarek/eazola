@@ -1,0 +1,130 @@
+{
+    "name": "Restaurant",
+    "alias": "restaurant",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Restaurant\\Providers\\RestaurantServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": [],
+    "nazmartMetaData": {
+        "admin_settings": {
+            "show_admin_landlord": false,
+            "show_admin_tenant": true,
+            "menu_item": [
+                {
+                    "id" : "restaurant-menu",
+                    "label": "Restaurant",
+                    "route": "tenant.admin.bed-type.index",
+                    "tenantRoute": "tenant.admin.bed-type.index",
+                    "parent": null,
+                    "icon": "mdi mdi-cloud-sync",
+                    "class": "plugin-menu",
+                    "permissions" : "restaurant-all-menus"
+                },
+                {
+                    "id" : "restaurant-category-all",
+                    "label": "Restaurant Category",
+                    "route": "tenant.admin.menu.category.all",
+                    "tenantRoute": "tenant.admin.menu.category.all",
+                    "parent": "restaurant-menu",
+                    "permissions" : ["restaurant-menu-category-all","restaurant-menu-category-create","restaurant-menu-category-edit","restaurant-menu-category-delete"]
+
+                },
+                {
+                    "id" : "restaurant-sub-category-all",
+                    "label": "Restaurant SubCategory",
+                    "route": "tenant.admin.menu.subcategory.all",
+                    "tenantRoute": "tenant.admin.menu.subcategory.all",
+                    "parent": "restaurant-menu",
+                    "permissions" : ["restaurant-menu-sub-category-all","restaurant-menu-sub-category-create","restaurant-menu-sub-category-edit","restaurant-menu-sub-category-delete"]
+                },
+                {
+                    "id" : "restaurant-menu-attribute-all",
+                    "label": "Menu Attribute",
+                    "route": "tenant.admin.menu.attributes.all",
+                    "tenantRoute": "tenant.admin.menu.attributes.all",
+                    "parent": "restaurant-menu",
+                    "permissions" : ["restaurant-menu-attribute-all","restaurant-menu-attribute-create","restaurant-menu-attribute-edit","restaurant-menu-attribute-delete"]
+                },
+                {
+                    "id" : "restaurant-menu-manage-all",
+                    "label": "Menu Manage",
+                    "route": "tenant.admin.menu.manage.all",
+                    "tenantRoute": "tenant.admin.menu.manage.all",
+                    "parent": "restaurant-menu",
+                    "permissions" : ["restaurant-menu-manage-all","restaurant-menu-manage-create","restaurant-menu-manage-edit","restaurant-menu-manage-delete"]
+                },
+                {
+                    "id" : "restaurant-tax-manage-all",
+                    "label": "Tax Manage",
+                    "route": "tenant.admin.menu.tax.all",
+                    "tenantRoute": "tenant.admin.menu.tax.all",
+                    "parent": "restaurant-menu",
+                    "permissions" : ["restaurant-menu-tax-all","restaurant-menu-tax-create","restaurant-menu-tax-edit","restaurant-menu-tax-delete"]
+                },
+                {
+                    "id" : "restaurant-menu-order-all",
+                    "label": "Menu Orders",
+                    "route": "tenant.admin.menu.order.all",
+                    "tenantRoute": "tenant.admin.menu.order.all",
+                    "parent": "restaurant-menu",
+                    "permissions" : "restaurant-menu-attribute-all"
+                },
+                {
+                    "id" : "restaurant-menu-approved-all",
+                    "label": "Approved Orders",
+                    "route": "tenant.admin.menu.order.approved",
+                    "tenantRoute": "tenant.admin.menu.order.approved",
+                    "parent": "restaurant-menu",
+                    "permissions" : "restaurant-menu-approved-all"
+                },
+                {
+                    "id" : "restaurant-menu-cancel-requested-all",
+                    "label": "Cancel Requested",
+                    "route": "tenant.admin.menu.order.cancel-requested",
+                    "tenantRoute": "tenant.admin.menu.order.cancel-requested",
+                    "parent": "restaurant-menu",
+                    "permissions" : "restaurant-menu-cancel-requested-all"
+                },
+                {
+                    "id" : "restaurant-menu-canceled-all",
+                    "label": "Canceled Orders",
+                    "route": "tenant.admin.menu.order.canceled",
+                    "tenantRoute": "tenant.admin.menu.order.canceled",
+                    "parent": "restaurant-menu",
+                    "permissions" : "restaurant-menu-canceled-all"
+                },
+                {
+                    "id" : "restaurant-menu-reports-all",
+                    "label": "Order Reports",
+                    "route": "tenant.admin.menu.order.report",
+                    "tenantRoute": "tenant.admin.menu.order.report",
+                    "parent": "restaurant-menu",
+                    "permissions" : "restaurant-menu-report-all"
+                },
+                {
+                    "id" : "restaurant-menu-pickup-address",
+                    "label": "Pickup Address",
+                    "route": "tenant.admin.menu.pickup.address",
+                    "tenantRoute": "tenant.admin.menu.pickup.address",
+                    "parent": "restaurant-menu",
+                    "permissions" : "restaurant-menu-report-all"
+                }
+            ]
+        },
+        "header_hook": [],
+        "footer_hook": [],
+        "pageBuilderAddon": [
+            {
+                "addon": "Modules\\Restaurant\\Http\\Pagebuilder\\Addons\\Home\\HomeArea",
+                "landlord": false,
+                "tenant": true
+            }
+
+        ]
+    }
+}

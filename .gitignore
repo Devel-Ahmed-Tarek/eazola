@@ -1,0 +1,15 @@
+# Laravel core
+core/vendor
+core/node_modules
+core/storage/logs
+core/storage/framework
+core/public/storage
+core/.env
+core/.env.*
+
+# General
+npm-debug.log
+yarn-error.log
+.idea
+.vscode
+.DS_Store

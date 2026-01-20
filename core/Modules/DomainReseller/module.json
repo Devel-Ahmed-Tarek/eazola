@@ -1,0 +1,49 @@
+{
+    "name": "DomainReseller",
+    "alias": "domainreseller",
+    "version": "1.0.0",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\DomainReseller\\Providers\\DomainResellerServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": [],
+    "nazmartMetaData": {
+        "plugin_type": "external",
+        "admin_settings": {
+            "show_admin_landlord": true,
+            "show_admin_tenant": true,
+            "menu_item": [
+                {
+                    "id" : "domain-reseller-menu",
+                    "label": "Domain Reseller",
+                    "route": "landlord.admin.domain-reseller.index",
+                    "tenantRoute": "tenant.admin.domain-reseller.index",
+                    "parent": null,
+                    "icon": "mdi mdi-web",
+                    "permissions": "domain-reseller",
+                    "class": "plugin-menu"
+                },
+                {
+                    "id" : "domain-reseller-dashboard",
+                    "label": "Domain Dashboard",
+                    "route": "landlord.admin.domain-reseller.index",
+                    "tenantRoute": "tenant.admin.domain-reseller.index",
+                    "parent": "domain-reseller-menu",
+                    "permissions": "domain-reseller"
+                },
+                {
+                    "id" : "domain-reseller-settings",
+                    "label": "Domain Settings",
+                    "route": "landlord.admin.domain-reseller.settings",
+                    "tenantRoute": null,
+                    "parent": "domain-reseller-menu",
+                    "permissions": "domain-reseller"
+                }
+            ]
+        }
+    }
+}

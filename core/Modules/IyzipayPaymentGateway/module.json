@@ -1,0 +1,41 @@
+{
+    "name": "IyzipayPaymentGateway",
+    "alias": "iyzipaypaymentgateway",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\IyzipayPaymentGateway\\Providers\\IyzipayPaymentGatewayServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": [],
+    "nazmartMetaData": {
+        "paymentGateway": {
+            "name": "Iyzipay",
+            "slug": "iyzipay",
+            "tenant": true,
+            "show_admin_landlord": true,
+            "show_admin_tenant": true,
+            "chargeCustomerMethodNameSpace": "Modules\\IyzipayPaymentGateway\\Http\\Controllers\\IyzipayPaymentGatewayController",
+            "chargeCustomerMethodName": "chargeCustomer",
+            "test_mode" : true,
+            "status" : true,
+            "extraInfoMarkupBlade" : "payment_blade",
+            "logo_file" : "iyzico_en.png",
+            "logo_file_en" : "izyco_en.png",
+            "logo_file_tr" : "izyco_tr.png",
+            "admin_settings": {
+                "menu_item": [
+                    {
+                        "id" : "iyzipay-payment-gateway-settings-menu",
+                        "label": "Iyzipay",
+                        "route": "landlord.admin.payment.settings.iyzipay.settings",
+                        "tenantRoute": "tenant.admin.payment.settings.iyzipay.settings",
+                        "permissions": ["iyzipay-payment-gateway-page-settings"]
+                    }
+                ]
+            }
+        }
+    }
+}

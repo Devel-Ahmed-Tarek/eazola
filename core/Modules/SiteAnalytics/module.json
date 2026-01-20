@@ -1,0 +1,54 @@
+{
+    "name": "SiteAnalytics",
+    "alias": "siteanalytics",
+    "version" : "1.0.1",
+    "description": "Site Analytics is an External Plugin developed by Core Team to enhance platform features",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SiteAnalytics\\Providers\\SiteAnalyticsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": [],
+    "nazmartMetaData": {
+        "plugin_type": "external",
+        "admin_settings": {
+            "show_admin_landlord": true,
+            "show_admin_tenant": true,
+            "menu_item": [
+                {
+                    "id" : "site-analytics-menu",
+                    "label": "Site Analytics",
+                    "route": "landlord.admin.analytics.settings",
+                    "tenantRoute": "tenant.admin.analytics.settings",
+                    "parent": null,
+                    "icon": "mdi mdi-google-analytics",
+                    "class": "plugin-menu",
+                    "permissions": "site-analytics"
+                },
+                {
+                    "id" : "site-analytics-index",
+                    "label": "SA Dashboard",
+                    "route": "landlord.admin.dashboard.analytics",
+                    "tenantRoute": "tenant.admin.dashboard.analytics",
+                    "parent": "site-analytics-menu"
+                },
+                {
+                    "id" : "site-analytics-packages",
+                    "label": "SA Analytics",
+                    "route": "landlord.admin.analytics",
+                    "tenantRoute": "tenant.admin.analytics",
+                    "parent": "site-analytics-menu"
+                },
+                {
+                    "id" : "site-analytics-settings",
+                    "label": "SA Settings",
+                    "route": "landlord.admin.analytics.settings",
+                    "tenantRoute": "tenant.admin.analytics.settings",
+                    "parent": "site-analytics-menu"
+                }
+            ]
+        }
+    }
+}

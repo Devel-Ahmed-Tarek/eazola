@@ -1,0 +1,181 @@
+{
+    "name": "HotelBooking",
+    "alias": "hotelbooking",
+    "description": "",
+    "keywords": [],
+    "version": "1.0.1",
+    "priority": 0,
+    "providers": [
+        "Modules\\HotelBooking\\Providers\\HotelBookingServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": [],
+    "nazmartMetaData": {
+        "admin_settings": {
+            "show_admin_landlord": false,
+            "show_admin_tenant": true,
+            "menu_item": [
+                {
+                    "id" : "hotel-bookings-menu",
+                    "label": "Hotel Bookings",
+                    "route": "tenant.admin.bed-type.index",
+                    "tenantRoute": "tenant.admin.bed-type.index",
+                    "parent": null,
+                    "icon": "mdi mdi-cloud-sync",
+                    "class": "plugin-menu",
+                    "permissions" : "hotel-booking-module"
+                },
+                {
+                    "id" : "hotel-manage-bed-type-all-menu",
+                    "label": "All Bed Types",
+                    "route": "tenant.admin.bed-type.index",
+                    "tenantRoute": "tenant.admin.bed-type.index",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-bed-type-all","hotel-manage-bed-type-create","hotel-manage-bed-type-edit","hotel-manage-bed-type-delete"]
+                },
+                {
+                    "id" : "hotel-manage-amenities-all-menu",
+                    "label": "All Amenities",
+                    "route": "tenant.admin.amenities.index",
+                    "tenantRoute": "tenant.admin.amenities.index",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-amenities-all","hotel-manage-amenities-create","hotel-manage-amenities-edit","hotel-manage-amenities-delete"]
+                },
+                {
+                    "id" : "hotel-manage-hotels-all-menu",
+                    "label": "All Hotel",
+                    "route": "tenant.admin.hotels.index",
+                    "tenantRoute": "tenant.admin.hotels.index",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotels-all","hotel-manage-hotels-create","hotel-manage-hotels-edit","hotel-manage-hotels-delete"]
+                },
+                {
+                    "id" : "hotel-manage-room_type-all-menu",
+                    "label": "All Room Type",
+                    "route": "tenant.admin.room-types.index",
+                    "tenantRoute": "tenant.admin.room-types.index",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-room_type-all","hotel-manage-room_type-create","hotel-manage-room_type-edit","hotel-manage-room_type-delete"]
+                },
+                {
+                    "id" : "hotel-manage-rooms-all-menu",
+                    "label": "All Room",
+                    "route": "tenant.admin.rooms.index",
+                    "tenantRoute": "tenant.admin.rooms.index",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-rooms-all","hotel-manage-rooms-create","hotel-manage-rooms-edit","hotel-manage-rooms-delete"]
+                },
+                {
+                    "id" : "hotel-manage-hotel-bookings-all-menu",
+                    "label": "Pending Bookings",
+                    "route": "tenant.admin.hotel-bookings.index",
+                    "tenantRoute": "tenant.admin.hotel-bookings.index",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotel-bookings-all","hotel-manage-hotel-bookings-edit","hotel-manage-hotel-bookings-delete"]
+                },
+                {
+                    "id" : "hotel-manage-hotel-bookings-approved-all-menu",
+                    "label": "Approved Bookings",
+                    "route": "tenant.admin.hotel-bookings.approved",
+                    "tenantRoute": "tenant.admin.hotel-bookings.approved",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotel-bookings-approved-all"]
+
+                },
+                {
+                    "id" : "hotel-manage-hotel-bookings-cancel-requested-all-menu",
+                    "label": "Cancel Requested Bookings",
+                    "route": "tenant.admin.hotel-bookings.cancel-requested",
+                    "tenantRoute": "tenant.admin.hotel-bookings.cancel-requested",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotel-bookings-cancel-requested-all"]
+                },
+                {
+                    "id" : "hotel-manage-hotel-bookings-canceled-all-menu",
+                    "label": "Canceled Bookings",
+                    "route": "tenant.admin.hotel-bookings.canceled",
+                    "tenantRoute": "tenant.admin.hotel-bookings.canceled",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotel-bookings-canceled-all"]
+                },
+                {
+                    "id" : "hotel-manage-hotel-bookings-add-new-menu",
+                    "label": "Create Bookings",
+                    "route": "tenant.admin.hotel-bookings.create",
+                    "tenantRoute": "tenant.admin.hotel-bookings.create",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotel-bookings-add-new","hotel-manage-hotel-bookings-create"]
+                },
+                {
+                    "id" : "hotel-manage-room-book-inventories-all-menu",
+                    "label": "RoomBookInventories",
+                    "route": "tenant.admin.room-book-inventories.index",
+                    "tenantRoute": "tenant.admin.room-book-inventories.index",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-room-book-inventories-all"]
+                },
+                {
+                    "id" : "hotel-manage-hotel-reviews-all-menu",
+                    "label": "Hotel Reviews",
+                    "route": "tenant.admin.all_hotel_review",
+                    "tenantRoute": "tenant.admin.all_hotel_review",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotel-reviews-all"]
+                },
+                {
+                    "id" : "hotel-manage-hotel-booking-report-menu",
+                    "label": "Booking Reports",
+                    "route": "tenant.admin.reports",
+                    "tenantRoute": "tenant.admin.reports",
+                    "parent": "hotel-bookings-menu",
+                    "permissions" : ["hotel-manage-hotel-booking-report"]
+                }
+            ]
+        },
+        "header_hook": [],
+        "footer_hook": [],
+        "pageBuilderAddon": [
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\Headers\\HeaderArea",
+                "landlord": false,
+                "tenant": true
+            },
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\Amenities\\HotelAmenityArea",
+                "landlord": false,
+                "tenant": true
+            },
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\Attractions\\AttractionArea",
+                "landlord": false,
+                "tenant": true
+            },
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\Guests\\GuestArea",
+                "landlord": false,
+                "tenant": true
+            },
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\Shots\\ShotArea",
+                "landlord": false,
+                "tenant": true
+            },
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\Faq\\FaqArea",
+                "landlord": false,
+                "tenant": true
+            },
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\Blogs\\BlogArea",
+                "landlord": false,
+                "tenant": true
+            },
+            {
+                "addon": "Modules\\HotelBooking\\Http\\Pagebuilder\\Addons\\BrandLogos\\BrandLogoArea",
+                "landlord": false,
+                "tenant": true
+            }
+        ]
+    }
+}

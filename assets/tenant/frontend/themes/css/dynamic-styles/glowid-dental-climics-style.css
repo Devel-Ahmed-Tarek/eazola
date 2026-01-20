@@ -1,0 +1,64 @@
+/*Write Css*//* تحسين الخط العام */
+body {
+    font-family: Cairo, Poppins, sans-serif;
+    line-height: 1.7;
+}
+
+/* العناوين */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* الأزرار */
+.btn, button {
+    border-radius: 10px;
+    padding: 10px 22px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover, button:hover {
+    opacity: 0.9;
+}
+
+/* كروت الخدمات */
+.service-box, .card {
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* الفورم */
+input, textarea, select {
+    border-radius: 8px;
+}
+
+<form action="/form-submit" method="POST">
+  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+  <input type="text" name="name" placeholder="الاسم" required>
+
+  <input type="email" name="email" placeholder="البريد الإلكتروني" required>
+
+  <input type="tel" name="phone" placeholder="رقم الهاتف">
+
+  <textarea name="message" placeholder="رسالتك"></textarea>
+
+  <button type="submit">احجز الآن</button>
+</form>
+form input, form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  background: #1e88e5;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 16px;
+}
