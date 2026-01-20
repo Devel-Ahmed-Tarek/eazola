@@ -13,3 +13,6 @@ yarn-error.log
 .idea
 .vscode
 .DS_Store
+
+assets/common/common-json-data/payment-gateways.json
+assets/tenant/page-layout/payment-gateway.json
