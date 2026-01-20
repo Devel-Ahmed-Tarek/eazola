@@ -33,6 +33,11 @@
     <link href="{{ global_asset('assets/common/css/fontawesome-iconpicker.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{global_asset('assets/common/css/custom-style.css')}}">
 
+    <!-- Eazola Tenant Admin Custom Override -->
+    @if(tenant())
+        <link href="{{ global_asset('assets/tenant/admin/css/tenant-admin-override.css') }}" rel="stylesheet">
+    @endif
+
     @if(!empty(get_static_option('dark_mode_for_admin_panel')))
         <link href="{{ global_asset('assets/landlord/admin/css/dark-mode.css') }}" rel="stylesheet">
     @endif
