@@ -51,6 +51,23 @@
     .sidebar .nav .nav-item.active > .nav-link {
         background-color:rgb(154, 226, 145) !important;
     }
+    /* All Icons in Header/Navbar - Black Color */
+    .navbar i,
+    .navbar .mdi,
+    .navbar-toggler i.mdi,
+    .navbar-toggler .mdi-menu,
+    .navbar-nav .nav-link i,
+    .navbar-nav .nav-link .mdi,
+    .navbar-nav .nav-item .nav-link i,
+    .navbar-nav .count-indicator i,
+    .navbar-nav .count-indicator .mdi-email-outline,
+    .navbar-nav .count-indicator .mdi-bell-outline,
+    .navbar-nav .nav-logout .mdi,
+    .navbar-nav .nav-logout .mdi-upload,
+    .navbar-dropdown .dropdown-item i,
+    .navbar-dropdown .dropdown-item .mdi {
+        color: #000000 !important;
+    }
 </style>
 @endif
 

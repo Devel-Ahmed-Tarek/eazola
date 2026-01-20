@@ -118,6 +118,51 @@
     .tenant_info_list_para span {
         display: contents;
     }
+
+    /* All Icons in Header/Navbar - Black Color */
+    .navbar i,
+    .navbar .mdi,
+    .navbar-toggler i.mdi,
+    .navbar-toggler .mdi-menu,
+    .navbar-nav .nav-link i,
+    .navbar-nav .nav-link .mdi,
+    .navbar-nav .nav-item .nav-link i,
+    .navbar-nav .count-indicator i,
+    .navbar-nav .count-indicator .mdi-email-outline,
+    .navbar-nav .count-indicator .mdi-bell-outline,
+    .navbar-nav .nav-logout .mdi,
+    .navbar-nav .nav-logout .mdi-upload,
+    .navbar-dropdown .dropdown-item i,
+    .navbar-dropdown .dropdown-item .mdi {
+        color: #000000 !important;
+    }
+
+    /* Navbar Toggler Icon */
+    .navbar-toggler span.mdi-menu {
+        color: #000000 !important;
+    }
+
+    /* Email Icon */
+    .navbar-nav .count-indicator#messageDropdown .mdi-email-outline {
+        color: #000000 !important;
+    }
+
+    /* Bell/Notification Icon */
+    .navbar-nav .count-indicator#notificationDropdown .mdi-bell-outline {
+        color: #000000 !important;
+    }
+
+    /* Upload/Visit Website Icon */
+    .navbar-nav .nav-logout .mdi-upload {
+        color: #000000 !important;
+    }
+
+    /* Dropdown Menu Icons */
+    .navbar-dropdown .dropdown-item .mdi-account-settings,
+    .navbar-dropdown .dropdown-item .mdi-key,
+    .navbar-dropdown .dropdown-item .mdi-logout {
+        color: #000000 !important;
+    }
 </style>
 
 

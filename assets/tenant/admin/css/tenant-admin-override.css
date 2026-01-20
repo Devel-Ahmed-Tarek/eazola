@@ -926,3 +926,74 @@ a[style*="#b66dff"],
 i[style*="#b66dff"] {
     color: var(--bs-primary) !important;
 }
+
+/* ============================================
+   All Icons in Header/Navbar - Black Color
+   ============================================ */
+/* All icons in navbar */
+.navbar i,
+.navbar .mdi,
+body .navbar i,
+body .navbar .mdi {
+    color: #000000 !important;
+}
+
+/* Navbar Toggler Icons */
+.navbar-toggler i.mdi,
+.navbar-toggler .mdi-menu,
+.navbar-toggler span.mdi,
+body .navbar-toggler i.mdi,
+body .navbar-toggler .mdi-menu {
+    color: #000000 !important;
+}
+
+/* Navbar Nav Links Icons */
+.navbar-nav .nav-link i,
+.navbar-nav .nav-link .mdi,
+.navbar-nav .nav-item .nav-link i,
+body .navbar-nav .nav-link i,
+body .navbar-nav .nav-link .mdi {
+    color: #000000 !important;
+}
+
+/* Count Indicator Icons (Email, Bell, etc.) */
+.navbar-nav .count-indicator i,
+.navbar-nav .count-indicator .mdi,
+.navbar-nav .count-indicator#messageDropdown .mdi-email-outline,
+.navbar-nav .count-indicator#notificationDropdown .mdi-bell-outline,
+body .navbar-nav .count-indicator i,
+body .navbar-nav .count-indicator .mdi {
+    color: #000000 !important;
+}
+
+/* Visit Website / Upload Icon */
+.navbar-nav .nav-logout .mdi,
+.navbar-nav .nav-logout .mdi-upload,
+.navbar-nav .nav-logout i,
+body .navbar-nav .nav-logout .mdi,
+body .navbar-nav .nav-logout i {
+    color: #000000 !important;
+}
+
+/* Dropdown Menu Icons */
+.navbar-dropdown .dropdown-item i,
+.navbar-dropdown .dropdown-item .mdi,
+.navbar-dropdown .dropdown-item .mdi-account-settings,
+.navbar-dropdown .dropdown-item .mdi-key,
+.navbar-dropdown .dropdown-item .mdi-logout,
+body .navbar-dropdown .dropdown-item i,
+body .navbar-dropdown .dropdown-item .mdi {
+    color: #000000 !important;
+}
+
+/* Specific icon classes */
+.navbar .mdi-email-outline,
+.navbar .mdi-bell-outline,
+.navbar .mdi-upload,
+.navbar .mdi-menu,
+body .navbar .mdi-email-outline,
+body .navbar .mdi-bell-outline,
+body .navbar .mdi-upload,
+body .navbar .mdi-menu {
+    color: #000000 !important;
+}
