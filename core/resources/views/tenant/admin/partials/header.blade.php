@@ -43,20 +43,28 @@
             span.tenant_info_icon,
             div.tenant_info_icon,
             a.tenant_info_icon {
-                color: #2ECC71 !important;
+                color: #000000 !important;
             }
             .tenant_info_icon i,
             .tenant_info_icon i.mdi,
             .tenant_info_icon i.mdi-lightbulb-on-outline {
-                color: #2ECC71 !important;
+                color: #000000 !important;
             }
-    .tenant_info_icon:hover {
-        background-color: rgba(46, 204, 113, 0.1) !important;
-        color: #000000 !important;
-    }
-    .tenant_info_icon:hover i {
-        color: #000000 !important;
-    }
+            .tenant_info_icon:hover,
+            span.tenant_info_icon:hover,
+            div.tenant_info_icon:hover,
+            .navbar .tenant_info_icon:hover {
+                background-color: rgba(46, 204, 113, 0.1) !important;
+                color: #000000 !important;
+            }
+            .tenant_info_icon:hover i,
+            .tenant_info_icon:hover i.mdi,
+            .tenant_info_icon:hover i.mdi-lightbulb-on-outline,
+            span.tenant_info_icon:hover i,
+            div.tenant_info_icon:hover i,
+            .navbar .tenant_info_icon:hover i {
+                color: #000000 !important;
+            }
             /* Override any purple color inline styles */
             [style*="#b66dff"],
             [style*="color: #b66dff"],

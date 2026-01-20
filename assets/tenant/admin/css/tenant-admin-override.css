@@ -600,11 +600,11 @@ a.text-primary:hover {
    Tenant Info Icon Override
    ============================================ */
 .tenant_info_icon {
-    color: var(--bs-primary) !important;
+    color: #000000 !important;
 }
 
 .tenant_info_icon i {
-    color: var(--bs-primary) !important;
+    color: #000000 !important;
 }
 
 .tenant_info_icon:hover {
@@ -764,7 +764,7 @@ body div.tenant_info_icon,
 body a.tenant_info_icon,
 body .navbar .tenant_info_icon,
 body .navbar .tenant_info_item .tenant_info_icon {
-    color: var(--bs-primary) !important;
+    color: #000000 !important;
     background-color: transparent !important;
 }
 
@@ -777,7 +777,7 @@ body span.tenant_info_icon i,
 body div.tenant_info_icon i,
 body .navbar .tenant_info_icon i,
 body .navbar .tenant_info_icon i.mdi {
-    color: var(--bs-primary) !important;
+    color: #000000 !important;
 }
 
 /* Override Inline Styles for Tenant Info Icon - All Variations */

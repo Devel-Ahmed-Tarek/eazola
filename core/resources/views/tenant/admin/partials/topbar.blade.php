@@ -51,24 +51,34 @@
 
     .tenant_info_icon {
         font-size: 20px !important;
-        color: var(--heading-color);
+        color: #000000 !important;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         height: 35px;
         width: 35px;
-        color: #000000 !important;
         border-radius: 3px !important;
     }
+    
+    .tenant_info_icon i,
+    .tenant_info_icon i.mdi,
+    .tenant_info_icon i.mdi-lightbulb-on-outline {
+        color: #000000 !important;
+    }
 
-    .tenant_info_icon:hover {
+    .tenant_info_icon:hover,
+    span.tenant_info_icon:hover,
+    div.tenant_info_icon:hover {
         background-color: rgba(46, 204, 113, 0.1) !important;
         color: #000000 !important;
     }
 
     .tenant_info_icon:hover i,
-    .tenant_info_icon:hover i.mdi {
+    .tenant_info_icon:hover i.mdi,
+    .tenant_info_icon:hover i.mdi-lightbulb-on-outline,
+    span.tenant_info_icon:hover i,
+    div.tenant_info_icon:hover i {
         color: #000000 !important;
     }
 
