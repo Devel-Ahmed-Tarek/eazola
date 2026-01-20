@@ -707,24 +707,65 @@ a.text-primary:hover {
    تغيير أي استخدام للون البنفسجي (#b66dff, #d286ff) إلى الأخضر
    ============================================ */
 
-/* Tenant Info Icon - Purple to Green */
-.tenant_info_icon {
+/* Tenant Info Icon - Purple to Green (Maximum Specificity) */
+/* Override inline styles from topbar.blade.php */
+body .tenant_info_icon,
+body span.tenant_info_icon,
+body div.tenant_info_icon,
+body a.tenant_info_icon,
+body .navbar .tenant_info_icon,
+body .navbar .tenant_info_item .tenant_info_icon {
+    color: var(--bs-primary) !important;
+    background-color: transparent !important;
+}
+
+body .tenant_info_icon i,
+body .tenant_info_icon i.mdi,
+body .tenant_info_icon i.mdi-lightbulb-on-outline,
+body .tenant_info_icon i.mdi:before,
+body .tenant_info_icon i:before,
+body span.tenant_info_icon i,
+body div.tenant_info_icon i,
+body .navbar .tenant_info_icon i,
+body .navbar .tenant_info_icon i.mdi {
     color: var(--bs-primary) !important;
 }
 
-.tenant_info_icon i,
-.tenant_info_icon i.mdi,
-.tenant_info_icon i.mdi-lightbulb-on-outline {
+/* Override Inline Styles for Tenant Info Icon - All Variations */
+body .tenant_info_icon[style*="#b66dff"],
+body .tenant_info_icon[style*="color: #b66dff"],
+body .tenant_info_icon[style*="color:#b66dff"],
+body span.tenant_info_icon[style*="#b66dff"],
+body div.tenant_info_icon[style*="#b66dff"],
+body .navbar .tenant_info_icon[style*="#b66dff"] {
     color: var(--bs-primary) !important;
 }
 
-.tenant_info_icon:hover {
-    background-color: rgba(46, 204, 113, 0.1);
+body .tenant_info_icon:hover,
+body span.tenant_info_icon:hover,
+body div.tenant_info_icon:hover,
+body .navbar .tenant_info_icon:hover {
+    background-color: rgba(46, 204, 113, 0.1) !important;
     color: var(--bs-primary-dark) !important;
 }
 
-.tenant_info_icon:hover i {
+body .tenant_info_icon:hover i,
+body .tenant_info_icon:hover i.mdi,
+body .navbar .tenant_info_icon:hover i {
     color: var(--bs-primary-dark) !important;
+}
+
+/* Force override with element + class specificity */
+span.tenant_info_icon,
+div.tenant_info_icon,
+a.tenant_info_icon {
+    color: #2ECC71 !important;
+}
+
+span.tenant_info_icon i,
+div.tenant_info_icon i,
+a.tenant_info_icon i {
+    color: #2ECC71 !important;
 }
 
 /* Sidebar Plugin Badge - Purple to Green */
@@ -739,45 +780,60 @@ a.text-primary:hover {
     color: var(--eazola-white) !important;
 }
 
-/* Global Purple Color Override - Inline Styles */
+/* Global Purple Color Override - Inline Styles (High Specificity) */
 [style*="#b66dff"],
 [style*="#d286ff"],
 [style*="rgb(182, 109, 255)"],
-[style*="rgb(210, 134, 255)"] {
+[style*="rgb(210, 134, 255)"],
+*[style*="#b66dff"],
+*[style*="#d286ff"] {
     color: var(--bs-primary) !important;
     background-color: var(--bs-primary) !important;
     border-color: var(--bs-primary) !important;
 }
 
-/* Specific Elements with Purple Color */
+/* Specific Elements with Purple Color - All Variations */
 span[style*="#b66dff"],
 div[style*="#b66dff"],
 p[style*="#b66dff"],
 a[style*="#b66dff"],
 i[style*="#b66dff"],
-button[style*="#b66dff"] {
+button[style*="#b66dff"],
+li[style*="#b66dff"],
+td[style*="#b66dff"],
+th[style*="#b66dff"],
+label[style*="#b66dff"],
+*[style*="color: #b66dff"],
+*[style*="color:#b66dff"],
+*[style*="color:#b66dff !important"],
+*[style*="color: #b66dff !important"] {
     color: var(--bs-primary) !important;
 }
 
-/* Background Colors */
-[style*="background-color: #b66dff"],
-[style*="background-color:#b66dff"],
-[style*="background: #b66dff"],
-[style*="background:#b66dff"] {
+/* Background Colors - All Variations */
+*[style*="background-color: #b66dff"],
+*[style*="background-color:#b66dff"],
+*[style*="background: #b66dff"],
+*[style*="background:#b66dff"],
+*[style*="background-color: #b66dff !important"],
+*[style*="background:#b66dff !important"] {
     background-color: var(--bs-primary) !important;
 }
 
-/* Border Colors */
-[style*="border-color: #b66dff"],
-[style*="border-color:#b66dff"],
-[style*="border: 1px solid #b66dff"],
-[style*="border:1px solid #b66dff"] {
+/* Border Colors - All Variations */
+*[style*="border-color: #b66dff"],
+*[style*="border-color:#b66dff"],
+*[style*="border: 1px solid #b66dff"],
+*[style*="border:1px solid #b66dff"],
+*[style*="border-color: #b66dff !important"] {
     border-color: var(--bs-primary) !important;
 }
 
-/* Text Colors */
-[style*="color: #b66dff"],
-[style*="color:#b66dff"] {
+/* Text Colors - All Variations */
+*[style*="color: #b66dff"],
+*[style*="color:#b66dff"],
+*[style*="color: #b66dff !important"],
+*[style*="color:#b66dff !important"] {
     color: var(--bs-primary) !important;
 }
 

@@ -36,6 +36,38 @@
     <!-- Eazola Tenant Admin Custom Override -->
     @if(tenant())
         <link href="{{ global_asset('assets/tenant/admin/css/tenant-admin-override.css') }}" rel="stylesheet">
+        <!-- Additional Override for Inline Styles -->
+        <style>
+            /* Override for tenant_info_icon purple color */
+            .tenant_info_icon,
+            span.tenant_info_icon,
+            div.tenant_info_icon,
+            a.tenant_info_icon {
+                color: #2ECC71 !important;
+            }
+            .tenant_info_icon i,
+            .tenant_info_icon i.mdi,
+            .tenant_info_icon i.mdi-lightbulb-on-outline {
+                color: #2ECC71 !important;
+            }
+            .tenant_info_icon:hover {
+                background-color: rgba(46, 204, 113, 0.1) !important;
+                color: #27AE60 !important;
+            }
+            .tenant_info_icon:hover i {
+                color: #27AE60 !important;
+            }
+            /* Override any purple color inline styles */
+            [style*="#b66dff"],
+            [style*="color: #b66dff"],
+            [style*="color:#b66dff"] {
+                color: #2ECC71 !important;
+            }
+            [style*="background-color: #b66dff"],
+            [style*="background:#b66dff"] {
+                background-color: #2ECC71 !important;
+            }
+        </style>
     @endif
 
     @if(!empty(get_static_option('dark_mode_for_admin_panel')))
