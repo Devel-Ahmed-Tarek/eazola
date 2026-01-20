@@ -170,7 +170,7 @@ body {
 
 .sidebar .nav .nav-item .nav-link.active,
 .sidebar .nav .nav-item.active .nav-link {
-    background-color: transparent;
+    background-color: var(--eazola-sidebar-hover);
     color: #000000 !important;
     font-weight: 600;
 }
