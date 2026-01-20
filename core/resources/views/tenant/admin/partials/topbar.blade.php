@@ -58,7 +58,7 @@
         justify-content: center;
         height: 35px;
         width: 35px;
-        color: #b66dff !important;
+        color: #2ECC71 !important;
         border-radius: 3px;
     }
 
