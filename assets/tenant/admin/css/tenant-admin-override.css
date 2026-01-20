@@ -608,8 +608,8 @@ a.text-primary:hover {
 }
 
 .tenant_info_icon:hover {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: var(--bs-primary-dark) !important;
+    background-color: rgba(46, 204, 113, 0.1) !important;
+    color: #000000 !important;
 }
 
 /* ============================================

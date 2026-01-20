@@ -62,6 +62,16 @@
         border-radius: 3px !important;
     }
 
+    .tenant_info_icon:hover {
+        background-color: rgba(46, 204, 113, 0.1) !important;
+        color: #000000 !important;
+    }
+
+    .tenant_info_icon:hover i,
+    .tenant_info_icon:hover i.mdi {
+        color: #000000 !important;
+    }
+
     .tenant_info_list {
         position: absolute;
         top: 55px;
