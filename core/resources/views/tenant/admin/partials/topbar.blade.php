@@ -58,7 +58,7 @@
         justify-content: center;
         height: 35px;
         width: 35px;
-        color: #2ECC71 !important;
+        color: black !important;
         border-radius: 3px;
     }
 
