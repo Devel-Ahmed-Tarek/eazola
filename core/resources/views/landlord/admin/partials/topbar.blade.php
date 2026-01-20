@@ -1,3 +1,86 @@
+<style>
+    /* All Icons in Header/Navbar - Black Color */
+    .navbar i,
+    .navbar .mdi,
+    .navbar-toggler i.mdi,
+    .navbar-toggler .mdi-menu,
+    .navbar-nav .nav-link i,
+    .navbar-nav .nav-link .mdi,
+    .navbar-nav .nav-item .nav-link i,
+    .navbar-nav .count-indicator i,
+    .navbar-nav .count-indicator .mdi-email-outline,
+    .navbar-nav .count-indicator .mdi-bell,
+    .navbar-nav .count-indicator .mdi-bell-outline,
+    .navbar-nav .nav-logout .mdi,
+    .navbar-nav .nav-logout .mdi-upload,
+    .navbar-dropdown .dropdown-item i,
+    .navbar-dropdown .dropdown-item .mdi {
+        color: #000000 !important;
+    }
+
+    /* Navbar Toggler Icon */
+    .navbar-toggler span.mdi-menu {
+        color: #000000 !important;
+    }
+
+    /* Email Icon */
+    .navbar-nav .count-indicator#messageDropdown .mdi-email-outline {
+        color: #000000 !important;
+    }
+
+    /* Bell/Notification Icon */
+    .navbar-nav .count-indicator .mdi-bell,
+    .navbar-nav .count-indicator .mdi-bell-outline {
+        color: #000000 !important;
+    }
+
+    /* Upload/Visit Website Icon */
+    .navbar-nav .nav-logout .mdi-upload {
+        color: #000000 !important;
+    }
+
+    /* Dropdown Menu Icons */
+    .navbar-dropdown .dropdown-item .mdi-cached,
+    .navbar-dropdown .dropdown-item .mdi-account-settings,
+    .navbar-dropdown .dropdown-item .mdi-key,
+    .navbar-dropdown .dropdown-item .mdi-logout {
+        color: #000000 !important;
+    }
+
+    /* All Buttons in Header/Navbar - Black Text Always */
+    .navbar .btn,
+    .navbar .btn-info,
+    .navbar .btn-outline-danger,
+    .navbar .btn-icon-text,
+    .navbar-nav .nav-logout .btn,
+    .navbar-nav .nav-logout .btn-outline-danger,
+    .navbar-nav .nav-logout .btn-icon-text,
+    .navbar .btn-outline-danger.btn-icon-text,
+    .navbar .btn .btn-icon-prepend,
+    .navbar .btn span,
+    .navbar .btn i {
+        color: #000000 !important;
+    }
+
+    /* Button text before hover */
+    .navbar .btn:not(:hover),
+    .navbar .btn-info:not(:hover),
+    .navbar .btn-outline-danger:not(:hover),
+    .navbar-nav .nav-logout .btn:not(:hover) {
+        color: #000000 !important;
+    }
+
+    /* Button text on hover - keep black */
+    .navbar .btn:hover,
+    .navbar .btn-info:hover,
+    .navbar .btn-outline-danger:hover,
+    .navbar-nav .nav-logout .btn:hover,
+    .navbar .btn:hover span,
+    .navbar .btn:hover i {
+        color: #000000 !important;
+    }
+</style>
+
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <a class="navbar-brand brand-logo" href="{{route('landlord.admin.home')}}">
