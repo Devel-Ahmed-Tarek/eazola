@@ -163,6 +163,36 @@
     .navbar-dropdown .dropdown-item .mdi-logout {
         color: #000000 !important;
     }
+
+    /* All Buttons in Header/Navbar - Black Text Always */
+    .navbar .btn,
+    .navbar .btn-outline-danger,
+    .navbar .btn-icon-text,
+    .navbar-nav .nav-logout .btn,
+    .navbar-nav .nav-logout .btn-outline-danger,
+    .navbar-nav .nav-logout .btn-icon-text,
+    .navbar .btn-outline-danger.btn-icon-text,
+    .navbar .btn .btn-icon-prepend,
+    .navbar .btn span,
+    .navbar .btn i {
+        color: #000000 !important;
+    }
+
+    /* Button text before hover */
+    .navbar .btn:not(:hover),
+    .navbar .btn-outline-danger:not(:hover),
+    .navbar-nav .nav-logout .btn:not(:hover) {
+        color: #000000 !important;
+    }
+
+    /* Button text on hover - keep black */
+    .navbar .btn:hover,
+    .navbar .btn-outline-danger:hover,
+    .navbar-nav .nav-logout .btn:hover,
+    .navbar .btn:hover span,
+    .navbar .btn:hover i {
+        color: #000000 !important;
+    }
 </style>
 
 
