@@ -35,6 +35,11 @@
     [style*="background-color: #b66dff !important"] {
         background-color: #2ECC71 !important;
     }
+    /* Active Sidebar Link - Override Purple to Black */
+    .sidebar .nav .nav-item.active > .nav-link .menu-title,
+    .sidebar .nav .nav-item.active > .nav-link i {
+        color: #000000 !important;
+    }
 </style>
 @endif
 
