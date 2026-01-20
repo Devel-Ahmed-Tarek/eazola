@@ -41,7 +41,7 @@
         color: #000000 !important;
     }
     .sidebar .nav .nav-item.active > .nav-link {
-        background-color: #f4f6f8 !important;
+        background-color:rgb(154, 226, 145) !important;
     }
 </style>
 @endif
