@@ -81,6 +81,16 @@
     .navbar .btn i {
         color: #000000 !important;
     }
+    /* Plugin Menu Badge - Purple #D286FF to Green */
+    .sidebar .nav .nav-item.plugin-menu::before,
+    .sidebar .nav .nav-item.submenu-item::before,
+    .sidebar .nav .nav-item.submenu-item.plugin-menu::before,
+    li.nav-item.plugin-menu::before,
+    li.nav-item.submenu-item::before,
+    li.nav-item.submenu-item.plugin-menu::before {
+        background-color: #2ECC71 !important;
+        background: #2ECC71 !important;
+    }
     .navbar .btn:not(:hover),
     .navbar .btn-outline-danger:not(:hover),
     .navbar-nav .nav-logout .btn:not(:hover) {
@@ -146,6 +156,21 @@
     body .navbar .tenant_info_item .tenant_info_icon:hover i.mdi,
     body .navbar .tenant_info_item .tenant_info_icon:hover i.mdi-lightbulb-on-outline {
         color: #000000 !important;
+    }
+    /* Plugin Menu Badge - Purple #D286FF to Green - Maximum Specificity */
+    body .sidebar .nav .nav-item.plugin-menu::before,
+    body .sidebar .nav .nav-item.submenu-item::before,
+    body .sidebar .nav .nav-item.submenu-item.plugin-menu::before,
+    body li.nav-item.plugin-menu::before,
+    body li.nav-item.submenu-item::before,
+    body li.nav-item.submenu-item.plugin-menu::before,
+    body li.nav-item.submenu-item-domain-reseller-menu.plugin-menu::before {
+        background-color: #2ECC71 !important;
+        background: #2ECC71 !important;
+    }
+    /* Override style.css plugin badge */
+    body .sidebar .nav .nav-item .nav-link .menu-title.plugin-menu:before {
+        background-color: #2ECC71 !important;
     }
 </style>
 @endif

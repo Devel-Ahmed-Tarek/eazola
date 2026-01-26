@@ -56,6 +56,21 @@
     .sidebar .nav .nav-item.active > .nav-link {
         background-color:rgb(154, 226, 145) !important;
     }
+    /* Plugin Menu Badge - Purple #D286FF to Green */
+    .sidebar .nav .nav-item.plugin-menu::before,
+    .sidebar .nav .nav-item.submenu-item::before,
+    .sidebar .nav .nav-item.submenu-item.plugin-menu::before,
+    li.nav-item.plugin-menu::before,
+    li.nav-item.submenu-item::before,
+    li.nav-item.submenu-item.plugin-menu::before,
+    li.nav-item.submenu-item-domain-reseller-menu.plugin-menu::before {
+        background-color: #2ECC71 !important;
+        background: #2ECC71 !important;
+    }
+    /* Override style.css plugin badge */
+    .sidebar .nav .nav-item .nav-link .menu-title.plugin-menu:before {
+        background-color: #2ECC71 !important;
+    }
 </style>
 
 <div class="main-panel">

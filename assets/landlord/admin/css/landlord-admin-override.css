@@ -241,6 +241,28 @@ body {
     background-color: var(--bs-primary) !important;
 }
 
+/* Plugin Menu Badge - All Variations (Purple #D286FF to Green) */
+.sidebar .nav .nav-item.plugin-menu::before,
+.sidebar .nav .nav-item.submenu-item::before,
+.sidebar .nav .nav-item.submenu-item.plugin-menu::before,
+.sidebar .nav .nav-item.submenu-item-domain-reseller-menu.plugin-menu::before,
+li.nav-item.plugin-menu::before,
+li.nav-item.submenu-item::before,
+li.nav-item.submenu-item.plugin-menu::before,
+li.nav-item.submenu-item-domain-reseller-menu.plugin-menu::before {
+    background-color: var(--bs-primary) !important;
+    background: var(--bs-primary) !important;
+}
+
+/* Override inline styles for plugin menu badge */
+.sidebar .nav .nav-item.plugin-menu[style*="#d286ff"]::before,
+.sidebar .nav .nav-item.submenu-item[style*="#d286ff"]::before,
+li.nav-item.plugin-menu[style*="#d286ff"]::before,
+li.nav-item.submenu-item[style*="#d286ff"]::before {
+    background-color: var(--bs-primary) !important;
+    background: var(--bs-primary) !important;
+}
+
 /* Sidebar Menu Icon Color (Purple to Green) */
 .sidebar .nav .nav-item .nav-link i.menu-icon {
     color: var(--eazola-text-secondary) !important;
@@ -821,6 +843,45 @@ a.tenant_info_icon i {
 .sidebar .nav .nav-item .nav-link .menu-title.plugin-menu:before {
     background-color: var(--bs-primary) !important;
     color: var(--eazola-white) !important;
+}
+
+/* Plugin Menu Badge - All Variations (Purple #D286FF to Green) - Maximum Specificity */
+body .sidebar .nav .nav-item.plugin-menu::before,
+body .sidebar .nav .nav-item.submenu-item::before,
+body .sidebar .nav .nav-item.submenu-item.plugin-menu::before,
+body .sidebar .nav .nav-item.submenu-item-domain-reseller-menu.plugin-menu::before,
+body li.nav-item.plugin-menu::before,
+body li.nav-item.submenu-item::before,
+body li.nav-item.submenu-item.plugin-menu::before,
+body li.nav-item.submenu-item-domain-reseller-menu.plugin-menu::before {
+    background-color: var(--bs-primary) !important;
+    background: var(--bs-primary) !important;
+}
+
+/* Override inline styles for plugin menu badge */
+body .sidebar .nav .nav-item.plugin-menu[style*="#d286ff"]::before,
+body .sidebar .nav .nav-item.submenu-item[style*="#d286ff"]::before,
+body li.nav-item.plugin-menu[style*="#d286ff"]::before,
+body li.nav-item.submenu-item[style*="#d286ff"]::before {
+    background-color: var(--bs-primary) !important;
+    background: var(--bs-primary) !important;
+}
+
+/* Specific Domain Reseller Menu Badge Override */
+li.nav-item.submenu-item-domain-reseller-menu.plugin-menu::before,
+.sidebar .nav li.nav-item.submenu-item-domain-reseller-menu.plugin-menu::before,
+body .sidebar .nav li.nav-item.submenu-item-domain-reseller-menu.plugin-menu::before {
+    background-color: #2ECC71 !important;
+    background: #2ECC71 !important;
+}
+
+/* All submenu items with plugin-menu class */
+.sidebar .nav .sub-menu .nav-item.plugin-menu::before,
+.sidebar .nav .collapse .nav-item.plugin-menu::before,
+body .sidebar .nav .sub-menu .nav-item.plugin-menu::before,
+body .sidebar .nav .collapse .nav-item.plugin-menu::before {
+    background-color: #2ECC71 !important;
+    background: #2ECC71 !important;
 }
 
 /* Sidebar Badge - Any purple badge */
