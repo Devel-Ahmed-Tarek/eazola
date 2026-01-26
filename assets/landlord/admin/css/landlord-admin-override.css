@@ -1150,3 +1150,37 @@ body .navbar .btn:hover .btn-icon-prepend {
 .btn-gradient-primary:not(.btn-gradient-light):active {
     color: #ffffff !important;
 }
+
+/* ============================================
+   Nav Tabs Override - Blue to Green
+   ============================================ */
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link,
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link,
+button.nav-link.active,
+.nav-link.active {
+    background-color: #2ECC71 !important;
+    border-color: #2ECC71 !important;
+    color: #ffffff !important;
+}
+
+.nav-pills .nav-link.active:hover,
+.nav-pills .nav-link.active:focus,
+.nav-tabs .nav-link.active:hover,
+.nav-tabs .nav-link.active:focus,
+button.nav-link.active:hover,
+button.nav-link.active:focus,
+.nav-link.active:hover,
+.nav-link.active:focus {
+    background-color: #27AE60 !important;
+    border-color: #27AE60 !important;
+    color: #ffffff !important;
+}
+
+/* Nav link hover (not active) */
+.nav-pills .nav-link:not(.active):hover,
+.nav-tabs .nav-link:not(.active):hover {
+    border-color: #2ECC71 !important;
+    color: #2ECC71 !important;
+}
