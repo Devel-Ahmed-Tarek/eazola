@@ -1120,3 +1120,33 @@ body .navbar .btn:hover i,
 body .navbar .btn:hover .btn-icon-prepend {
     color: #000000 !important;
 }
+
+/* ============================================
+   Gradient Button Override - Purple to Green
+   ============================================ */
+.btn-gradient-primary {
+    background: linear-gradient(to right, #2ECC71, #1ABC9C) !important;
+    border: 0 !important;
+}
+
+.btn-gradient-primary:not([disabled]):not(.disabled):active,
+.btn-gradient-primary:not([disabled]):not(.disabled).active,
+.show > .btn-gradient-primary.dropdown-toggle {
+    background: linear-gradient(to right, #27AE60, #16A085) !important;
+}
+
+.btn-gradient-primary:hover,
+.btn-gradient-primary:focus {
+    background: linear-gradient(to right, #27AE60, #16A085) !important;
+    opacity: 1 !important;
+}
+
+.btn-gradient-primary:not(.btn-gradient-light) {
+    color: #ffffff !important;
+}
+
+.btn-gradient-primary:not(.btn-gradient-light):hover,
+.btn-gradient-primary:not(.btn-gradient-light):focus,
+.btn-gradient-primary:not(.btn-gradient-light):active {
+    color: #ffffff !important;
+}
