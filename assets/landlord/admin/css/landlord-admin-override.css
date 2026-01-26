@@ -1184,3 +1184,28 @@ button.nav-link.active:focus,
     border-color: #2ECC71 !important;
     color: #2ECC71 !important;
 }
+
+/* ============================================
+   Toggle Switch/Slider Override - Purple to Green
+   ============================================ */
+input:checked + .slider {
+    background: linear-gradient(to right, #2ECC71, #1ABC9C) !important;
+    border: 0 !important;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2ECC71 !important;
+}
+
+/* Switch toggle background when checked */
+.custom-control-input:checked ~ .custom-control-label::before,
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #2ECC71 !important;
+    border-color: #2ECC71 !important;
+}
+
+/* Form check input */
+.form-check-input:checked {
+    background-color: #2ECC71 !important;
+    border-color: #2ECC71 !important;
+}
