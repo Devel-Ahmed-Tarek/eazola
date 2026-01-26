@@ -18,7 +18,7 @@
             "menu_item": [
                 {
                     "id" : "hotel-bookings-menu",
-                    "label": "Hotel Bookings",
+                    "label": "Booking Services",
                     "route": "tenant.admin.bed-type.index",
                     "tenantRoute": "tenant.admin.bed-type.index",
                     "parent": null,
@@ -28,7 +28,7 @@
                 },
                 {
                     "id" : "hotel-manage-bed-type-all-menu",
-                    "label": "All Bed Types",
+                    "label": "All Categories Types",
                     "route": "tenant.admin.bed-type.index",
                     "tenantRoute": "tenant.admin.bed-type.index",
                     "parent": "hotel-bookings-menu",
@@ -44,7 +44,7 @@
                 },
                 {
                     "id" : "hotel-manage-hotels-all-menu",
-                    "label": "All Hotel",
+                    "label": "All Booking",
                     "route": "tenant.admin.hotels.index",
                     "tenantRoute": "tenant.admin.hotels.index",
                     "parent": "hotel-bookings-menu",
@@ -52,7 +52,7 @@
                 },
                 {
                     "id" : "hotel-manage-room_type-all-menu",
-                    "label": "All Room Type",
+                    "label": "All  Types",
                     "route": "tenant.admin.room-types.index",
                     "tenantRoute": "tenant.admin.room-types.index",
                     "parent": "hotel-bookings-menu",
@@ -60,7 +60,7 @@
                 },
                 {
                     "id" : "hotel-manage-rooms-all-menu",
-                    "label": "All Room",
+                    "label": "All Items",
                     "route": "tenant.admin.rooms.index",
                     "tenantRoute": "tenant.admin.rooms.index",
                     "parent": "hotel-bookings-menu",
@@ -109,7 +109,7 @@
                 },
                 {
                     "id" : "hotel-manage-room-book-inventories-all-menu",
-                    "label": "RoomBookInventories",
+                    "label": " Book Inventories",
                     "route": "tenant.admin.room-book-inventories.index",
                     "tenantRoute": "tenant.admin.room-book-inventories.index",
                     "parent": "hotel-bookings-menu",
@@ -117,7 +117,7 @@
                 },
                 {
                     "id" : "hotel-manage-hotel-reviews-all-menu",
-                    "label": "Hotel Reviews",
+                    "label": " Reviews",
                     "route": "tenant.admin.all_hotel_review",
                     "tenantRoute": "tenant.admin.all_hotel_review",
                     "parent": "hotel-bookings-menu",
