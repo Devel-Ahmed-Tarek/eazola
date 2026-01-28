@@ -10,6 +10,14 @@ class TenantMenuSetting extends Model
 {
     use HasFactory;
 
+    /**
+     * The database connection that should be used by the model.
+     * This table is in the central/landlord database, not tenant database.
+     *
+     * @var string
+     */
+    protected $connection = 'mysql';
+
     protected $table = 'tenant_menu_settings';
 
     protected $fillable = [

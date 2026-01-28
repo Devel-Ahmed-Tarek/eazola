@@ -34,7 +34,12 @@ class SidebarMenuHelper
 
         // Load hidden menus from cache or database
         if (self::$hiddenMenusCache === null) {
-            self::$hiddenMenusCache = TenantMenuSetting::getHiddenMenus(tenant()->id);
+            try {
+                self::$hiddenMenusCache = TenantMenuSetting::getHiddenMenus(tenant()->id);
+            } catch (\Exception $e) {
+                // If table doesn't exist or any error, return empty array (all menus visible)
+                self::$hiddenMenusCache = [];
+            }
         }
 
         // If the menu key is in the hidden list, return false

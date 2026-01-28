@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * The database connection that should be used by the migration.
+     * This table must be in the central/landlord database.
+     *
+     * @var string
+     */
+    protected $connection = 'mysql';
+
+    /**
      * Run the migrations.
      * 
      * This table stores per-tenant sidebar menu visibility settings.
@@ -15,7 +23,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tenant_menu_settings', function (Blueprint $table) {
+        Schema::connection('mysql')->create('tenant_menu_settings', function (Blueprint $table) {
             $table->id();
             $table->string('tenant_id')->index();
             $table->string('menu_key')->index();
@@ -40,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tenant_menu_settings');
+        Schema::connection('mysql')->dropIfExists('tenant_menu_settings');
     }
 };
