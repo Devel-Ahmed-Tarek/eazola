@@ -49,16 +49,19 @@ class TenantMenuSettingController extends Controller
         $request->validate([
             'menu_settings' => 'required|array',
             'menu_settings.*.menu_key' => 'required|string',
-            'menu_settings.*.is_visible' => 'required|boolean',
+            'menu_settings.*.is_visible' => 'required',
             'menu_settings.*.menu_label' => 'nullable|string',
             'menu_settings.*.parent_key' => 'nullable|string',
         ]);
 
         foreach ($request->menu_settings as $setting) {
+            // Convert is_visible to boolean properly
+            $isVisible = filter_var($setting['is_visible'], FILTER_VALIDATE_BOOLEAN);
+            
             TenantMenuSetting::setMenuVisibility(
                 $tenantId,
                 $setting['menu_key'],
-                $setting['is_visible'],
+                $isVisible,
                 $setting['menu_label'] ?? null,
                 $setting['parent_key'] ?? null
             );
@@ -83,15 +86,18 @@ class TenantMenuSettingController extends Controller
 
         $request->validate([
             'menu_key' => 'required|string',
-            'is_visible' => 'required|boolean',
+            'is_visible' => 'required',
             'menu_label' => 'nullable|string',
             'parent_key' => 'nullable|string',
         ]);
 
+        // Convert is_visible to boolean properly
+        $isVisible = filter_var($request->is_visible, FILTER_VALIDATE_BOOLEAN);
+        
         $setting = TenantMenuSetting::setMenuVisibility(
             $tenantId,
             $request->menu_key,
-            $request->is_visible,
+            $isVisible,
             $request->menu_label,
             $request->parent_key
         );

@@ -500,12 +500,20 @@
         
         $('#loadingOverlay').addClass('active');
         
+        // Prepare menu settings with proper boolean conversion
+        const menuSettings = Object.values(changedItems).map(item => ({
+            menu_key: item.menu_key,
+            is_visible: item.is_visible ? 1 : 0,
+            menu_label: item.menu_label || '',
+            parent_key: item.parent_key || ''
+        }));
+        
         $.ajax({
             url: "{{ route('landlord.admin.tenant.menu.settings.update', $tenant->id) }}",
             method: 'POST',
             data: {
                 _token: csrfToken,
-                menu_settings: Object.values(changedItems)
+                menu_settings: menuSettings
             },
             success: function(response) {
                 $('#loadingOverlay').removeClass('active');
@@ -523,10 +531,11 @@
             },
             error: function(xhr) {
                 $('#loadingOverlay').removeClass('active');
+                console.log('Error:', xhr.responseJSON);
                 Swal.fire({
                     icon: 'error',
                     title: '{{ __("Error") }}',
-                    text: '{{ __("Failed to save changes. Please try again.") }}'
+                    text: xhr.responseJSON?.message || '{{ __("Failed to save changes. Please try again.") }}'
                 });
             }
         });
