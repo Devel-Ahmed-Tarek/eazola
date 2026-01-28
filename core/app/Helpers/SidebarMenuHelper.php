@@ -6,12 +6,49 @@ namespace App\Helpers;
 
 use App\Models\PaymentLogs;
 use App\Models\PricePlan;
+use App\Models\TenantMenuSetting;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use function __;
 
 class SidebarMenuHelper
 {
+    /**
+     * Cache for hidden menus for the current tenant
+     */
+    private static ?array $hiddenMenusCache = null;
+
+    /**
+     * Check if a menu item is visible for the current tenant.
+     * Returns true if visible, false if hidden by admin.
+     *
+     * @param string $menuKey
+     * @return bool
+     */
+    private function isTenantMenuVisible(string $menuKey): bool
+    {
+        // Only check for tenant context
+        if (!function_exists('tenant') || is_null(tenant())) {
+            return true;
+        }
+
+        // Load hidden menus from cache or database
+        if (self::$hiddenMenusCache === null) {
+            self::$hiddenMenusCache = TenantMenuSetting::getHiddenMenus(tenant()->id);
+        }
+
+        // If the menu key is in the hidden list, return false
+        return !in_array($menuKey, self::$hiddenMenusCache);
+    }
+
+    /**
+     * Clear the hidden menus cache (useful after updates)
+     */
+    public static function clearMenuCache(): void
+    {
+        self::$hiddenMenusCache = null;
+    }
+
 
     public function render_sidebar_menus() : string
     {
@@ -1177,7 +1214,8 @@ class SidebarMenuHelper
                 $check_all_feature = $all_features->pluck('feature_name')->toArray();
 
 
-                if (in_array('dashboard',$check_all_feature)) {
+                // Dashboard - Check tenant menu visibility
+                if (in_array('dashboard',$check_all_feature) && $this->isTenantMenuVisible('tenant-dashboard-menu')) {
                     $menu_instance->add_menu_item('tenant-dashboard-menu', [
                         'route' => 'tenant.admin.dashboard',
                         'label' => __('Dashboard'),
@@ -1187,15 +1225,15 @@ class SidebarMenuHelper
                     ]);
                 }
 
-
-                if (in_array('admin',$check_all_feature)) {
+                // Admin Manage - Check tenant menu visibility
+                if (in_array('admin',$check_all_feature) && $this->isTenantMenuVisible('admin-manage-settings-menu-items')) {
                     if ($admin->hasRole('Super Admin')) {
                         $this->tenant_admin_manage_menus($menu_instance);
                     }
                 }
 
-
-                if (in_array('user',$check_all_feature)) {
+                // User Manage - Check tenant menu visibility
+                if (in_array('user',$check_all_feature) && $this->isTenantMenuVisible('users-manage-settings-menu-items')) {
                     if ($admin->hasRole('Super Admin')) {
                         $this->tenant_users_manage_menus($menu_instance);
                     }
@@ -1206,48 +1244,63 @@ class SidebarMenuHelper
 
 
                 if (in_array('eCommerce',$check_ecommerce_feature)) {
-                    if (isPluginActive('Product'))
+                    // Product Order Manage - Check tenant menu visibility
+                    if (isPluginActive('Product') && $this->isTenantMenuVisible('product-order-manage-settings'))
                     {
                         $this->tenant_order_manage_settings_menus($menu_instance);
                     }
 
-                    if (isPluginActive('Badge'))
+                    // Badge Manage - Check tenant menu visibility
+                    if (isPluginActive('Badge') && $this->isTenantMenuVisible('badge-settings-menu-items'))
                     {
                         $this->tenant_badge_settings_menus($menu_instance);
                     }
 
-                    $this->tenant_country_settings_menus($menu_instance);
-                    $this->tenant_tax_settings_menus($menu_instance);
+                    // Country Manage - Check tenant menu visibility
+                    if ($this->isTenantMenuVisible('country-settings-menu-items')) {
+                        $this->tenant_country_settings_menus($menu_instance);
+                    }
+                    
+                    // Tax Manage - Check tenant menu visibility
+                    if ($this->isTenantMenuVisible('tax-settings-menu-items')) {
+                        $this->tenant_tax_settings_menus($menu_instance);
+                    }
 
-                    if (isPluginActive('ShippingModule')) {
+                    // Shipping Manage - Check tenant menu visibility
+                    if (isPluginActive('ShippingModule') && $this->isTenantMenuVisible('shipping-settings-menu-items')) {
                         $this->tenant_shipping_settings_menus($menu_instance);
                     }
 
-                    if (isPluginActive('CouponManage'))
+                    // Coupon Manage - Check tenant menu visibility
+                    if (isPluginActive('CouponManage') && $this->isTenantMenuVisible('coupon-settings-menu-items'))
                     {
                         $this->tenant_coupon_settings_menus($menu_instance);
                     }
 
-                    if (isPluginActive('Attributes'))
+                    // Attribute - Check tenant menu visibility
+                    if (isPluginActive('Attributes') && $this->isTenantMenuVisible('product-attribute-menu-items'))
                     {
                         $this->tenant_attribute_settings_menus($menu_instance);
                     }
 
-                    if (isPluginActive('Product'))
+                    // Products - Check tenant menu visibility
+                    if (isPluginActive('Product') && $this->isTenantMenuVisible('product-settings-menu-items'))
                     {
                         if (in_array('product',$check_ecommerce_feature)) {
                             $this->tenant_product_settings_menus($menu_instance);
                         }
                     }
 
-                    if (isPluginActive('Inventory'))
+                    // Inventory - Check tenant menu visibility
+                    if (isPluginActive('Inventory') && $this->isTenantMenuVisible('inventory-settings-menu-items'))
                     {
                         if (in_array('inventory',$check_ecommerce_feature)) {
                             $this->tenant_inventory_settings_menus($menu_instance);
                         }
                     }
 
-                    if (isPluginActive('Campaign'))
+                    // Campaign - Check tenant menu visibility
+                    if (isPluginActive('Campaign') && $this->isTenantMenuVisible('campaign-settings-menu-items'))
                     {
                         if (in_array('campaign',$check_ecommerce_feature)) {
                             $this->tenant_campaign_settings_menus($menu_instance);
@@ -1256,123 +1309,139 @@ class SidebarMenuHelper
                 }
                 //Ecommerce
 
-
-                if (isPluginActive('Donation')) {
+                // Donations - Check tenant menu visibility
+                if (isPluginActive('Donation') && $this->isTenantMenuVisible('donation-settings-menu-items')) {
                     if (in_array('donation', $check_all_feature)) {
                         $this->tenant_donation_settings_menus($menu_instance);
                         $this->tenant_donation_activities($menu_instance);
                     }
                 }
 
-                if (isPluginActive('Event')) {
+                // Events - Check tenant menu visibility
+                if (isPluginActive('Event') && $this->isTenantMenuVisible('event-settings-menu-items')) {
                     if (in_array('event', $check_all_feature)) {
                         $this->tenant_event_settings_menus($menu_instance);
                     }
                 }
 
-
-
-                if (isPluginActive('Job')) {
+                // Jobs - Check tenant menu visibility
+                if (isPluginActive('Job') && $this->isTenantMenuVisible('job-settings-menu-items')) {
                     if (in_array('job', $check_all_feature)) {
                         $this->tenant_job_settings_menus($menu_instance);
                     }
                 }
 
-                if (isPluginActive('Appointment')) {
+                // Appointment - Check tenant menu visibility
+                if (isPluginActive('Appointment') && $this->isTenantMenuVisible('appointment-settings-menu-items')) {
                     if (in_array('appointment', $check_all_feature)) {
                         $this->tenant_appointment_settings_menus($menu_instance);
                     }
                 }
 
-                if (isPluginActive('SupportTicket')) {
+                // Support Tickets - Check tenant menu visibility
+                if (isPluginActive('SupportTicket') && $this->isTenantMenuVisible('support-tickets-settings-menu-items')) {
                     if (in_array('support_ticket', $check_all_feature)) {
                         $this->tenant_support_ticket_settings_menus($menu_instance);
                     }
                 }
 
-
-                if (in_array('brand',$check_all_feature)) {
+                // Brands - Check tenant menu visibility
+                if (in_array('brand',$check_all_feature) && $this->isTenantMenuVisible('brands')) {
                     $this->tenant_brands_settings_menus($menu_instance);
                 }
 
-
-                if (in_array('custom_domain',$check_all_feature)) {
+                // Custom Domain - Check tenant menu visibility
+                if (in_array('custom_domain',$check_all_feature) && $this->isTenantMenuVisible('custom-domain-request')) {
                     $this->tenant_custom_domain_request_settings_menus($menu_instance);
                 }
 
-
-                if (in_array('testimonial',$check_all_feature)) {
+                // Testimonial - Check tenant menu visibility
+                if (in_array('testimonial',$check_all_feature) && $this->isTenantMenuVisible('testimonial')) {
                     $this->tenant_testimonial_settings_menus($menu_instance);
                 }
 
-
-                if (in_array('form_builder',$check_all_feature)) {
+                // Form Builder - Check tenant menu visibility
+                if (in_array('form_builder',$check_all_feature) && $this->isTenantMenuVisible('form-builder-settings-menu-items')) {
                     $this->tenant_form_builder_settings_menus($menu_instance);
                 }
 
-
-                if (in_array('own_order_manage',$check_all_feature)) {
+                // My Package Orders - Check tenant menu visibility
+                if (in_array('own_order_manage',$check_all_feature) && $this->isTenantMenuVisible('tenant-payment-manage-settings-menu-items')) {
                     if ($admin->hasRole('Super Admin')) {
                         $this->tenant_payment_manage_menus($menu_instance);
                     }
                 }
 
-                if (in_array('page',$check_all_feature)) {
+                // Pages - Check tenant menu visibility
+                if (in_array('page',$check_all_feature) && $this->isTenantMenuVisible('pages-settings-menu-items')) {
                     $this->tenant_pages_settings_menus($menu_instance);
                 }
 
-
-                if (isPluginActive('Portfolio')) {
+                // Portfolio - Check tenant menu visibility
+                if (isPluginActive('Portfolio') && $this->isTenantMenuVisible('portfolio-settings-menu-items')) {
                     if (in_array('portfolio',$check_all_feature)) {
                         $this->tenant_porfolio_settings_menu($menu_instance);
                     }
                 }
 
-                if (in_array('blog',$check_all_feature)) {
+                // Blogs - Check tenant menu visibility
+                if (in_array('blog',$check_all_feature) && $this->isTenantMenuVisible('blog-settings-menu-items')) {
                     $this->tenant_blog_settings_menus($menu_instance);
                 }
 
-                if (in_array('advertisement',$check_all_feature)) {
+                // Advertisement - Check tenant menu visibility
+                if (in_array('advertisement',$check_all_feature) && $this->isTenantMenuVisible('advertisement-settings-menu-items')) {
                     $this->tenant_advertisement_settings_menus($menu_instance);
                 }
 
-                if (isPluginActive('Service')) {
+                // Services - Check tenant menu visibility
+                if (isPluginActive('Service') && $this->isTenantMenuVisible('services-settings-menu-items')) {
                     if (in_array('service', $check_all_feature)) {
                         $this->tenant_services_settings_menus($menu_instance);
                     }
                 }
 
-                if (isPluginActive('Knowledgebase')) {
+                // Knowledgebase - Check tenant menu visibility
+                if (isPluginActive('Knowledgebase') && $this->isTenantMenuVisible('knowledgebase-settings-menu-items')) {
                     if (in_array('knowledgebase', $check_all_feature)) {
                         $this->tenant_knowledgebase_settings_menu($menu_instance);
                     }
                 }
 
-                if(isPluginActive('NewsLetter')){
+                // Newsletter - Check tenant menu visibility
+                if(isPluginActive('NewsLetter') && $this->isTenantMenuVisible('newsletter')){
                     if (in_array('newsletter',$check_all_feature)) {
                         $this->tenant_newsletter_settings_menus($menu_instance);
                     }
                 }
 
-
-                if (in_array('faq',$check_all_feature)) {
+                // FAQs - Check tenant menu visibility
+                if (in_array('faq',$check_all_feature) && $this->isTenantMenuVisible('faq-settings-menu-items')) {
                     $this->tenant_faq_settings($menu_instance);
                 }
 
-                if (in_array('wedding_price_plan',$check_all_feature)) {
+                // Price Plan - Check tenant menu visibility
+                if (in_array('wedding_price_plan',$check_all_feature) && $this->isTenantMenuVisible('wedding-price-plan-settings-menu-items')) {
                     $this->tenant_wedding_price_plan_settings($menu_instance);
                 }
 
-
-                if (in_array('gallery',$check_all_feature)) {
+                // Image Gallery - Check tenant menu visibility
+                if (in_array('gallery',$check_all_feature) && $this->isTenantMenuVisible('image_gallery-settings-menu-items')) {
                     $this->tenant_image_gallery($menu_instance);
                 }
 
-                // External Menu Render
+                // External Menu Render - Check tenant menu visibility for each
                 foreach (getAllExternalMenu() as $externalMenu)
                 {
                     foreach ($externalMenu as $individual_menu_item){
                         $convert_to_array = (array) $individual_menu_item;
+                        
+                        // Check tenant menu visibility for external menus
+                        $menuId = $convert_to_array['id'] ?? '';
+                        if (!empty($menuId) && !$this->isTenantMenuVisible($menuId)) {
+                            continue; // Skip hidden external menus
+                        }
+                        
                         $convert_to_array['label'] = __($convert_to_array['label']);
 
                         if (array_key_exists('permissions', $convert_to_array) && !is_array($convert_to_array['permissions'])) {
@@ -1387,21 +1456,23 @@ class SidebarMenuHelper
                     }
                 }
 
-                if (in_array('appearance_settings',$check_all_feature)) {
+                // Appearance Settings - Check tenant menu visibility
+                if (in_array('appearance_settings',$check_all_feature) && $this->isTenantMenuVisible('appearance-settings-menu-items')) {
                     $this->tenant_appearance_settings_menus($menu_instance);
                 }
 
-                if (in_array('general_settings',$check_all_feature)) {
+                // General Settings - Check tenant menu visibility
+                if (in_array('general_settings',$check_all_feature) && $this->isTenantMenuVisible('general-settings-menu-items')) {
                     $this->tenant_general_settings_menus($menu_instance);
                 }
 
-                if (in_array('payment_gateways',$check_all_feature)) {
+                // Payment Settings - Check tenant menu visibility
+                if (in_array('payment_gateways',$check_all_feature) && $this->isTenantMenuVisible('payment_gateway-manage-settings-menu-items')) {
                     $this->tenant_payment_gateway_manage_menus($menu_instance);
                 }
 
-
-
-                if (in_array('language',$check_all_feature)) {
+                // Languages - Check tenant menu visibility
+                if (in_array('language',$check_all_feature) && $this->isTenantMenuVisible('tenant-languages')) {
                     $menu_instance->add_menu_item('tenant-languages', [
                         'route' => 'tenant.admin.languages',
                         'label' => __('Languages'),

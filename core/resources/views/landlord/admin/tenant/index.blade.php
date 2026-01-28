@@ -88,6 +88,18 @@
                                         {{__('View Details')}}
                                     </x-link-with-popover>
 
+                                    @foreach($user->tenant_details ?? [] as $tenant_detail)
+                                        @if(!empty(optional($tenant_detail->domain)->domain))
+                                            <a class="btn btn-warning btn-sm mb-3 mr-1" 
+                                               href="{{route('landlord.admin.tenant.menu.settings', $tenant_detail->id)}}"
+                                               data-bs-toggle="tooltip" 
+                                               data-bs-placement="top" 
+                                               title="{{__('Sidebar Settings for')}} {{optional($tenant_detail->domain)->domain}}">
+                                                <i class="mdi mdi-menu"></i> {{__('Sidebar')}}
+                                            </a>
+                                            @break
+                                        @endif
+                                    @endforeach
 
                                     <form action="{{ route(route_prefix().'user.email.verify.enable.status') }}" method="post">
                                         @csrf

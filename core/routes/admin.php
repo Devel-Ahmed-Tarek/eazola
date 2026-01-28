@@ -376,6 +376,16 @@ Route::controller(FormBuilderController::class)->name('landlord.')->prefix('form
         Route::post('/website-instruction-status','update_website_instruction_status')->name('admin.tenant.website.instruction.status');
     });
 
+    /* ------------------------------------------
+      TENANT MENU SETTINGS ROUTES
+    -------------------------------------------- */
+    Route::controller(\App\Http\Controllers\Landlord\Admin\TenantMenuSettingController::class)->name('landlord.')->prefix('tenant-menu')->group(function (){
+        Route::get('/settings/{tenant_id}','index')->name('admin.tenant.menu.settings');
+        Route::post('/settings/{tenant_id}','update')->name('admin.tenant.menu.settings.update');
+        Route::post('/toggle/{tenant_id}','toggle')->name('admin.tenant.menu.toggle');
+        Route::post('/reset/{tenant_id}','reset')->name('admin.tenant.menu.reset');
+    });
+
 /* ------------------------------------------
   TENANT WEBSITE INSTRUCTION
 -------------------------------------------- */
