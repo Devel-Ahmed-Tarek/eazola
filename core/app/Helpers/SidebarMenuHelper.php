@@ -37,15 +37,28 @@ class SidebarMenuHelper
         if (self::$hiddenMenusCache === null) {
             try {
                 // Get hidden menus for this specific tenant
-                self::$hiddenMenusCache = TenantMenuSetting::getHiddenMenus(tenant()->id);
+                $tenantId = tenant()->id;
+                self::$hiddenMenusCache = TenantMenuSetting::getHiddenMenus($tenantId);
+                
+                // Debug logging - can be removed later
+                \Log::info('TenantMenuSetting: Loaded hidden menus for tenant ' . $tenantId, [
+                    'hidden_menus' => self::$hiddenMenusCache
+                ]);
             } catch (\Exception $e) {
+                // Log the error for debugging
+                \Log::error('TenantMenuSetting: Error loading hidden menus', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
                 // If table doesn't exist or any error, return empty array (all menus visible)
                 self::$hiddenMenusCache = [];
             }
         }
 
         // If the menu key is in the hidden list, return false
-        return !in_array($menuKey, self::$hiddenMenusCache);
+        $isVisible = !in_array($menuKey, self::$hiddenMenusCache);
+        
+        return $isVisible;
     }
 
     /**
