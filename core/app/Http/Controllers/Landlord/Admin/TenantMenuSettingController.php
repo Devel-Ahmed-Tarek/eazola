@@ -5,11 +5,35 @@ namespace App\Http\Controllers\Landlord\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\TenantMenuSetting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class TenantMenuSettingController extends Controller
 {
+    /**
+     * Display all stores for a specific user.
+     * From this page, admin can navigate to each store's sidebar settings.
+     *
+     * @param int $userId
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function userStores(int $userId)
+    {
+        $user = User::findOrFail($userId);
+        
+        // Get all tenants (stores) for this user
+        $tenants = Tenant::with('domain')
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('landlord.admin.tenant-menu.user-stores', [
+            'user' => $user,
+            'tenants' => $tenants,
+        ]);
+    }
+
     /**
      * Display the menu settings page for a specific tenant (store).
      * Each tenant/store has its own independent settings.

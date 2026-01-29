@@ -378,8 +378,11 @@ Route::controller(FormBuilderController::class)->name('landlord.')->prefix('form
 
     /* ------------------------------------------
       TENANT MENU SETTINGS ROUTES
+      - user-stores: shows all stores for a user
+      - settings: sidebar settings for a specific store
     -------------------------------------------- */
     Route::controller(\App\Http\Controllers\Landlord\Admin\TenantMenuSettingController::class)->name('landlord.')->prefix('tenant-menu')->group(function (){
+        Route::get('/user-stores/{user_id}','userStores')->name('admin.tenant.menu.user-stores');
         Route::get('/settings/{tenant_id}','index')->name('admin.tenant.menu.settings');
         Route::post('/settings/{tenant_id}','update')->name('admin.tenant.menu.settings.update');
         Route::post('/toggle/{tenant_id}','toggle')->name('admin.tenant.menu.toggle');

@@ -310,9 +310,15 @@
                 <button type="button" class="btn btn-reset" id="resetBtn">
                     <i class="mdi mdi-refresh"></i> {{__('Reset to Default')}}
                 </button>
-                <a href="{{ route('landlord.admin.tenant.website.list') }}" class="btn btn-secondary">
-                    <i class="mdi mdi-arrow-left"></i> {{__('Back to Website List')}}
-                </a>
+                @if($tenant->user_id)
+                    <a href="{{ route('landlord.admin.tenant.menu.user-stores', $tenant->user_id) }}" class="btn btn-secondary">
+                        <i class="mdi mdi-arrow-left"></i> {{__('Back to User Stores')}}
+                    </a>
+                @else
+                    <a href="{{ route('landlord.admin.tenant.website.list') }}" class="btn btn-secondary">
+                        <i class="mdi mdi-arrow-left"></i> {{__('Back to Website List')}}
+                    </a>
+                @endif
             </div>
 
             <!-- Menu Items -->

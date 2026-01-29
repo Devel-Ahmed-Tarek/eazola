@@ -88,18 +88,16 @@
                                         {{__('View Details')}}
                                     </x-link-with-popover>
 
-                                    {{-- Sidebar Settings for each tenant/store --}}
-                                    @foreach($user->tenant_details ?? [] as $tenant_detail)
-                                        @if(!empty(optional($tenant_detail->domain)->domain))
-                                            <a class="btn btn-warning btn-sm mb-3 mr-1" 
-                                               href="{{route('landlord.admin.tenant.menu.settings', $tenant_detail->id)}}"
-                                               data-bs-toggle="tooltip" 
-                                               data-bs-placement="top" 
-                                               title="{{__('Sidebar Settings for')}} {{optional($tenant_detail->domain)->domain}}">
-                                                <i class="mdi mdi-menu"></i> {{ Str::limit(optional($tenant_detail->domain)->domain, 15) }}
-                                            </a>
-                                        @endif
-                                    @endforeach
+                                    {{-- User Stores Button - Opens page with all user's stores --}}
+                                    @if(count($user->tenant_details ?? []) > 0)
+                                        <a class="btn btn-warning btn-sm mb-3 mr-1" 
+                                           href="{{route('landlord.admin.tenant.menu.user-stores', $user->id)}}"
+                                           data-bs-toggle="tooltip" 
+                                           data-bs-placement="top" 
+                                           title="{{__('Manage Stores & Sidebar Settings')}}">
+                                            <i class="mdi mdi-store"></i> {{__('Stores')}} ({{ count($user->tenant_details) }})
+                                        </a>
+                                    @endif
 
                                     <form action="{{ route(route_prefix().'user.email.verify.enable.status') }}" method="post">
                                         @csrf
