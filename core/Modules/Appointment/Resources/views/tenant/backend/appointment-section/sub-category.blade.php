@@ -43,8 +43,11 @@
                             </div>
                         </th>
                         <th>{{__('ID')}}</th>
+                        <th>{{__('Image')}}</th>
                         <th>{{__('Title')}}</th>
+                        <th>{{__('Icon')}}</th>
                         <th>{{__('Category')}}</th>
+                        <th>{{__('Sort Order')}}</th>
                         <th>{{__('Status')}}</th>
                         <th>{{__('Action')}}</th>
                     </x-slot>
@@ -56,11 +59,29 @@
                                 </td>
                                 <td>{{$data->id}}</td>
                                 <td>
+                                    @if($data->image)
+                                        {!! render_attachment_preview_for_admin($data->image, 'max-width:50px;max-height:50px;') !!}
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td>
                                     {{ $data->getTranslation('title',$lang_slug)}}
+                                    @if($data->slug)
+                                        <br><small class="text-muted">{{ $data->slug }}</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($data->icon)
+                                        <i class="{{ $data->icon }}" style="font-size: 20px;"></i>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <span class="badge badge-info">{{ $data->appointment_category?->getTranslation('title',$lang_slug) }}</span>
                                 </td>
+                                <td>{{ $data->sort_order ?? 0 }}</td>
                                 <td>{{ \App\Enums\StatusEnums::getText($data->status) }}</td>
                                 <td>
                                 @can('appointment-sub-category-edit')
@@ -73,6 +94,11 @@
                                        data-id="{{$data->id}}"
                                        data-action="{{route('tenant.admin.appointment.sub.category.update')}}"
                                        data-title="{{$data->getTranslation('title',$default_lang)}}"
+                                       data-description="{{$data->getTranslation('description',$default_lang)}}"
+                                       data-slug="{{$data->slug}}"
+                                       data-image="{{$data->image}}"
+                                       data-icon="{{$data->icon}}"
+                                       data-sort_order="{{$data->sort_order}}"
                                        data-appointment_category_id="{{$data->appointment_category_id}}"
                                        data-status="{{$data->status}}"
                                     >
@@ -92,7 +118,7 @@
 
     @can('appointment-sub-category-create')
         <div class="modal fade" id="new_testimonial" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">{{__('New Sub Category')}}</h5>
@@ -103,19 +129,43 @@
                             @csrf
                             <input type="hidden" name="lang" value="{{$default_lang}}">
 
-                            <x-fields.select name="appointment_category_id" title="{{__('Select Appointment Category')}}">
-                                @foreach($all_categories as $cat)
-                                  <option value="{{ $cat->id }}">{{ $cat->getTranslation('title',$lang_slug) }}</option>
-                                @endforeach
-                            </x-fields.select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <x-fields.select name="appointment_category_id" title="{{__('Select Appointment Category')}}">
+                                        @foreach($all_categories as $cat)
+                                          <option value="{{ $cat->id }}">{{ $cat->getTranslation('title',$lang_slug) }}</option>
+                                        @endforeach
+                                    </x-fields.select>
+                                </div>
+                                <div class="col-md-6">
+                                    <x-fields.select name="status" title="{{__('Status')}}">
+                                        <option value="{{\App\Enums\StatusEnums::PUBLISH}}">{{__('Publish')}}</option>
+                                        <option value="{{\App\Enums\StatusEnums::DRAFT}}">{{__('Draft')}}</option>
+                                    </x-fields.select>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <x-fields.input name="title" label="{{__('Title')}}" />
+                                </div>
+                                <div class="col-md-6">
+                                    <x-fields.input name="slug" label="{{__('Slug')}}" info="{{__('Leave empty to auto-generate from title')}}" />
+                                </div>
+                            </div>
 
-                            <x-fields.input name="title" label="{{__('Title')}}" />
+                            <x-fields.textarea name="description" label="{{__('Description')}}" info="{{__('Optional short description')}}" />
 
-                            <x-fields.select name="status" title="{{__('Status')}}">
-                                <option value="{{\App\Enums\StatusEnums::PUBLISH}}">{{__('Publish')}}</option>
-                                <option value="{{\App\Enums\StatusEnums::DRAFT}}">{{__('Draft')}}</option>
-                            </x-fields.select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <x-fields.input name="icon" label="{{__('Icon Class')}}" info="{{__('e.g., las la-spa, fas fa-cut')}}" />
+                                </div>
+                                <div class="col-md-6">
+                                    <x-fields.input name="sort_order" type="number" label="{{__('Sort Order')}}" value="0" />
+                                </div>
+                            </div>
+
+                            <x-fields.media-upload name="image" title="{{__('Image')}}" />
 
                         </div>
                         <div class="modal-footer">
@@ -130,7 +180,7 @@
 
     @can('appointment-sub-category-edit')
         <div class="modal fade" id="testimonial_item_edit_modal" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">{{__('Edit Sub Category Item')}}</h5>
@@ -141,20 +191,46 @@
                         <div class="modal-body">
                             @csrf
                             <input type="hidden" name="lang" value="{{$default_lang}}">
-                            <input type="hidden" name="id" class="donation_category_id" value="">
+                            <input type="hidden" name="id" class="edit_id" value="">
 
-                            <x-fields.select name="appointment_category_id" class="appointment_category_id" title="{{__('Select Appointment Category')}}">
-                                @foreach($all_categories as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->getTranslation('title',$lang_slug) }}</option>
-                                @endforeach
-                            </x-fields.select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <x-fields.select name="appointment_category_id" class="edit_appointment_category_id" title="{{__('Select Appointment Category')}}">
+                                        @foreach($all_categories as $cat)
+                                            <option value="{{ $cat->id }}">{{ $cat->getTranslation('title',$lang_slug) }}</option>
+                                        @endforeach
+                                    </x-fields.select>
+                                </div>
+                                <div class="col-md-6">
+                                    <x-fields.select name="status" title="{{__('Status')}}" class="edit_status">
+                                        <option value="{{\App\Enums\StatusEnums::PUBLISH}}">{{__('Publish')}}</option>
+                                        <option value="{{\App\Enums\StatusEnums::DRAFT}}">{{__('Draft')}}</option>
+                                    </x-fields.select>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <x-fields.input name="title" label="{{__('Title')}}" class="edit_title" />
+                                </div>
+                                <div class="col-md-6">
+                                    <x-fields.input name="slug" label="{{__('Slug')}}" class="edit_slug" info="{{__('Leave empty to auto-generate from title')}}" />
+                                </div>
+                            </div>
 
-                            <x-fields.input name="title" label="{{__('Title')}}" class="edit_title" />
-                            <x-fields.select name="status" title="{{__('Status')}}" class="edit_status">
-                                <option value="{{\App\Enums\StatusEnums::PUBLISH}}">{{__('Publish')}}</option>
-                                <option value="{{\App\Enums\StatusEnums::DRAFT}}">{{__('Draft')}}</option>
-                            </x-fields.select>
+                            <x-fields.textarea name="description" label="{{__('Description')}}" class="edit_description" info="{{__('Optional short description')}}" />
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <x-fields.input name="icon" label="{{__('Icon Class')}}" class="edit_icon" info="{{__('e.g., las la-spa, fas fa-cut')}}" />
+                                </div>
+                                <div class="col-md-6">
+                                    <x-fields.input name="sort_order" type="number" label="{{__('Sort Order')}}" class="edit_sort_order" value="0" />
+                                </div>
+                            </div>
+
+                            <x-fields.media-upload name="image" title="{{__('Image')}}" id="edit_image" />
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{__('Close')}}</button>
@@ -182,16 +258,29 @@
             $(document).on('click', '.testimonial_edit_btn', function () {
                 var el = $(this);
                 var id = el.data('id');
-                var title = el.data('title');
-                var appointment_category_id = el.data('appointment_category_id');
                 var action = el.data('action');
 
                 var form = $('#testimonial_edit_modal_form');
                 form.attr('action', action);
-                form.find('.donation_category_id').val(id);
-                form.find('.edit_title').val(title);
-                form.find('.edit_status option[value="' + el.data('status') + '"]').attr('selected', true);
-                form.find('.appointment_category_id option[value="' +appointment_category_id+ '"]').attr('selected', true);
+                form.find('.edit_id').val(id);
+                form.find('.edit_title').val(el.data('title'));
+                form.find('.edit_description').val(el.data('description') || '');
+                form.find('.edit_slug').val(el.data('slug') || '');
+                form.find('.edit_icon').val(el.data('icon') || '');
+                form.find('.edit_sort_order').val(el.data('sort_order') || 0);
+                
+                // Reset and set select options
+                form.find('.edit_status').val(el.data('status'));
+                form.find('.edit_appointment_category_id').val(el.data('appointment_category_id'));
+
+                // Handle image - update the media upload preview
+                var imageId = el.data('image');
+                if (imageId) {
+                    form.find('input[name="image"]').val(imageId);
+                    // Trigger media upload preview update if component supports it
+                } else {
+                    form.find('input[name="image"]').val('');
+                }
             });
         });
     </script>

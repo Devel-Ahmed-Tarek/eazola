@@ -26,7 +26,7 @@ class AppointmentSubCategoryController extends Controller
     {
         $default_lang = $request->lang ?? default_lang();
         $all_categories = AppointmentCategory::all();
-        $all_subcategories = AppointmentSubcategory::all();
+        $all_subcategories = AppointmentSubcategory::orderBy('sort_order', 'asc')->get();
 
         return view('appointment::tenant.backend.appointment-section.sub-category',compact('all_categories','all_subcategories','default_lang'));
     }
@@ -36,13 +36,27 @@ class AppointmentSubCategoryController extends Controller
         $request->validate([
             'appointment_category_id'=> 'required',
             'title'=> 'required|max:191',
+            'slug' => 'nullable|max:191|unique:appointment_subcategories,slug',
+            'image' => 'nullable|max:191',
+            'icon' => 'nullable|max:191',
+            'sort_order' => 'nullable|integer',
         ]);
 
-        $category = new AppointmentSubcategory();
-        $category->setTranslation('title',$request->lang, SanitizeInput::esc_html($request->title));
-        $category->appointment_category_id = $request->appointment_category_id;
-        $category->status = $request->status;
-        $category->save();
+        $subcategory = new AppointmentSubcategory();
+        $subcategory->setTranslation('title', $request->lang, SanitizeInput::esc_html($request->title));
+        
+        // Description (translatable)
+        if ($request->filled('description')) {
+            $subcategory->setTranslation('description', $request->lang, SanitizeInput::esc_html($request->description));
+        }
+        
+        $subcategory->appointment_category_id = $request->appointment_category_id;
+        $subcategory->slug = $request->filled('slug') ? SanitizeInput::esc_html($request->slug) : null;
+        $subcategory->image = $request->image;
+        $subcategory->icon = $request->icon;
+        $subcategory->sort_order = $request->sort_order ?? 0;
+        $subcategory->status = $request->status;
+        $subcategory->save();
 
         return response()->success(ResponseMessage::SettingsSaved());
     }
@@ -53,13 +67,27 @@ class AppointmentSubCategoryController extends Controller
         $request->validate([
             'appointment_category_id'=> 'required',
             'title'=> 'required|max:191',
+            'slug' => 'nullable|max:191|unique:appointment_subcategories,slug,' . $request->id,
+            'image' => 'nullable|max:191',
+            'icon' => 'nullable|max:191',
+            'sort_order' => 'nullable|integer',
         ]);
 
-        $category =  AppointmentSubcategory::findOrFail($request->id);
-        $category->setTranslation('title',$request->lang, SanitizeInput::esc_html($request->title));
-        $category->appointment_category_id = $request->appointment_category_id;
-        $category->status = $request->status;
-        $category->save();
+        $subcategory = AppointmentSubcategory::findOrFail($request->id);
+        $subcategory->setTranslation('title', $request->lang, SanitizeInput::esc_html($request->title));
+        
+        // Description (translatable)
+        if ($request->filled('description')) {
+            $subcategory->setTranslation('description', $request->lang, SanitizeInput::esc_html($request->description));
+        }
+        
+        $subcategory->appointment_category_id = $request->appointment_category_id;
+        $subcategory->slug = $request->filled('slug') ? SanitizeInput::esc_html($request->slug) : null;
+        $subcategory->image = $request->image;
+        $subcategory->icon = $request->icon;
+        $subcategory->sort_order = $request->sort_order ?? 0;
+        $subcategory->status = $request->status;
+        $subcategory->save();
 
         return response()->success(ResponseMessage::SettingsSaved());
     }

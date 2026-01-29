@@ -13,9 +13,21 @@ class AppointmentRequest extends FormRequest
         $data =  [
             'title' => 'required|string',
             'description' => 'required',
-            'price' => 'required',
+            'price' => 'required|numeric|min:0',
             'image' => 'nullable',
             'is_popular' => 'nullable',
+            // New fields
+            'short_description' => 'nullable|string|max:500',
+            'duration' => 'nullable|integer|min:1',
+            'sale_price' => 'nullable|numeric|min:0',
+            'is_featured' => 'nullable',
+            'gallery' => 'nullable|string',
+            'video_url' => 'nullable|url|max:500',
+            'max_booking_per_slot' => 'nullable|integer|min:1',
+            'advance_booking_days' => 'nullable|integer|min:0',
+            'cancellation_policy' => 'nullable|string',
+            'requirements' => 'nullable|string',
+            'sort_order' => 'nullable|integer',
         ];
 
         if(!empty($this->sub_appointment_status)){

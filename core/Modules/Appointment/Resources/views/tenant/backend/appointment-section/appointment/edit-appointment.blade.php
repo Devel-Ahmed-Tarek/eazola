@@ -86,8 +86,10 @@
                                     <x-fields.input type="text" name="title" label="{{__('Title')}}" class="title" id="title" value="{{$appointment->getTranslation('title',$lang_slug)}}"/>
 
                                     <x-slug.edit-markup value="{{$appointment->slug}}"/>
+                                    
+                                    <x-fields.textarea name="short_description" label="{{__('Short Description')}}" value="{{$appointment->getTranslation('short_description',$lang_slug)}}" info="{{__('Brief summary shown in listings (max 500 characters)')}}" />
 
-                                    <x-summernote.textarea label="{{__('Description')}}" name="description" value="{!! $appointment->getTranslation('description',$lang_slug) !!}"/>
+                                    <x-summernote.textarea label="{{__('Full Description')}}" name="description" value="{!! $appointment->getTranslation('description',$lang_slug) !!}"/>
 
                                     <x-fields.switcher name="sub_appointment_status" value="{{$appointment->sub_appointment_status}}" label="{{__('Sub Appointments')}}"/>
                                     <div class="form-group sub_appointment_parent d-none">
@@ -112,6 +114,10 @@
                                         </div>
                                     </div>
 
+                                    <x-fields.textarea name="requirements" label="{{__('Requirements')}}" value="{{$appointment->getTranslation('requirements',$lang_slug)}}" info="{{__('What customers need to bring or prepare')}}" />
+                                    
+                                    <x-fields.textarea name="cancellation_policy" label="{{__('Cancellation Policy')}}" value="{{$appointment->getTranslation('cancellation_policy',$lang_slug)}}" info="{{__('Terms for cancellation and refunds')}}" />
+
                                    <x-appointment::backend.meta-data.edit-meta-markup :donation="$appointment"/>
 
                                 </div>
@@ -134,11 +140,43 @@
                                                                 @endforeach
                                                             </x-fields.select>
 
-                                                            <x-fields.input type="number" name="price" label="Price" value="{{$appointment->price}}"/>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <x-fields.input type="number" name="price" label="{{__('Price')}}" value="{{$appointment->price}}" step="0.01"/>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <x-fields.input type="number" name="sale_price" label="{{__('Sale Price')}}" value="{{$appointment->sale_price}}" info="{{__('Optional discounted price')}}" step="0.01"/>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <x-fields.input type="number" name="duration" label="{{__('Duration (minutes)')}}" value="{{$appointment->duration}}" />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <x-fields.input type="number" name="sort_order" label="{{__('Sort Order')}}" value="{{$appointment->sort_order ?? 0}}" />
+                                                                </div>
+                                                            </div>
 
-                                                            <x-fields.input type="number" name="person" label="Person" value="{{$appointment->person}}"/>
+                                                            <x-fields.input type="number" name="person" label="{{__('Person')}}" value="{{$appointment->person}}"/>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <x-fields.input type="number" name="max_booking_per_slot" label="{{__('Max Bookings/Slot')}}" value="{{ $appointment->max_booking_per_slot ?? 1 }}" info="{{__('Max simultaneous bookings')}}"/>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <x-fields.input type="number" name="advance_booking_days" label="{{__('Advance Days')}}" value="{{ $appointment->advance_booking_days ?? 30 }}" info="{{__('Days to book in advance')}}"/>
+                                                                </div>
+                                                            </div>
 
-                                                            <x-fields.switcher value="{{$appointment->is_popular}}" name="is_popular" label="Popular"/>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <x-fields.switcher value="{{$appointment->is_popular}}" name="is_popular" label="{{__('Popular')}}"/>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <x-fields.switcher value="{{$appointment->is_featured}}" name="is_featured" label="{{__('Featured')}}"/>
+                                                                </div>
+                                                            </div>
 
                                                             <x-fields.switcher value="{{$appointment->tax_status}}" name="tax_status" label="Tax Status"/>
 
@@ -158,7 +196,11 @@
                                                                 <option value="{{\App\Enums\StatusEnums::PUBLISH}}" {{$appointment->status == \App\Enums\StatusEnums::PUBLISH ? 'selected' : ''}}>{{__("Publish")}}</option>
                                                             </x-fields.select>
 
-                                                            <x-landlord-others.edit-media-upload-image :label="'Image'" :name="'image'" :value="$appointment->image"/>
+                                                            <x-landlord-others.edit-media-upload-image :label="__('Main Image')" :name="'image'" :value="$appointment->image"/>
+                                                            
+                                                            <x-landlord-others.edit-media-upload-image :label="__('Gallery Images')" :name="'gallery'" :value="$appointment->gallery"/>
+                                                            
+                                                            <x-fields.input type="url" name="video_url" label="{{__('Video URL')}}" value="{{ $appointment->video_url }}" info="{{__('YouTube or Vimeo URL')}}"/>
 
                                                             <div class="submit_btn mt-5">
                                                                 <button type="submit" class="btn btn-gradient-primary pull-right">{{__('Update')}}</button>

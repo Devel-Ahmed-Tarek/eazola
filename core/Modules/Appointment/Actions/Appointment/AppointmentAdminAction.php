@@ -23,6 +23,21 @@ class AppointmentAdminAction
             $appointment->setTranslation('title', $request->lang, SanitizeInput::esc_html($request->title))
                 ->setTranslation('description',$request->lang, purify_html($request->description));
 
+            // Short description (translatable)
+            if ($request->filled('short_description')) {
+                $appointment->setTranslation('short_description', $request->lang, SanitizeInput::esc_html($request->short_description));
+            }
+            
+            // Cancellation policy (translatable)
+            if ($request->filled('cancellation_policy')) {
+                $appointment->setTranslation('cancellation_policy', $request->lang, SanitizeInput::esc_html($request->cancellation_policy));
+            }
+            
+            // Requirements (translatable)
+            if ($request->filled('requirements')) {
+                $appointment->setTranslation('requirements', $request->lang, SanitizeInput::esc_html($request->requirements));
+            }
+
             $slug = !empty($request->slug) ? $request->slug : Str::slug($request->title);
             $created_slug = create_slug($slug,'Appointment',true, 'Appointment');
             $appointment->slug = SanitizeInput::esc_html($created_slug);
@@ -35,6 +50,16 @@ class AppointmentAdminAction
             $appointment->tax_status = $request->tax_status;
             $appointment->person = $request->person;
             $appointment->sub_appointment_status = $request->sub_appointment_status;
+            
+            // New fields
+            $appointment->duration = $request->duration;
+            $appointment->sale_price = $request->sale_price;
+            $appointment->is_featured = $request->is_featured;
+            $appointment->gallery = $request->gallery;
+            $appointment->video_url = $request->video_url;
+            $appointment->max_booking_per_slot = $request->max_booking_per_slot ?? 1;
+            $appointment->advance_booking_days = $request->advance_booking_days ?? 30;
+            $appointment->sort_order = $request->sort_order ?? 0;
 
             $Metas = [
                 'title' => [$request->lang => SanitizeInput::esc_html($request->meta_title)],
@@ -112,6 +137,21 @@ class AppointmentAdminAction
             $appointment->setTranslation('title', $request->lang, SanitizeInput::esc_html($request->title))
             ->setTranslation('description', $request->lang,SanitizeInput::esc_html($request->description));
 
+            // Short description (translatable)
+            if ($request->filled('short_description')) {
+                $appointment->setTranslation('short_description', $request->lang, SanitizeInput::esc_html($request->short_description));
+            }
+            
+            // Cancellation policy (translatable)
+            if ($request->filled('cancellation_policy')) {
+                $appointment->setTranslation('cancellation_policy', $request->lang, SanitizeInput::esc_html($request->cancellation_policy));
+            }
+            
+            // Requirements (translatable)
+            if ($request->filled('requirements')) {
+                $appointment->setTranslation('requirements', $request->lang, SanitizeInput::esc_html($request->requirements));
+            }
+
         $slug = !empty($request->slug) ? $request->slug : Str::slug($request->title);
         $created_slug = create_slug($slug,'Appointment',true, 'Appointment');
 
@@ -125,6 +165,17 @@ class AppointmentAdminAction
             $appointment->tax_status = $request->tax_status;
             $appointment->person = $request->person;
             $appointment->sub_appointment_status = $request->sub_appointment_status;
+            
+            // New fields
+            $appointment->duration = $request->duration;
+            $appointment->sale_price = $request->sale_price;
+            $appointment->is_featured = $request->is_featured;
+            $appointment->gallery = $request->gallery;
+            $appointment->video_url = $request->video_url;
+            $appointment->max_booking_per_slot = $request->max_booking_per_slot ?? 1;
+            $appointment->advance_booking_days = $request->advance_booking_days ?? 30;
+            $appointment->sort_order = $request->sort_order ?? 0;
+            
             $appointment->save();
 
         $metas = [
