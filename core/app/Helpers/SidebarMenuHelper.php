@@ -1987,18 +1987,25 @@ class SidebarMenuHelper
             'permissions' => ['page-list','page-create','page-edit','page-delete'],
             'icon' => 'mdi mdi-file',
         ]);
-        $menu_instance->add_menu_item('pages-settings-all-page-settings', [
-            'route' => 'tenant.admin.pages',
-            'label' => __('All Pages'),
-            'parent' => 'pages-settings-menu-items',
-            'permissions' => ['page-list'],
-        ]);
-        $menu_instance->add_menu_item('pages-settings-new-page-settings', [
-            'route' => 'tenant.admin.pages.create',
-            'label' => __('New Pages'),
-            'parent' => 'pages-settings-menu-items',
-            'permissions' => ['page-create'],
-        ]);
+
+        // Check visibility for each child item
+        if ($this->isTenantMenuVisible('pages-settings-all-page-settings')) {
+            $menu_instance->add_menu_item('pages-settings-all-page-settings', [
+                'route' => 'tenant.admin.pages',
+                'label' => __('All Pages'),
+                'parent' => 'pages-settings-menu-items',
+                'permissions' => ['page-list'],
+            ]);
+        }
+
+        if ($this->isTenantMenuVisible('pages-settings-new-page-settings')) {
+            $menu_instance->add_menu_item('pages-settings-new-page-settings', [
+                'route' => 'tenant.admin.pages.create',
+                'label' => __('New Pages'),
+                'parent' => 'pages-settings-menu-items',
+                'permissions' => ['page-create'],
+            ]);
+        }
     }
 
     private function tenant_brands_settings_menus(MenuWithPermission $menu_instance) : void
@@ -2022,33 +2029,42 @@ class SidebarMenuHelper
             'icon' => 'mdi mdi-blogger',
         ]);
 
-        $menu_instance->add_menu_item('blog-all-settings-menu-items', [
-            'route' => 'tenant.admin.blog',
-            'label' => __('All Blogs'),
-            'parent' => 'blog-settings-menu-items',
-            'permissions' => ['blog-list'],
-        ]);
+        // Check visibility for each child item
+        if ($this->isTenantMenuVisible('blog-all-settings-menu-items')) {
+            $menu_instance->add_menu_item('blog-all-settings-menu-items', [
+                'route' => 'tenant.admin.blog',
+                'label' => __('All Blogs'),
+                'parent' => 'blog-settings-menu-items',
+                'permissions' => ['blog-list'],
+            ]);
+        }
 
-        $menu_instance->add_menu_item('blog-add-settings-menu-items', [
-            'route' => 'tenant.admin.blog.new',
-            'label' => __('Add New Blog'),
-            'parent' => 'blog-settings-menu-items',
-            'permissions' => ['blog-create'],
-        ]);
+        if ($this->isTenantMenuVisible('blog-add-settings-menu-items')) {
+            $menu_instance->add_menu_item('blog-add-settings-menu-items', [
+                'route' => 'tenant.admin.blog.new',
+                'label' => __('Add New Blog'),
+                'parent' => 'blog-settings-menu-items',
+                'permissions' => ['blog-create'],
+            ]);
+        }
 
-        $menu_instance->add_menu_item('blog-category-settings-all', [
-            'route' => 'tenant.admin.blog.category',
-            'label' => __('Blog Category'),
-            'parent' => 'blog-settings-menu-items',
-            'permissions' => ['blog-category-list'],
-        ]);
+        if ($this->isTenantMenuVisible('blog-category-settings-all')) {
+            $menu_instance->add_menu_item('blog-category-settings-all', [
+                'route' => 'tenant.admin.blog.category',
+                'label' => __('Blog Category'),
+                'parent' => 'blog-settings-menu-items',
+                'permissions' => ['blog-category-list'],
+            ]);
+        }
 
-        $menu_instance->add_menu_item('blog-settings-all', [
-            'route' => 'tenant.admin.blog.settings',
-            'label' => __('Settings'),
-            'parent' => 'blog-settings-menu-items',
-            'permissions' => ['blog-settings'],
-        ]);
+        if ($this->isTenantMenuVisible('blog-settings-all')) {
+            $menu_instance->add_menu_item('blog-settings-all', [
+                'route' => 'tenant.admin.blog.settings',
+                'label' => __('Settings'),
+                'parent' => 'blog-settings-menu-items',
+                'permissions' => ['blog-settings'],
+            ]);
+        }
 
     }
 
@@ -2610,18 +2626,25 @@ class SidebarMenuHelper
             'permissions' => [],
             'icon' => 'mdi mdi-account-multiple',
         ]);
-        $menu_instance->add_menu_item('users-manage-settings-list-menu-items', [
-            'route' => 'tenant.admin.user',
-            'label' => __('All Users'),
-            'parent' => 'users-manage-settings-menu-items',
-            'permissions' => [],
-        ]);
-        $menu_instance->add_menu_item('users-manage-settings-add-new-menu-items', [
-            'route' => 'tenant.admin.user.new',
-            'label' => __('Add New'),
-            'parent' => 'users-manage-settings-menu-items',
-            'permissions' => [],
-        ]);
+
+        // Check visibility for each child item
+        if ($this->isTenantMenuVisible('users-manage-settings-list-menu-items')) {
+            $menu_instance->add_menu_item('users-manage-settings-list-menu-items', [
+                'route' => 'tenant.admin.user',
+                'label' => __('All Users'),
+                'parent' => 'users-manage-settings-menu-items',
+                'permissions' => [],
+            ]);
+        }
+
+        if ($this->isTenantMenuVisible('users-manage-settings-add-new-menu-items')) {
+            $menu_instance->add_menu_item('users-manage-settings-add-new-menu-items', [
+                'route' => 'tenant.admin.user.new',
+                'label' => __('Add New'),
+                'parent' => 'users-manage-settings-menu-items',
+                'permissions' => [],
+            ]);
+        }
     }
 
     private function tenant_payment_manage_menus(MenuWithPermission $menu_instance) : void
@@ -2661,24 +2684,34 @@ class SidebarMenuHelper
             'permissions' => [],
             'icon' => 'mdi mdi-account-multiple',
         ]);
-        $menu_instance->add_menu_item('admins-manage-settings-list-menu-items', [
-            'route' => 'tenant.admin.all.user',
-            'label' => __('All Staff'),
-            'parent' => 'admin-manage-settings-menu-items',
-            'permissions' => [],
-        ]);
-        $menu_instance->add_menu_item('admins-manage-settings-add-new-menu-items', [
-            'route' => 'tenant.admin.new.user',
-            'label' => __('Add New Staff'),
-            'parent' => 'admin-manage-settings-menu-items',
-            'permissions' => [],
-        ]);
-        $menu_instance->add_menu_item('admins-role-manage-settings-add-new-menu-items', [
-            'route' => 'tenant.admin.all.admin.role',
-            'label' => __('All Staff Role'),
-            'parent' => 'admin-manage-settings-menu-items',
-            'permissions' => [],
-        ]);
+
+        // Check visibility for each child item
+        if ($this->isTenantMenuVisible('admins-manage-settings-list-menu-items')) {
+            $menu_instance->add_menu_item('admins-manage-settings-list-menu-items', [
+                'route' => 'tenant.admin.all.user',
+                'label' => __('All Staff'),
+                'parent' => 'admin-manage-settings-menu-items',
+                'permissions' => [],
+            ]);
+        }
+
+        if ($this->isTenantMenuVisible('admins-manage-settings-add-new-menu-items')) {
+            $menu_instance->add_menu_item('admins-manage-settings-add-new-menu-items', [
+                'route' => 'tenant.admin.new.user',
+                'label' => __('Add New Staff'),
+                'parent' => 'admin-manage-settings-menu-items',
+                'permissions' => [],
+            ]);
+        }
+
+        if ($this->isTenantMenuVisible('admins-role-manage-settings-add-new-menu-items')) {
+            $menu_instance->add_menu_item('admins-role-manage-settings-add-new-menu-items', [
+                'route' => 'tenant.admin.all.admin.role',
+                'label' => __('All Staff Role'),
+                'parent' => 'admin-manage-settings-menu-items',
+                'permissions' => [],
+            ]);
+        }
     }
 
 
@@ -2698,30 +2731,43 @@ class SidebarMenuHelper
             ],
             'icon' => 'mdi mdi-cart',
         ]);
-        $menu_instance->add_menu_item('product-order-manage-settings-all-order', [
-            'route' => 'tenant.admin.product.order.manage.all',
-            'label' => __('All Order'),
-            'parent' => 'product-order-manage-settings',
-            'permissions' => ['product-order-all-order'],
-        ]);
-        $menu_instance->add_menu_item('product-order-manage-settings-success-page', [
-            'route' => 'tenant.admin.product.order.success.page',
-            'label' => __('Success Order Page'),
-            'parent' => 'product-order-manage-settings',
-            'permissions' => ['product-order-success-page'],
-        ]);
-        $menu_instance->add_menu_item('product-order-manage-settings-cancel-page', [
-            'route' => 'tenant.admin.product.order.cancel.page',
-            'label' => __('Cancel Order Page'),
-            'parent' => 'product-order-manage-settings',
-            'permissions' => ['product-order-cancel-page'],
-        ]);
-        $menu_instance->add_menu_item('product-order-manage-settings-order-settings', [
-            'route' => 'tenant.admin.product.order.settings',
-            'label' => __('Order Settings'),
-            'parent' => 'product-order-manage-settings',
-            'permissions' => ['product-order-manage-settings'],
-        ]);
+
+        // Check visibility for each child item
+        if ($this->isTenantMenuVisible('product-order-manage-settings-all-order')) {
+            $menu_instance->add_menu_item('product-order-manage-settings-all-order', [
+                'route' => 'tenant.admin.product.order.manage.all',
+                'label' => __('All Order'),
+                'parent' => 'product-order-manage-settings',
+                'permissions' => ['product-order-all-order'],
+            ]);
+        }
+
+        if ($this->isTenantMenuVisible('product-order-manage-settings-success-page')) {
+            $menu_instance->add_menu_item('product-order-manage-settings-success-page', [
+                'route' => 'tenant.admin.product.order.success.page',
+                'label' => __('Success Order Page'),
+                'parent' => 'product-order-manage-settings',
+                'permissions' => ['product-order-success-page'],
+            ]);
+        }
+
+        if ($this->isTenantMenuVisible('product-order-manage-settings-cancel-page')) {
+            $menu_instance->add_menu_item('product-order-manage-settings-cancel-page', [
+                'route' => 'tenant.admin.product.order.cancel.page',
+                'label' => __('Cancel Order Page'),
+                'parent' => 'product-order-manage-settings',
+                'permissions' => ['product-order-cancel-page'],
+            ]);
+        }
+
+        if ($this->isTenantMenuVisible('product-order-manage-settings-order-settings')) {
+            $menu_instance->add_menu_item('product-order-manage-settings-order-settings', [
+                'route' => 'tenant.admin.product.order.settings',
+                'label' => __('Order Settings'),
+                'parent' => 'product-order-manage-settings',
+                'permissions' => ['product-order-manage-settings'],
+            ]);
+        }
     }
 
     private function tenant_badge_settings_menus(MenuWithPermission $menu_instance): void
@@ -2950,19 +2996,24 @@ class SidebarMenuHelper
             'icon' => 'mdi mdi-shopping',
         ]);
 
-        $menu_instance->add_menu_item('product-all-settings-menu-items', [
-            'route' => 'tenant.admin.product.all',
-            'label' => __('All Products'),
-            'parent' => 'product-settings-menu-items',
-            'permissions' => ['product-list'],
-        ]);
+        // Check visibility for each child item
+        if ($this->isTenantMenuVisible('product-all-settings-menu-items')) {
+            $menu_instance->add_menu_item('product-all-settings-menu-items', [
+                'route' => 'tenant.admin.product.all',
+                'label' => __('All Products'),
+                'parent' => 'product-settings-menu-items',
+                'permissions' => ['product-list'],
+            ]);
+        }
 
-        $menu_instance->add_menu_item('product-create-menu-items', [
-            'route' => 'tenant.admin.product.create',
-            'label' => __('Add New Product'),
-            'parent' => 'product-settings-menu-items',
-            'permissions' => ['product-create'],
-        ]);
+        if ($this->isTenantMenuVisible('product-create-menu-items')) {
+            $menu_instance->add_menu_item('product-create-menu-items', [
+                'route' => 'tenant.admin.product.create',
+                'label' => __('Add New Product'),
+                'parent' => 'product-settings-menu-items',
+                'permissions' => ['product-create'],
+            ]);
+        }
     }
 
     private function tenant_campaign_settings_menus(MenuWithPermission $menu_instance): void

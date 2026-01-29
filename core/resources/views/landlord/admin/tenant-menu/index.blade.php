@@ -441,28 +441,22 @@
         const $card = $this.closest('.menu-settings-card');
         const $header = $card.find('.menu-parent-header');
         const $childToggles = $card.find('.child-toggle');
+        const $collapseSection = $card.find('.collapse');
         
-        // Update header style
+        // Update header style and collapse section
         if (isChecked) {
             $header.removeClass('collapsed');
+            $collapseSection.collapse('show');
+            // Re-enable children toggles (they keep their current values)
+            $childToggles.prop('disabled', false);
         } else {
             $header.addClass('collapsed');
+            $collapseSection.collapse('hide');
+            // Disable children toggles visually (but don't change their values)
+            $childToggles.prop('disabled', true);
         }
         
-        // Enable/disable children
-        $childToggles.prop('disabled', !isChecked);
-        
-        // If disabling parent, also disable all children
-        if (!isChecked) {
-            $childToggles.each(function() {
-                const childKey = $(this).data('key');
-                const childLabel = $(this).data('label');
-                $(this).prop('checked', false);
-                updateStatusIndicator($(this), false);
-                markChanged(childKey, false, childLabel, key);
-            });
-        }
-        
+        // Only mark the parent as changed
         markChanged(key, isChecked, label);
     });
     
