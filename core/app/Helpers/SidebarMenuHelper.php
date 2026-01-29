@@ -21,6 +21,7 @@ class SidebarMenuHelper
     /**
      * Check if a menu item is visible for the current tenant.
      * Returns true if visible, false if hidden by admin.
+     * Each tenant/store has its own independent settings.
      *
      * @param string $menuKey
      * @return bool
@@ -35,6 +36,7 @@ class SidebarMenuHelper
         // Load hidden menus from cache or database
         if (self::$hiddenMenusCache === null) {
             try {
+                // Get hidden menus for this specific tenant
                 self::$hiddenMenusCache = TenantMenuSetting::getHiddenMenus(tenant()->id);
             } catch (\Exception $e) {
                 // If table doesn't exist or any error, return empty array (all menus visible)

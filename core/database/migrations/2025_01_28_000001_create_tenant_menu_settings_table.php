@@ -17,7 +17,8 @@ return new class extends Migration
     /**
      * Run the migrations.
      * 
-     * This table stores per-tenant sidebar menu visibility settings.
+     * This table stores per-tenant (per-store) sidebar menu visibility settings.
+     * Each tenant/store has its own independent settings.
      * If a record exists with is_visible = 0, the menu item will be hidden for that tenant.
      * If no record exists, the menu item follows the default behavior (visible based on plan).
      */
@@ -25,7 +26,7 @@ return new class extends Migration
     {
         Schema::connection('mysql')->create('tenant_menu_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('tenant_id')->index();
+            $table->string('tenant_id')->index(); // Each tenant/store has its own settings
             $table->string('menu_key')->index();
             $table->string('menu_label')->nullable();
             $table->string('parent_key')->nullable();

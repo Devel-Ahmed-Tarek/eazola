@@ -21,7 +21,7 @@ class TenantMenuSetting extends Model
     protected $table = 'tenant_menu_settings';
 
     protected $fillable = [
-        'tenant_id',
+        'tenant_id',  // Each tenant/store has its own settings
         'menu_key',
         'menu_label',
         'parent_key',

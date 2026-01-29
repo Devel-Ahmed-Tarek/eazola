@@ -286,7 +286,7 @@
             <div class="tenant-info-header">
                 <h4><i class="mdi mdi-menu"></i> {{__('Sidebar Menu Settings')}}</h4>
                 <div class="domain-info">
-                    <strong>{{__('Tenant')}}:</strong> {{ optional($tenant->domain)->domain ?? $tenant->id }}
+                    <strong>{{__('Store')}}:</strong> {{ optional($tenant->domain)->domain ?? $tenant->id }}
                     @if($tenant->user)
                         | <strong>{{__('Owner')}}:</strong> {{ $tenant->user->name }} ({{ $tenant->user->email }})
                     @endif
@@ -299,7 +299,7 @@
             <!-- Info Alert -->
             <div class="alert alert-info mb-4">
                 <i class="mdi mdi-information-outline"></i>
-                {{__('Toggle OFF to hide menu items from this tenant\'s sidebar. Hidden items will not appear regardless of their subscription plan.')}}
+                {{__('Toggle OFF to hide menu items from this store\'s sidebar. Hidden items will not appear regardless of their subscription plan.')}}
             </div>
 
             <!-- Action Buttons -->
@@ -310,8 +310,8 @@
                 <button type="button" class="btn btn-reset" id="resetBtn">
                     <i class="mdi mdi-refresh"></i> {{__('Reset to Default')}}
                 </button>
-                <a href="{{ route('landlord.admin.tenant') }}" class="btn btn-secondary">
-                    <i class="mdi mdi-arrow-left"></i> {{__('Back to Tenants')}}
+                <a href="{{ route('landlord.admin.tenant.website.list') }}" class="btn btn-secondary">
+                    <i class="mdi mdi-arrow-left"></i> {{__('Back to Website List')}}
                 </a>
             </div>
 

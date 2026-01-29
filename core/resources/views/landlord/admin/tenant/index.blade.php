@@ -88,6 +88,7 @@
                                         {{__('View Details')}}
                                     </x-link-with-popover>
 
+                                    {{-- Sidebar Settings for each tenant/store --}}
                                     @foreach($user->tenant_details ?? [] as $tenant_detail)
                                         @if(!empty(optional($tenant_detail->domain)->domain))
                                             <a class="btn btn-warning btn-sm mb-3 mr-1" 
@@ -95,9 +96,8 @@
                                                data-bs-toggle="tooltip" 
                                                data-bs-placement="top" 
                                                title="{{__('Sidebar Settings for')}} {{optional($tenant_detail->domain)->domain}}">
-                                                <i class="mdi mdi-menu"></i> {{__('Sidebar')}}
+                                                <i class="mdi mdi-menu"></i> {{ Str::limit(optional($tenant_detail->domain)->domain, 15) }}
                                             </a>
-                                            @break
                                         @endif
                                     @endforeach
 

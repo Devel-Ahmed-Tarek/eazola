@@ -277,6 +277,9 @@ class TenantExceptionController extends Controller
                 })
                 ->addColumn('action', function($row){
                     $action = '';
+                    // Sidebar Settings Button
+                    $action .= '<a href="'.route('landlord.admin.tenant.menu.settings', $row->id).'" class="btn btn-warning btn-sm mb-1 mr-1" title="'.__('Sidebar Settings').'"><i class="mdi mdi-menu"></i></a> ';
+                    // Delete Button
                     $action.= General::deletePopover(route('landlord.admin.tenant.website.delete',$row->id));
                     return $action;
                 })

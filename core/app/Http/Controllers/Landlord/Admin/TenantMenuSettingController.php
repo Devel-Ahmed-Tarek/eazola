@@ -11,7 +11,8 @@ use Illuminate\Http\JsonResponse;
 class TenantMenuSettingController extends Controller
 {
     /**
-     * Display the menu settings page for a specific tenant.
+     * Display the menu settings page for a specific tenant (store).
+     * Each tenant/store has its own independent settings.
      *
      * @param string $tenantId
      * @return \Illuminate\Contracts\View\View
@@ -36,7 +37,7 @@ class TenantMenuSettingController extends Controller
     }
 
     /**
-     * Update menu settings for a tenant.
+     * Update menu settings for a tenant (store).
      *
      * @param Request $request
      * @param string $tenantId
@@ -74,7 +75,7 @@ class TenantMenuSettingController extends Controller
     }
 
     /**
-     * Toggle a single menu item visibility.
+     * Toggle a single menu item visibility for a tenant.
      *
      * @param Request $request
      * @param string $tenantId
