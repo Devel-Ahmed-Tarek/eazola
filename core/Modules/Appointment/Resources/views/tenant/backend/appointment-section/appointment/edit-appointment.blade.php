@@ -158,7 +158,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <x-fields.input type="number" name="person" label="{{__('Person')}}" value="{{$appointment->person}}"/>
+                                                            <x-fields.input type="number" name="person" label="{{__('Person')}}" value="{{$appointment->person ?? 1}}" info="{{__('1=Single, 2=Double, 3=Triple')}}"/>
                                                             
                                                             <div class="row">
                                                                 <div class="col-md-6">

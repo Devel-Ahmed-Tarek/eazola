@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('short_description')->nullable()->after('description');
             $table->integer('duration')->nullable()->after('price'); // Duration in minutes
             $table->decimal('sale_price', 10, 2)->nullable()->after('duration'); // Sale/discount price
-            $table->boolean('is_featured')->default(false)->after('is_popular');
+            $table->string('is_featured')->nullable()->after('is_popular'); // Same type as is_popular
             $table->text('gallery')->nullable()->after('image'); // JSON array of image IDs
             $table->string('video_url', 500)->nullable()->after('gallery');
             $table->integer('max_booking_per_slot')->default(1)->after('person'); // Max bookings per time slot

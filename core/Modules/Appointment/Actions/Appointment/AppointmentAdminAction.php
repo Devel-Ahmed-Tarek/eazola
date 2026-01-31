@@ -48,18 +48,34 @@ class AppointmentAdminAction
             $appointment->price = $request->price;
             $appointment->is_popular = $request->is_popular;
             $appointment->tax_status = $request->tax_status;
-            $appointment->person = $request->person;
+            $appointment->person = $request->person ?? 1;
             $appointment->sub_appointment_status = $request->sub_appointment_status;
             
-            // New fields
-            $appointment->duration = $request->duration;
-            $appointment->sale_price = $request->sale_price;
-            $appointment->is_featured = $request->is_featured;
-            $appointment->gallery = $request->gallery;
-            $appointment->video_url = $request->video_url;
-            $appointment->max_booking_per_slot = $request->max_booking_per_slot ?? 1;
-            $appointment->advance_booking_days = $request->advance_booking_days ?? 30;
-            $appointment->sort_order = $request->sort_order ?? 0;
+            // New fields - only set if provided (let DB use defaults)
+            if ($request->filled('duration')) {
+                $appointment->duration = $request->duration;
+            }
+            if ($request->filled('sale_price')) {
+                $appointment->sale_price = $request->sale_price;
+            }
+            if ($request->has('is_featured')) {
+                $appointment->is_featured = $request->is_featured;
+            }
+            if ($request->filled('gallery')) {
+                $appointment->gallery = $request->gallery;
+            }
+            if ($request->filled('video_url')) {
+                $appointment->video_url = $request->video_url;
+            }
+            if ($request->filled('max_booking_per_slot')) {
+                $appointment->max_booking_per_slot = $request->max_booking_per_slot;
+            }
+            if ($request->filled('advance_booking_days')) {
+                $appointment->advance_booking_days = $request->advance_booking_days;
+            }
+            if ($request->filled('sort_order')) {
+                $appointment->sort_order = $request->sort_order;
+            }
 
             $Metas = [
                 'title' => [$request->lang => SanitizeInput::esc_html($request->meta_title)],
@@ -163,18 +179,18 @@ class AppointmentAdminAction
             $appointment->price = $request->price;
             $appointment->is_popular = $request->is_popular;
             $appointment->tax_status = $request->tax_status;
-            $appointment->person = $request->person;
+            $appointment->person = $request->person ?? 1;
             $appointment->sub_appointment_status = $request->sub_appointment_status;
             
-            // New fields
-            $appointment->duration = $request->duration;
-            $appointment->sale_price = $request->sale_price;
-            $appointment->is_featured = $request->is_featured;
-            $appointment->gallery = $request->gallery;
-            $appointment->video_url = $request->video_url;
-            $appointment->max_booking_per_slot = $request->max_booking_per_slot ?? 1;
-            $appointment->advance_booking_days = $request->advance_booking_days ?? 30;
-            $appointment->sort_order = $request->sort_order ?? 0;
+            // New fields - update if provided
+            $appointment->duration = $request->duration ?: $appointment->duration;
+            $appointment->sale_price = $request->sale_price ?: $appointment->sale_price;
+            $appointment->is_featured = $request->has('is_featured') ? $request->is_featured : $appointment->is_featured;
+            $appointment->gallery = $request->gallery ?: $appointment->gallery;
+            $appointment->video_url = $request->video_url ?: $appointment->video_url;
+            $appointment->max_booking_per_slot = $request->max_booking_per_slot ?: ($appointment->max_booking_per_slot ?? 1);
+            $appointment->advance_booking_days = $request->advance_booking_days ?: ($appointment->advance_booking_days ?? 30);
+            $appointment->sort_order = $request->sort_order ?? ($appointment->sort_order ?? 0);
             
             $appointment->save();
 
@@ -263,7 +279,12 @@ class AppointmentAdminAction
                 'image' => $blog_details->image,
                 'views' => 0,
                 'price' => $blog_details->price,
-
+                'person' => $blog_details->person ?? 1,
+                'duration' => $blog_details->duration,
+                'sale_price' => $blog_details->sale_price,
+                'is_popular' => $blog_details->is_popular,
+                'is_featured' => $blog_details->is_featured,
+                'sort_order' => $blog_details->sort_order ?? 0,
             ]);
 
             $meta_object = optional($blog_details->metainfo);
