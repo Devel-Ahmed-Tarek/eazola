@@ -104,11 +104,12 @@
 </div>
 
 <style>
+/* Appointment Card - Theme Compatible */
 .appointment-service-card {
-    background: white;
-    border-radius: 15px;
+    background: var(--section-bg, #fff);
+    border-radius: var(--card-radius, 10px);
     overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    box-shadow: var(--card-shadow, 0 2px 10px rgba(0,0,0,0.08));
     transition: all 0.3s ease;
     position: relative;
     display: flex;
@@ -116,27 +117,26 @@
 }
 .appointment-service-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 .appointment-service-card .featured-badge,
 .appointment-service-card .discount-badge {
     position: absolute;
     top: 15px;
     padding: 5px 12px;
-    border-radius: 20px;
+    border-radius: var(--btn-radius, 5px);
     font-size: 0.75rem;
     font-weight: 600;
     z-index: 2;
 }
 .appointment-service-card .featured-badge {
     left: 15px;
-    background: linear-gradient(135deg, #f39c12, #e74c3c);
-    color: white;
+    background: var(--secondary-color, #f39c12);
+    color: #fff;
 }
 .appointment-service-card .discount-badge {
     right: 15px;
-    background: #e74c3c;
-    color: white;
+    background: var(--danger-color, #e74c3c);
+    color: #fff;
 }
 .appointment-service-card .service-image-wrapper {
     height: 200px;
@@ -156,29 +156,41 @@
     display: flex;
     flex-direction: column;
 }
+.appointment-service-card .service-title {
+    font-family: var(--heading-font, inherit);
+}
 .appointment-service-card .service-title a {
-    color: #2c3e50;
+    color: var(--heading-color, inherit);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 .appointment-service-card .service-title a:hover {
-    color: var(--bs-primary, #2ECC71);
+    color: var(--main-color-one, var(--bs-primary, inherit));
+}
+.appointment-service-card .service-description {
+    font-family: var(--body-font, inherit);
 }
 .appointment-service-card .service-meta .meta-item {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     font-size: 0.85rem;
-    color: #7f8c8d;
+    color: var(--paragraph-color, #666);
 }
 .appointment-service-card .service-meta .popular {
-    color: #f39c12;
+    color: var(--secondary-color, #f39c12);
 }
 .appointment-service-card .current-price {
     font-size: 1.25rem;
+    color: var(--main-color-one, var(--bs-primary, inherit));
 }
 .appointment-service-card .book-btn {
-    border-radius: 20px;
+    border-radius: var(--btn-radius, 5px);
     padding: 8px 20px;
+    background-color: var(--main-color-one, var(--bs-primary));
+    border-color: var(--main-color-one, var(--bs-primary));
+}
+.appointment-service-card .book-btn:hover {
+    opacity: 0.9;
 }
 </style>

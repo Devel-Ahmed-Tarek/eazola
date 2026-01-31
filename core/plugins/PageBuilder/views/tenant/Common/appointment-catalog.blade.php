@@ -410,18 +410,18 @@
 </section>
 
 <style>
+/* Appointment Catalog - Theme Compatible Styles */
 .appointment-catalog-area {
-    background-color: #f8f9fa;
     background-size: cover;
     background-position: center;
 }
 .appointment-catalog-area .section-title {
-    font-size: 2.5rem;
+    font-family: inherit; /* Inherit from theme */
     font-weight: 700;
 }
 .appointment-catalog-area .accordion-button:not(.collapsed) {
-    background-color: var(--bs-primary, #2ECC71);
-    color: white;
+    background-color: var(--main-color-one, var(--bs-primary, currentColor));
+    color: #fff;
 }
 .appointment-catalog-area .category-icon {
     width: 50px;
@@ -429,25 +429,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(46, 204, 113, 0.1);
+    background: var(--main-color-one-rgb, rgba(0,0,0,0.05));
     border-radius: 50%;
     font-size: 1.5rem;
-    color: var(--bs-primary, #2ECC71);
+    color: var(--main-color-one, var(--bs-primary, inherit));
 }
 .appointment-catalog-area .nav-pills .nav-link {
-    border-radius: 30px;
+    border-radius: var(--btn-radius, 5px);
     padding: 12px 25px;
     margin: 5px;
     transition: all 0.3s ease;
+    font-family: inherit;
 }
 .appointment-catalog-area .nav-pills .nav-link.active {
-    background: var(--bs-primary, #2ECC71);
+    background: var(--main-color-one, var(--bs-primary, currentColor));
 }
 .appointment-catalog-area .category-showcase-card {
-    background: white;
-    border-radius: 15px;
+    background: var(--section-bg, #fff);
+    border-radius: var(--card-radius, 10px);
     overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    box-shadow: var(--card-shadow, 0 2px 10px rgba(0,0,0,0.08));
     transition: transform 0.3s ease;
 }
 .appointment-catalog-area .category-showcase-card:hover {
@@ -460,5 +461,31 @@
 .appointment-catalog-area .category-image-wrapper img {
     object-fit: cover;
     height: 100%;
+}
+.appointment-catalog-area h2, 
+.appointment-catalog-area h3, 
+.appointment-catalog-area h4, 
+.appointment-catalog-area h5 {
+    font-family: var(--heading-font, inherit);
+    color: var(--heading-color, inherit);
+}
+.appointment-catalog-area p,
+.appointment-catalog-area span,
+.appointment-catalog-area a {
+    font-family: var(--body-font, inherit);
+}
+.appointment-catalog-area .btn-primary,
+.appointment-catalog-area .btn-outline-primary {
+    background-color: var(--main-color-one, var(--bs-primary));
+    border-color: var(--main-color-one, var(--bs-primary));
+    border-radius: var(--btn-radius, 5px);
+}
+.appointment-catalog-area .btn-outline-primary {
+    background-color: transparent;
+    color: var(--main-color-one, var(--bs-primary));
+}
+.appointment-catalog-area .btn-outline-primary:hover {
+    background-color: var(--main-color-one, var(--bs-primary));
+    color: #fff;
 }
 </style>

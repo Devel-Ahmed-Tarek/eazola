@@ -73,22 +73,29 @@
 </a>
 
 <style>
+/* Appointment List Item - Theme Compatible */
 .appointment-list-item {
     border-left: 3px solid transparent;
     transition: all 0.3s ease;
+    font-family: var(--body-font, inherit);
 }
 .appointment-list-item:hover {
-    border-left-color: var(--bs-primary, #2ECC71);
-    background-color: #f8f9fa;
+    border-left-color: var(--main-color-one, var(--bs-primary, currentColor));
+    background-color: var(--section-bg-2, #f8f9fa);
 }
 .appointment-list-item .service-thumb img {
     width: 60px;
     height: 60px;
     object-fit: cover;
+    border-radius: var(--card-radius, 5px);
 }
 .appointment-list-item .service-name {
-    color: #2c3e50;
+    color: var(--heading-color, inherit);
+    font-family: var(--heading-font, inherit);
     font-weight: 600;
+}
+.appointment-list-item .current-price {
+    color: var(--main-color-one, var(--bs-primary, inherit));
 }
 .appointment-list-item .book-arrow {
     width: 35px;
@@ -96,8 +103,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bs-primary, #2ECC71);
-    color: white;
+    background: var(--main-color-one, var(--bs-primary, currentColor));
+    color: #fff;
     border-radius: 50%;
     transition: transform 0.3s ease;
 }
