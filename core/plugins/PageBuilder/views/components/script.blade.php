@@ -299,6 +299,96 @@
                 }
             });
 
+            /*-----------------------------------
+            *   ADD WIDGET BY CLICK (+ Button)
+            * ---------------------------------*/
+            $(document).on('click', '.add-widget-btn', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var $li = $(this).closest('li.widget-handler');
+                var addonClass = $li.attr('data-name');
+                var namespace = $li.attr('data-namespace');
+                
+                // Find the first sortable drop area
+                var $dropArea = $('.sortable_widget_location').first();
+                if ($dropArea.length === 0) {
+                    $dropArea = $('.sortable').first();
+                }
+                
+                if ($dropArea.length === 0) {
+                    alert('{{__("No drop area found")}}');
+                    return;
+                }
+                
+                var dropAreaId = $dropArea.attr('id');
+                var $btn = $(this);
+                
+                // Show loading state
+                $btn.html('<i class="las la-spinner la-spin"></i>').prop('disabled', true);
+                
+                // Get widget markup via AJAX
+                $.ajax({
+                    'url': "{{route(route_prefix().'admin.page.builder.get.addon.markup')}}",
+                    'type': "POST",
+                    'data': {
+                        '_token': "{!! csrf_token() !!}",
+                        'addon_class': addonClass,
+                        'addon_namespace': namespace,
+                        'addon_page_id': '{{$page->id}}',
+                        'addon_page_type': dropAreaId,
+                        'addon_location': dropAreaId,
+                    },
+                    success: function (data) {
+                        if(data.type != undefined && data.type == 'warning'){
+                            Swal.fire({
+                                icon: 'warning',
+                                title: data.msg,
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                        } else {
+                            // Create new li element and append to drop area
+                            var $newWidget = $('<li class="ui-state-default widget-handler" data-name="' + addonClass + '" data-namespace="' + namespace + '"></li>');
+                            $newWidget.html(data);
+                            $dropArea.append($newWidget);
+                            
+                            // Reset order
+                            var allItems = $dropArea.find('li');
+                            $.each(allItems, function (index, value) {
+                                $(this).find('input[name="addon_order"]').val(index + 1);
+                                $(this).find('input[name="addon_location"]').val(dropAreaId);
+                            });
+                            
+                            // Show success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: '{{__("Widget added successfully!")}}',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            
+                            // Scroll to the new widget
+                            $('html, body').animate({
+                                scrollTop: $newWidget.offset().top - 100
+                            }, 500);
+                        }
+                        
+                        // Reset button
+                        $btn.html('<i class="las la-plus"></i>').prop('disabled', false);
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{__("Error adding widget")}}',
+                            timer: 3000
+                        });
+                        $btn.html('<i class="las la-plus"></i>').prop('disabled', false);
+                    }
+                });
+            });
 
         });
     })(jQuery);

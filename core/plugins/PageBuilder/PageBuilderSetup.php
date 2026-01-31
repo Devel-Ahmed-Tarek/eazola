@@ -376,7 +376,13 @@ class PageBuilderSetup
     private static function render_admin_addon_item($args): string
     {
         return '<li class="ui-state-default widget-handler" data-name="'.$args['addon_name'].'" data-namespace="'.base64_encode($args['addon_namespace']).'" >
-                    <h4 class="top-part"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'.$args['addon_title'].$args['preview_image'].'</h4>
+                    <h4 class="top-part">
+                        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+                        '.$args['addon_title'].$args['preview_image'].'
+                        <button type="button" class="btn btn-sm btn-success add-widget-btn" title="'.__('Add to page').'">
+                            <i class="las la-plus"></i>
+                        </button>
+                    </h4>
                 </li>';
     }
     public static function render_widgets_by_name_for_admin($args){

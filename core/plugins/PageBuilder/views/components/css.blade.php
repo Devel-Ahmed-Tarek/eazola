@@ -398,4 +398,46 @@
         max-width: 150px;
     }
 
+    /* Add Widget Button Styles */
+    .all-addons-wrapper ul li .top-part {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 35px;
+    }
+    
+    .all-addons-wrapper ul li .top-part .add-widget-btn {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 14px;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+        z-index: 5;
+    }
+    
+    .all-addons-wrapper ul li .top-part .add-widget-btn:hover {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .all-addons-wrapper ul li .top-part .add-widget-btn i {
+        margin: 0;
+    }
+    
+    .all-addons-wrapper ul li .top-part .preview-image {
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
 </style>
