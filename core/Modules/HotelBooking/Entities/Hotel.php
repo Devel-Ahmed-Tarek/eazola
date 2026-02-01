@@ -13,10 +13,39 @@ class Hotel extends Model
 {
     use HasFactory, HasTranslations;
 
-    protected $fillable = ["name","distance","restaurant_inside","location","about","slug"];
+    protected $fillable = [
+        "name",
+        "distance",
+        "restaurant_inside",
+        "location",
+        "about",
+        "slug",
+        "short_description",
+        "icon",
+        "image",
+        "sort_order",
+        "is_featured",
+        "status"
+    ];
     protected $with = ["hotel_amenities","hotel_images"];
 //    protected $table = ["hotels"];
-    protected $translatable = ['name','location','about','distance'];
+    protected $translatable = ['name','location','about','distance','short_description'];
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('status', '1');
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', 'on');
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order', 'asc');
+    }
 
 
     public function hotel_amenities(): BelongsToMany

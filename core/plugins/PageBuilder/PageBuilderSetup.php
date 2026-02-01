@@ -51,6 +51,7 @@ use Plugins\PageBuilder\Addons\Tenants\Common\misc\TestimonialThree;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\TestimonialTwo;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\VideoGalleryOne;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\AppointmentCatalog;
+use Plugins\PageBuilder\Addons\Tenants\Common\misc\HotelCatalog;
 use Plugins\PageBuilder\Addons\Tenants\Construction\BlogArea;
 use Plugins\PageBuilder\Addons\Tenants\Construction\CounterupArea;
 use Plugins\PageBuilder\Addons\Tenants\Construction\HeaderArea;
@@ -288,6 +289,9 @@ class PageBuilderSetup
 
             //Appointment Services Catalog (Common)
             AppointmentCatalog::class,
+
+            //Hotel & Rooms Catalog (Common)
+            HotelCatalog::class,
             
             //Barber shop
             \Plugins\PageBuilder\Addons\Tenants\BarberShop\HeaderArea::class,

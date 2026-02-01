@@ -30,11 +30,40 @@ class RoomType extends Model
         "bed_type_id",
         "extra_bed_type_id",
         "description",
-        "hotel_id"
+        "hotel_id",
+        "short_description",
+        "slug",
+        "icon",
+        "image",
+        "sort_order",
+        "is_featured",
+        "status"
     ];
 
     protected $with = ["room_type_amenities","bed_type","hotel"];
-    protected $translatable = ['name','description'];
+    protected $translatable = ['name','description','short_description'];
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('status', '1');
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', 'on');
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order', 'asc');
+    }
+
+    // Get rooms for this room type
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'room_type_id', 'id');
+    }
 
     public function room_type_amenities(): BelongsToMany
     {

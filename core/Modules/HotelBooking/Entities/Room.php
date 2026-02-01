@@ -12,9 +12,61 @@ class Room extends Model
 {
     use HasFactory, HasTranslations;
 
-    protected $fillable = ["name","room_type_id","base_cost","share_value","description"];
+    protected $fillable = [
+        "name",
+        "room_type_id",
+        "base_cost",
+        "sale_price",
+        "share_value",
+        "description",
+        "short_description",
+        "slug",
+        "is_featured",
+        "is_popular",
+        "gallery",
+        "video_url",
+        "max_guests",
+        "sort_order",
+        "status"
+    ];
     protected $with = ["room_types","room_image"];
-    protected $translatable = ['name','description'];
+    protected $translatable = ['name','description','short_description'];
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('status', '1');
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', 'on');
+    }
+
+    public function scopePopular($query)
+    {
+        return $query->where('is_popular', 'on');
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order', 'asc');
+    }
+
+    // Check if has sale price
+    public function hasSalePrice(): bool
+    {
+        return !empty($this->sale_price) && $this->sale_price < $this->base_cost;
+    }
+
+    // Get gallery as array
+    public function getGalleryImagesAttribute(): array
+    {
+        if (empty($this->gallery)) {
+            return [];
+        }
+        return is_array($this->gallery) ? $this->gallery : explode(',', $this->gallery);
+    }
 
     public function room_types(){
         return $this->belongsTo(RoomType::class,"room_type_id","id");
