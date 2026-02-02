@@ -9,28 +9,39 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('room_types', function (Blueprint $table) {
-            $table->text('short_description')->nullable()->after('description');
-            $table->string('slug')->nullable()->after('short_description');
-            $table->string('icon')->nullable()->after('slug');
-            $table->string('image')->nullable()->after('icon');
-            $table->integer('sort_order')->default(0)->after('image');
-            $table->string('is_featured')->nullable()->after('sort_order');
-            $table->string('status')->default('1')->after('is_featured');
+            if (!Schema::hasColumn('room_types', 'short_description')) {
+                $table->text('short_description')->nullable();
+            }
+            if (!Schema::hasColumn('room_types', 'slug')) {
+                $table->string('slug')->nullable();
+            }
+            if (!Schema::hasColumn('room_types', 'icon')) {
+                $table->string('icon')->nullable();
+            }
+            if (!Schema::hasColumn('room_types', 'image')) {
+                $table->string('image')->nullable();
+            }
+            if (!Schema::hasColumn('room_types', 'sort_order')) {
+                $table->integer('sort_order')->default(0);
+            }
+            if (!Schema::hasColumn('room_types', 'is_featured')) {
+                $table->string('is_featured')->nullable();
+            }
+            if (!Schema::hasColumn('room_types', 'status')) {
+                $table->string('status')->default('1');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('room_types', function (Blueprint $table) {
-            $table->dropColumn([
-                'short_description',
-                'slug',
-                'icon',
-                'image',
-                'sort_order',
-                'is_featured',
-                'status'
-            ]);
+            $columns = ['short_description', 'slug', 'icon', 'image', 'sort_order', 'is_featured', 'status'];
+            foreach ($columns as $column) {
+                if (Schema::hasColumn('room_types', $column)) {
+                    $table->dropColumn($column);
+                }
+            }
         });
     }
 };
