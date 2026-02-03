@@ -48,6 +48,11 @@
 
     {!! render_favicon_by_id(get_static_option('site_favicon')) !!}
 
+    {{-- Font Preloading for better performance --}}
+    <link rel="preload" href="{{ global_asset('assets/tenant/frontend/themes/fonts/la-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ global_asset('assets/tenant/frontend/themes/fonts/la-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <title>
         @if(!request()->routeIs('tenant.frontend.homepage'))
