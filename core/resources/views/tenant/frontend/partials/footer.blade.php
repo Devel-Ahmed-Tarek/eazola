@@ -25,6 +25,9 @@
 @if(in_array('jquery-3.6.1.min', $loadCoreScript))
     <script src="{{global_asset('assets/common/js/jquery-3.6.1.min.js')}}"></script>
 @endif
+
+{{-- Performance Optimizer: Lazy Loading & Deferred Resources --}}
+<script src="{{global_asset('assets/tenant/frontend/js/performance-optimizer.js')}}" defer></script>
 @if(in_array('popper.min', $loadCoreScript))
     <script src="{{global_asset('assets/tenant/frontend/themes/js/popper.min.js')}}"></script>
 @endif

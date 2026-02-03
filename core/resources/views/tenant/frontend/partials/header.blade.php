@@ -54,6 +54,48 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    {{-- Critical CSS: First Section & Above the Fold --}}
+    <style id="critical-css">
+        /* Critical Layout */
+        *,*::before,*::after{box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{margin:0;font-family:var(--body-font,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif);line-height:1.6;color:var(--paragraph-color,#666)}
+        img{max-width:100%;height:auto;display:block}
+        
+        /* Header/Navbar Critical */
+        .navbar,.header,.headerArea{position:relative;z-index:999}
+        .navbar-area{background:var(--navbar-bg,#fff);transition:all .3s ease}
+        .navbar-area.nav-fixed{position:fixed;top:0;left:0;right:0;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+        
+        /* Hero Section Critical */
+        .hero-area,.headerArea,.banner,.slider-area{min-height:50vh;position:relative}
+        .hero-area .container,.banner .container{position:relative;z-index:2}
+        
+        /* Grid System Critical */
+        .container{width:100%;padding:0 15px;margin:0 auto}
+        @media(min-width:576px){.container{max-width:540px}}
+        @media(min-width:768px){.container{max-width:720px}}
+        @media(min-width:992px){.container{max-width:960px}}
+        @media(min-width:1200px){.container{max-width:1140px}}
+        @media(min-width:1400px){.container{max-width:1320px}}
+        .row{display:flex;flex-wrap:wrap;margin:0 -15px}
+        [class*="col-"]{padding:0 15px;width:100%}
+        
+        /* Button Critical */
+        .btn,.cmn-btn,button{display:inline-block;cursor:pointer;border:none;transition:all .3s ease}
+        
+        /* Loading States */
+        .lazy-section{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+        .lazy-section.section-loaded{opacity:1;transform:translateY(0)}
+        img[data-src]{opacity:0;transition:opacity .3s ease}
+        img.loaded,img:not([data-src]){opacity:1}
+        
+        /* Prevent Layout Shift */
+        .img-wrapper,.image-wrapper{position:relative;overflow:hidden}
+        .img-wrapper::before{content:'';display:block;padding-top:56.25%}
+        .img-wrapper img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+    </style>
+
     <title>
         @if(!request()->routeIs('tenant.frontend.homepage'))
             @if(Route::currentRouteName() === 'tenant.dynamic.page')

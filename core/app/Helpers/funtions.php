@@ -369,6 +369,53 @@ function render_image_markup_by_attachment_id($id, $class = null, $size = 'full'
     return $output;
 }
 
+/**
+ * Render lazy loading image markup by attachment ID
+ * @param int|null $id - Attachment ID
+ * @param string|null $class - CSS classes
+ * @param string $size - Image size (full, large, grid)
+ * @param bool $default - Use default placeholder
+ * @param bool $eager - If true, loads immediately (for above-the-fold images)
+ * @return string
+ */
+function render_lazy_image_by_attachment_id($id, $class = null, $size = 'full', $default = false, $eager = false): string
+{
+    if (empty($id) && !$default) return '';
+    $output = '';
+
+    $image_details = get_attachment_image_by_id($id, $size, $default);
+    if (!empty($image_details)) {
+        $class_list = !empty($class) ? $class . ' ' : '';
+        
+        if ($eager) {
+            // Above the fold - load immediately with fetchpriority
+            $output = '<img src="' . $image_details['img_url'] . '" class="' . $class_list . '" alt="' . $image_details['img_alt'] . '" fetchpriority="high"/>';
+        } else {
+            // Below the fold - lazy load
+            $placeholder = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
+            $output = '<img src="' . $placeholder . '" data-src="' . $image_details['img_url'] . '" class="' . $class_list . '" alt="' . $image_details['img_alt'] . '" loading="lazy"/>';
+        }
+    }
+    return $output;
+}
+
+/**
+ * Render lazy loading background image
+ * @param int|null $id - Attachment ID
+ * @param string $size - Image size
+ * @return string - Returns data-bg attribute value
+ */
+function render_lazy_background_by_attachment_id($id, $size = 'full'): string
+{
+    if (empty($id)) return '';
+    
+    $image_details = get_attachment_image_by_id($id, $size, false);
+    if (!empty($image_details) && !empty($image_details['img_url'])) {
+        return 'data-bg="' . $image_details['img_url'] . '"';
+    }
+    return '';
+}
+
 function get_theme_image($slug)
 {
     switch ($slug) {
