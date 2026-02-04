@@ -48,6 +48,19 @@
                     <x-fields.switcher value="{{get_static_option('user_email_verify_status')}}" name="user_email_verify_status" label="{{__('Disable/Enable User Email Verify')}}" info="{{__('if you keep it no, it will allow user to register without being ask for email verify.')}}"/>
                     <x-fields.switcher value="{{get_static_option('table_list_data_orderable_status')}}" name="table_list_data_orderable_status" label="{{__('Enable/Disable of Sorting Table List Data')}}" info="{{__('Enable means you can sort table data by clicking on the table header')}}" link="https://prnt.sc/CIBN4wxnAFtx"/>
 
+                    @if(!tenant())
+                    <div class="card mt-4 mb-4 border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="las la-user-check"></i> {{__('Tenant Approval Settings')}}</h5>
+                        </div>
+                        <div class="card-body">
+                            <x-fields.switcher value="{{get_static_option('require_tenant_approval')}}" name="require_tenant_approval" label="{{__('Require Manual Approval for New Tenants')}}" info="{{__('When enabled, new websites will require admin approval before activation. The tenant will see a pending message until approved.')}}"/>
+                            <x-fields.switcher value="{{get_static_option('notify_admin_new_tenant')}}" name="notify_admin_new_tenant" label="{{__('Notify Admin on New Tenant Registration')}}" info="{{__('Send email notification to admin when a new tenant registers.')}}"/>
+                            <x-fields.switcher value="{{get_static_option('notify_tenant_on_approval')}}" name="notify_tenant_on_approval" label="{{__('Notify Tenant on Approval/Rejection')}}" info="{{__('Send email notification to tenant when their site is approved or rejected.')}}"/>
+                        </div>
+                    </div>
+                    @endif
+
                     <button type="submit" class="btn btn-gradient-primary me-2">{{__('Save Changes')}}</button>
                 </form>
             </div>

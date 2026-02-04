@@ -105,7 +105,21 @@ class LandlordPricePlanAndTenantCreate
     public static function createDatabaseUsingEventListener($log, $user, $event = true)
     {
         if ($event) {
-            Tenant::create(['id' => $log->tenant_id]);
+            // Check if manual approval is required
+            $require_approval = get_static_option_central('require_tenant_approval');
+            $approval_status = !empty($require_approval) ? 'pending' : 'approved';
+            
+            Tenant::create([
+                'id' => $log->tenant_id,
+                'approval_status' => $approval_status,
+                'approved_at' => $approval_status === 'approved' ? now() : null,
+            ]);
+            
+            // Notify admin if new tenant notification is enabled
+            if (!empty(get_static_option_central('notify_admin_new_tenant'))) {
+                self::notifyAdminNewTenant($log, $user, $approval_status);
+            }
+            
             // event(new TenantRegisterEvent($user, $log->tenant_id,$log->theme));
         }
 
@@ -141,6 +155,84 @@ class LandlordPricePlanAndTenantCreate
             'description' => $description,
             'domain_create_status' => $domain_create_status,
         ]);
+    }
+
+    /**
+     * Notify admin about new tenant registration
+     */
+    public static function notifyAdminNewTenant($log, $user, $approval_status)
+    {
+        try {
+            $admin_email = get_static_option_central('site_global_email');
+            if (empty($admin_email)) return;
+            
+            $status_text = $approval_status === 'pending' ? __('Pending Approval') : __('Auto Approved');
+            $site_name = get_static_option_central('site_'.get_default_language().'_title') ?? 'Site';
+            
+            $message = '<h3>'.__('New Tenant Registration').'</h3>';
+            $message .= '<p><strong>'.__('Tenant ID').':</strong> ' . $log->tenant_id . '</p>';
+            $message .= '<p><strong>'.__('User Name').':</strong> ' . $user->name . '</p>';
+            $message .= '<p><strong>'.__('User Email').':</strong> ' . $user->email . '</p>';
+            $message .= '<p><strong>'.__('Package').':</strong> ' . $log->package_name . '</p>';
+            $message .= '<p><strong>'.__('Status').':</strong> ' . $status_text . '</p>';
+            
+            if ($approval_status === 'pending') {
+                $message .= '<p><a href="' . route('landlord.admin.tenant.pending.approval') . '" style="background:#f0ad4e;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">'.__('Review Pending Tenants').'</a></p>';
+            }
+            
+            Mail::to($admin_email)->send(new BasicMail($message, __('New Tenant Registration') . ' - ' . $site_name));
+        } catch (\Exception $e) {
+            // Log error but don't break the registration process
+            \Log::error('Failed to notify admin about new tenant registration', [
+                'tenant_id' => $log->tenant_id ?? null,
+                'user_email' => $user->email ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
+
+    /**
+     * Notify tenant about approval/rejection
+     */
+    public static function notifyTenantApproval($tenant, $status, $note = null)
+    {
+        try {
+            if (empty(get_static_option_central('notify_tenant_on_approval'))) return;
+            
+            $user = User::find($tenant->user_id);
+            if (empty($user)) return;
+            
+            $site_name = get_static_option_central('site_'.get_default_language().'_title') ?? 'Site';
+            $domain = $tenant->id . '.' . env('CENTRAL_DOMAIN');
+            
+            if ($status === 'approved') {
+                $subject = __('Your Website Has Been Approved') . ' - ' . $site_name;
+                $message = '<h3>'.__('Congratulations!').'</h3>';
+                $message .= '<p>'.__('Your website has been approved and is now active.').'</p>';
+                $message .= '<p><strong>'.__('Website URL').':</strong> <a href="https://' . $domain . '">' . $domain . '</a></p>';
+                $message .= '<p>'.__('You can now start customizing your website.').'</p>';
+            } else {
+                $subject = __('Website Registration Update') . ' - ' . $site_name;
+                $message = '<h3>'.__('Registration Update').'</h3>';
+                $message .= '<p>'.__('Unfortunately, your website registration could not be approved at this time.').'</p>';
+                if (!empty($note)) {
+                    $message .= '<p><strong>'.__('Reason').':</strong> ' . $note . '</p>';
+                }
+                $message .= '<p>'.__('Please contact support for more information.').'</p>';
+            }
+            
+            Mail::to($user->email)->send(new BasicMail($message, $subject));
+        } catch (\Exception $e) {
+            // Log error but don't break the approval process
+            \Log::error('Failed to notify tenant about approval status', [
+                'tenant_id' => $tenant->id ?? null,
+                'status' => $status,
+                'user_email' => $user->email ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 
     public static function store_payment_log_history($log_id)

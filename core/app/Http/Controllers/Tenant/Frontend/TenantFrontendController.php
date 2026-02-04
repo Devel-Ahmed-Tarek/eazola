@@ -88,6 +88,32 @@ class TenantFrontendController extends Controller
         ]);
     }
 
+    /**
+     * Display tenant approval status page
+     * Shows pending/rejected message to tenant
+     */
+    public function approvalStatus()
+    {
+        $tenant = tenant();
+        $approval_status = $tenant->approval_status ?? 'approved';
+        $approval_note = $tenant->approval_note ?? null;
+        
+        // If approved, redirect to homepage
+        if ($approval_status === 'approved') {
+            return redirect()->route('tenant.frontend.homepage');
+        }
+        
+        // Get tenant owner info
+        $user = $tenant->user;
+        
+        return view(self::BASE_VIEW_PATH.'approval-status', compact(
+            'tenant',
+            'approval_status',
+            'approval_note',
+            'user'
+        ));
+    }
+
     public function dynamic_single_page ($slug){
 
         $page_post = Page::usingLocale(GlobalLanguage::default_slug())->where('slug', $slug)->first();

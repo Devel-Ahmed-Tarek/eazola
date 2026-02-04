@@ -19,6 +19,7 @@ use App\Http\Controllers\Landlord\Admin\PageBuilderController;
 use App\Http\Controllers\Landlord\Admin\PagesController;
 use App\Http\Controllers\Landlord\Admin\PricePlanController;
 use App\Http\Controllers\Landlord\Admin\TenantExceptionController;
+use App\Http\Controllers\Landlord\Admin\TenantApprovalController;
 use App\Http\Controllers\Landlord\Admin\TenantManageController;
 use App\Http\Controllers\Landlord\Admin\ThemeManageController;
 use App\Http\Controllers\Landlord\Admin\WidgetsController;
@@ -122,6 +123,20 @@ Route::group(['middleware' => ['auth:admin','adminglobalVariable','setlang'],'pr
         Route::get('/al-website-list','all_website_list')->name('admin.tenant.website.list');
         Route::post('/website-delete/{id}','delete_website')->name('admin.tenant.website.delete');
 
+    });
+
+    /* ------------------------------------------
+       TENANT APPROVAL MANAGE ROUTES
+   -------------------------------------------- */
+    Route::controller(TenantApprovalController::class)->name('landlord.')->prefix('tenant-approval')->group(function (){
+        Route::get('/pending','index')->name('admin.tenant.pending.approval');
+        Route::get('/all','all')->name('admin.tenant.approval.all');
+        Route::get('/show/{tenant_id}','show')->name('admin.tenant.approval.show');
+        Route::post('/approve/{tenant_id}','approve')->name('admin.tenant.approval.approve');
+        Route::post('/reject/{tenant_id}','reject')->name('admin.tenant.approval.reject');
+        Route::post('/bulk-approve','bulkApprove')->name('admin.tenant.approval.bulk.approve');
+        Route::post('/bulk-reject','bulkReject')->name('admin.tenant.approval.bulk.reject');
+        Route::post('/reset/{tenant_id}','resetToPending')->name('admin.tenant.approval.reset');
     });
 
     /* ------------------------------------------

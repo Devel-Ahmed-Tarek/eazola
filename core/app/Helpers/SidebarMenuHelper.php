@@ -6,6 +6,7 @@ namespace App\Helpers;
 
 use App\Models\PaymentLogs;
 use App\Models\PricePlan;
+use App\Models\Tenant;
 use App\Models\TenantMenuSetting;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -102,6 +103,7 @@ class SidebarMenuHelper
         $this->all_notification_settings_menus($menu_instance);
         $this->newsletter_settings_menus($menu_instance);
         $this->order_manage_settings_menus($menu_instance);
+        $this->tenant_approval_menus($menu_instance);
         $this->custom_domain_settings_menus($menu_instance);
         $this->support_ticket_settings_menus($menu_instance);
         $this->testimonial_settings_menus($menu_instance);
@@ -504,6 +506,35 @@ class SidebarMenuHelper
             'label' => __('Payment Report'),
             'parent' => 'order-manage-settings-menu-items',
             'permissions' => ['package-order-payment-report'],
+        ]);
+    }
+
+    private function tenant_approval_menus(MenuWithPermission $menu_instance) : void
+    {
+        // Get pending count for badge
+        $pending_count = \App\Models\Tenant::where('approval_status', 'pending')->count();
+        $badge = $pending_count > 0 ? ' <span class="badge bg-warning text-dark">'.$pending_count.'</span>' : '';
+        
+        $menu_instance->add_menu_item('tenant-approval-menu', [
+            'route' => '#',
+            'label' => __('Tenant Approval') . $badge,
+            'parent' => null,
+            'permissions' => ['tenant-approval-list', 'tenant-approval-approve', 'tenant-approval-reject'],
+            'icon' => 'mdi mdi-account-check',
+        ]);
+
+        $menu_instance->add_menu_item('tenant-approval-pending', [
+            'route' => 'landlord.admin.tenant.pending.approval',
+            'label' => __('Pending Approvals') . $badge,
+            'parent' => 'tenant-approval-menu',
+            'permissions' => ['tenant-approval-list'],
+        ]);
+
+        $menu_instance->add_menu_item('tenant-approval-all', [
+            'route' => 'landlord.admin.tenant.approval.all',
+            'label' => __('All Tenants Status'),
+            'parent' => 'tenant-approval-menu',
+            'permissions' => ['tenant-approval-list'],
         ]);
     }
 

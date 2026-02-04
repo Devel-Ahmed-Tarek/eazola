@@ -29,7 +29,11 @@ Route::middleware([
     'setlang'
 ])->group(function () {
 
-    Route::middleware(['package_expire','maintenance_mode'])->controller(\App\Http\Controllers\Tenant\Frontend\TenantFrontendController::class)->group(function () {
+    // Approval Status Page (No package_expire or tenant_approval middleware)
+    Route::get('/approval-status', [\App\Http\Controllers\Tenant\Frontend\TenantFrontendController::class, 'approvalStatus'])
+        ->name('tenant.frontend.approval.status');
+
+    Route::middleware(['package_expire','maintenance_mode','tenant_approval'])->controller(\App\Http\Controllers\Tenant\Frontend\TenantFrontendController::class)->group(function () {
         Route::get('/', 'homepage')->name('tenant.frontend.homepage');
         Route::get('/lang-change','lang_change')->name('tenant.frontend.langchange');
     });

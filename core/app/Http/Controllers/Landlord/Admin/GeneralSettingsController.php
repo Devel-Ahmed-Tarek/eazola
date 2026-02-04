@@ -137,6 +137,10 @@ class GeneralSettingsController extends Controller
             'date_display_style' => 'nullable',
             'set_app_debug_env' => 'nullable',
             'table_list_data_orderable_status' => 'nullable',
+            // Tenant Approval Settings
+            'require_tenant_approval' => 'nullable|string',
+            'notify_admin_new_tenant' => 'nullable|string',
+            'notify_tenant_on_approval' => 'nullable|string',
         ];
 
         $this->validate($request,$nonlang_fields);
