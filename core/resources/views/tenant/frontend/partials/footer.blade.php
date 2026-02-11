@@ -1,8 +1,15 @@
+@php
+    // Page-level control for footer visibility
+    $current_page = $page_post ?? null;
+    $show_footer = $current_page ? ($current_page->show_footer ?? true) : true;
+@endphp
+
 <div class="modal product-quick-view-bg-color" id="product_quick_view" tabindex="-1" role="dialog"
      aria-labelledby="productModal" aria-hidden="true"></div>
 
-
-@include('tenant.frontend.partials.widget-area')
+@if($show_footer)
+    @include('tenant.frontend.partials.widget-area')
+@endif
 
 <div class="mouseCursor cursorOuter"></div>
 <div class="mouseCursor cursorInner"></div>

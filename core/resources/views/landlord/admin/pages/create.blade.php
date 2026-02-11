@@ -86,6 +86,34 @@
                                 <option value="1">{{__('Publish')}}</option>
                                 <option value="0">{{__('Draft')}}</option>
                             </x-fields.select>
+
+                            {{-- Header & Footer Visibility (per page) --}}
+                            <div class="card mt-4 border-info">
+                                <div class="card-header bg-info text-white py-2">
+                                    <h6 class="mb-0"><i class="las la-columns"></i> {{__('Header & Footer (This Page Only)')}}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <x-fields.switcher
+                                        name="show_header"
+                                        label="{{__('Show Main Header')}}"
+                                        value="1"
+                                        info="{{__('Hide or show the main header for this page only.')}}"
+                                    />
+                                    <x-fields.switcher
+                                        name="show_social_header"
+                                        label="{{__('Show Social / Top Bar Header')}}"
+                                        value="1"
+                                        info="{{__('Control the top social/contact bar visibility for this page.')}}"
+                                    />
+                                    <x-fields.switcher
+                                        name="show_footer"
+                                        label="{{__('Show Footer')}}"
+                                        value="1"
+                                        info="{{__('Hide or show the footer for this page only.')}}"
+                                    />
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-gradient-primary me-2 mt-5">{{__('Save Changes')}}</button>
                         </div>
 

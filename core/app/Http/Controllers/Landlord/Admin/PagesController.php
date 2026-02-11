@@ -98,6 +98,10 @@ class PagesController extends Controller
 
         $page_data->page_builder = is_null( $request->page_builder) ? 0 : 1;
         $page_data->breadcrumb = is_null( $request->breadcrumb) ? 0 : 1;
+        // per-page header/footer visibility (default ON)
+        $page_data->show_header = is_null($request->show_header) ? 0 : 1;
+        $page_data->show_footer = is_null($request->show_footer) ? 0 : 1;
+        $page_data->show_social_header = is_null($request->show_social_header) ? 0 : 1;
 
         $Metas = [
             'title' => [$request->lang => SanitizeInput::esc_html($request->meta_title)],
@@ -161,6 +165,10 @@ class PagesController extends Controller
 
         $page_data->page_builder = is_null($request->page_builder) ? 0 : 1;
         $page_data->breadcrumb = is_null($request->breadcrumb) ? 0 : 1;
+        // per-page header/footer visibility (default ON)
+        $page_data->show_header = is_null($request->show_header) ? 0 : 1;
+        $page_data->show_footer = is_null($request->show_footer) ? 0 : 1;
+        $page_data->show_social_header = is_null($request->show_social_header) ? 0 : 1;
         $page_data->save();
 
 

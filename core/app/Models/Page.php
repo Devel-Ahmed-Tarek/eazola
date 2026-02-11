@@ -9,7 +9,20 @@ use Spatie\Translatable\HasTranslations;
 class Page extends Model
 {
     use HasFactory,HasTranslations;
-    protected $fillable = ['title','page_content','slug','visibility','page_builder','status','breadcrumb','navbar_variant','footer_variant'];
+    protected $fillable = [
+        'title',
+        'page_content',
+        'slug',
+        'visibility',
+        'page_builder',
+        'status',
+        'breadcrumb',
+        'navbar_variant',
+        'footer_variant',
+        'show_header',
+        'show_footer',
+        'show_social_header',
+    ];
     public $translatable = ['title','page_content'];
 
     public function metainfo(){
@@ -20,6 +33,9 @@ class Page extends Model
         'visibility' => 'integer',
         'page_builder' => 'integer',
         'breadcrumb' => 'integer',
-        'status' => 'integer'
+        'status' => 'integer',
+        'show_header' => 'boolean',
+        'show_footer' => 'boolean',
+        'show_social_header' => 'boolean',
     ];
 }

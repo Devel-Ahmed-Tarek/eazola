@@ -187,7 +187,15 @@
 </head>
 
 
+@php
+    // Current dynamic page (if any)
+    $current_page = $page_post ?? null;
+    $show_header = $current_page ? ($current_page->show_header ?? true) : true;
+@endphp
+
 <body class="{{tenant()?->theme_slug}}">
 
-@include('tenant.frontend.partials.navbar')
+@if($show_header)
+    @include('tenant.frontend.partials.navbar')
+@endif
 

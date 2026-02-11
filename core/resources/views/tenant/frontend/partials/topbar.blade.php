@@ -1,4 +1,10 @@
-@if(get_static_option('landlord_frontend_topbar_show_hide'))
+@php
+    // Page-level control for social/top bar header
+    $current_page = $page_post ?? null;
+    $show_social_header = $current_page ? ($current_page->show_social_header ?? true) : true;
+@endphp
+
+@if(get_static_option('landlord_frontend_topbar_show_hide') && $show_social_header)
 
   @php
       $theme = get_static_option('tenant_default_theme');
