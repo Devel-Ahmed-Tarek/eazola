@@ -106,7 +106,7 @@ class LandlordPricePlanAndTenantCreate
     {
         if ($event) {
             // Auto-confirm: when ON, tenant is approved immediately so they can visit site
-            $auto_confirm_orders = get_static_option_central('auto_confirm_package_orders');
+            $auto_confirm_orders = get_static_option('auto_confirm_package_orders');
             $require_approval = get_static_option_central('require_tenant_approval');
             
             if (!empty($auto_confirm_orders)) {

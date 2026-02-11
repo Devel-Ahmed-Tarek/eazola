@@ -352,7 +352,7 @@ class PaymentLogController extends Controller
          *  - Redirect to success page directly (no external payment)
          * ------------------------------------------------------------------
          */
-        if (!empty(get_static_option_central('auto_confirm_package_orders'))) {
+        if (!empty(get_static_option('auto_confirm_package_orders'))) {
             try {
                 $paymentLog = $createNewWebsiteTenantHelper->getPaymentLog();
 
