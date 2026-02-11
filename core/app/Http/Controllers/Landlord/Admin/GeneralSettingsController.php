@@ -141,6 +141,8 @@ class GeneralSettingsController extends Controller
             'require_tenant_approval' => 'nullable|string',
             'notify_admin_new_tenant' => 'nullable|string',
             'notify_tenant_on_approval' => 'nullable|string',
+            // Package Order Settings
+            'auto_confirm_package_orders' => 'nullable|string',
         ];
 
         $this->validate($request,$nonlang_fields);

@@ -105,9 +105,15 @@ class LandlordPricePlanAndTenantCreate
     public static function createDatabaseUsingEventListener($log, $user, $event = true)
     {
         if ($event) {
-            // Check if manual approval is required
+            // Auto-confirm: when ON, tenant is approved immediately so they can visit site
+            $auto_confirm_orders = get_static_option_central('auto_confirm_package_orders');
             $require_approval = get_static_option_central('require_tenant_approval');
-            $approval_status = !empty($require_approval) ? 'pending' : 'approved';
+            
+            if (!empty($auto_confirm_orders)) {
+                $approval_status = 'approved';
+            } else {
+                $approval_status = !empty($require_approval) ? 'pending' : 'approved';
+            }
             
             Tenant::create([
                 'id' => $log->tenant_id,

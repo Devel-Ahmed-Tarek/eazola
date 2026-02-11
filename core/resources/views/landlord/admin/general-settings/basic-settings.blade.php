@@ -59,6 +59,15 @@
                             <x-fields.switcher value="{{get_static_option('notify_tenant_on_approval')}}" name="notify_tenant_on_approval" label="{{__('Notify Tenant on Approval/Rejection')}}" info="{{__('Send email notification to tenant when their site is approved or rejected.')}}"/>
                         </div>
                     </div>
+
+                    <div class="card mt-4 mb-4 border-info">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="las la-shopping-cart"></i> {{__('Package Order Settings')}}</h5>
+                        </div>
+                        <div class="card-body">
+                            <x-fields.switcher value="{{get_static_option('auto_confirm_package_orders')}}" name="auto_confirm_package_orders" label="{{__('Auto-Confirm Package Orders')}}" info="{{__('When enabled, new package orders are confirmed as soon as payment succeeds. The tenant can visit their site immediately without waiting for confirmation from Order Manage.')}}"/>
+                        </div>
+                    </div>
                     @endif
 
                     <button type="submit" class="btn btn-gradient-primary me-2">{{__('Save Changes')}}</button>
