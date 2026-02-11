@@ -356,16 +356,17 @@ class PaymentLogController extends Controller
             try {
                 $paymentLog = $createNewWebsiteTenantHelper->getPaymentLog();
 
-                // Mark payment as complete
+                // 1) Mark payment as complete (status + payment_status)
                 LandlordPricePlanAndTenantCreate::update_database($paymentLog->id, Str::random(16));
 
-                // Update tenant dates and related info
-                LandlordPricePlanAndTenantCreate::update_tenant(['order_id' => $paymentLog->id]);
-
-                // Create tenant (if not exists) + send credentials mail
+                // 2) Create tenant (if not exists) + send credentials mail
+                //    this also applies our auto-approval logic
                 LandlordPricePlanAndTenantCreate::tenant_create_event_with_credential_mail($paymentLog->id, true);
 
-                // Wrap order id for success route
+                // 3) Now that tenant exists, update tenant dates/user/theme
+                LandlordPricePlanAndTenantCreate::update_tenant(['order_id' => $paymentLog->id]);
+
+                // 4) Redirect user to success page (from there يقدر يوصل لموقعه)
                 $order_id = XgPaymentGateway::wrapped_id(
                     random_int(1, 9) . $paymentLog->id . random_int(1, 9)
                 );
