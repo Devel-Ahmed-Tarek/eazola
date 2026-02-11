@@ -340,6 +340,42 @@ class PaymentLogController extends Controller
             return back()->with('msg', $message);
         }
 
+        /**
+         * ------------------------------------------------------------------
+         * Auto Confirm Package Orders (No Payment Flow)
+         * ------------------------------------------------------------------
+         * If enabled from Basic Settings (auto_confirm_package_orders),
+         * we will:
+         *  - Mark the order as complete
+         *  - Create/Update tenant with proper dates
+         *  - Trigger tenant create event with credentials mail
+         *  - Redirect to success page directly (no external payment)
+         * ------------------------------------------------------------------
+         */
+        if (!empty(get_static_option_central('auto_confirm_package_orders'))) {
+            try {
+                $paymentLog = $createNewWebsiteTenantHelper->getPaymentLog();
+
+                // Mark payment as complete
+                LandlordPricePlanAndTenantCreate::update_database($paymentLog->id, Str::random(16));
+
+                // Update tenant dates and related info
+                LandlordPricePlanAndTenantCreate::update_tenant(['order_id' => $paymentLog->id]);
+
+                // Create tenant (if not exists) + send credentials mail
+                LandlordPricePlanAndTenantCreate::tenant_create_event_with_credential_mail($paymentLog->id, true);
+
+                // Wrap order id for success route
+                $order_id = XgPaymentGateway::wrapped_id(
+                    random_int(1, 9) . $paymentLog->id . random_int(1, 9)
+                );
+
+                return redirect()->route(self::SUCCESS_ROUTE, $order_id);
+            } catch (\Exception $e) {
+                return back()->with(FlashMsg::item_delete(__('Auto confirm failed: ') . $e->getMessage()));
+            }
+        }
+
 
         if ($selected_payment_gateway == 'bank_transfer') {
             if ($createNewWebsiteTenantHelper->getPackage()->price != 0) { //for free zero pack
