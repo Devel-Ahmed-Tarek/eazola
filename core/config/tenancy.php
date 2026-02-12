@@ -198,7 +198,8 @@ return [
             tenant_module_migrations_file_path("Appointment"),
             tenant_module_migrations_file_path("HotelBooking"),
             tenant_module_migrations_file_path("Restaurant"),
-            tenant_module_migrations_file_path("SiteAnalytics")
+            tenant_module_migrations_file_path("SiteAnalytics"),
+            tenant_module_migrations_file_path("Shipping"),
         ],
         '--realpath' => true,
     ],
