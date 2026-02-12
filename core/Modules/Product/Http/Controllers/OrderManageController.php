@@ -18,6 +18,9 @@ use Modules\Product\Entities\OrderProducts;
 use Modules\Product\Entities\ProductInventory;
 use Modules\Product\Entities\ProductInventoryDetail;
 use Modules\Product\Entities\ProductOrder;
+use Modules\Shipping\Entities\ShippingAccount;
+use Modules\Shipping\Http\Services\Sideup\SideupClient;
+use Modules\Shipping\Http\Services\Sideup\SideupOrderService;
 
 class OrderManageController extends Controller
 {
@@ -90,6 +93,11 @@ class OrderManageController extends Controller
         }
         $order_details->save();
 
+        // Auto-create SideUp shipment when order is completed
+        if ($order_details->status === 'complete') {
+            $this->autoCreateSideupShipmentIfEnabled($order_details);
+        }
+
         if ($order_details->status === 'cancel')
         {
             $this->undostock($order_details);
@@ -111,6 +119,66 @@ class OrderManageController extends Controller
 
 
         return redirect()->back()->with(['msg' => __('Payment Logs Status Update Success...'), 'type' => 'success']);
+    }
+
+    /**
+     * Create SideUp shipment automatically when:
+     * - SideUp integration is enabled for this tenant
+     * - No existing shipment for this order
+     */
+    private function autoCreateSideupShipmentIfEnabled(ProductOrder $order): void
+    {
+        // حماية: لو موديل الشحن مش موجود (موديول مقفول أو مش متثبت) ما نعملش حاجة
+        if (!class_exists(ShippingAccount::class)) {
+            return;
+        }
+
+        // لو فيه شحنة أصلاً، ما نكررهاش
+        if ($order->shipment) {
+            return;
+        }
+
+        $account = ShippingAccount::where('provider', 'sideup')->first();
+
+        if (empty($account?->api_key) || empty($account?->base_url) || !$account->enabled) {
+            return;
+        }
+
+        try {
+            $shippingAddress = $order->shipping;
+
+            $orderData = [
+                'id'        => $order->id,
+                'amount'    => $order->total_amount,
+                'reference' => 'order_' . $order->id,
+                'from'      => [
+                    // TODO: لاحقاً نجيب عنوان التاجر من إعدادات التيننت
+                ],
+                'to'        => [
+                    'name'    => $order->name,
+                    'phone'   => $order->phone,
+                    'email'   => $order->email,
+                    'address' => $shippingAddress?->address ?? $order->address,
+                    'city'    => $shippingAddress?->city ?? $order->city,
+                    'state'   => $shippingAddress?->state ?? $order->state,
+                    'country' => $shippingAddress?->country ?? $order->country,
+                    'zip'     => $shippingAddress?->zip ?? $order->zipcode,
+                ],
+                'items'     => json_decode($order->order_details, true) ?? [],
+                'cod'       => $order->payment_gateway === 'cod',
+            ];
+
+            $client  = new SideupClient($account->base_url, $account->api_key);
+            $service = new SideupOrderService($client);
+
+            $service->createShipmentForOrder($orderData);
+        } catch (\Throwable $e) {
+            // متسجلة في اللوج، وما نكسرش تغيير حالة الطلب
+            \Log::warning('Auto SideUp shipment creation failed', [
+                'order_id' => $order->id,
+                'error'    => $e->getMessage(),
+            ]);
+        }
     }
 
     private function undostock($order) {
