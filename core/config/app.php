@@ -190,6 +190,7 @@ return [
 
         // WidgetBuilder service provider
         \Plugins\WidgetBuilder\WidgetBuilderServiceProvider::class,
+        Modules\Shipping\Providers\ShippingServiceProvider::class,
 
     ],
 

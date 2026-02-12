@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\CountryManage\Entities\Country;
 use Modules\CountryManage\Entities\State;
 use Modules\ShippingModule\Entities\UserShippingAddress;
+use Modules\Shipping\Entities\Shipment;
 
 class ProductOrder extends Model
 {
@@ -65,5 +66,10 @@ class ProductOrder extends Model
     public function sale_details()
     {
         return $this->hasMany(SaleDetails::class, 'order_id', 'id');
+    }
+
+    public function shipment(): HasOne
+    {
+        return $this->hasOne(Shipment::class, 'order_id', 'id');
     }
 }

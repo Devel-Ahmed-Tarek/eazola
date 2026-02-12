@@ -23,6 +23,35 @@
                             $order_meta = json_decode($order->payment_meta);
                         @endphp
 
+                        <!-- Shipping / SideUp Actions -->
+                        @php
+                            /** @var \Modules\Product\Entities\ProductOrder $order */
+                            $shipment = $order->shipment ?? null;
+                        @endphp
+
+                        <div class="mb-4 d-flex justify-content-end gap-2">
+                            @if($shipment)
+                                <a href="{{ $shipment->tracking_url ?? '#' }}" target="_blank"
+                                   class="btn btn-outline-primary btn-sm @if(empty($shipment->tracking_url)) disabled @endif">
+                                    {{ __('View Tracking') }}
+                                </a>
+                                @if(!empty($shipment->label_url))
+                                    <a href="{{ $shipment->label_url }}" target="_blank"
+                                       class="btn btn-outline-secondary btn-sm">
+                                        {{ __('Download Label') }}
+                                    </a>
+                                @endif
+                            @else
+                                <form action="{{ route('tenant.admin.shipping.sideup.order.create-shipment', $order->id) }}"
+                                      method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        {{ __('Create SideUp Shipment') }}
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+
                         <!-- Order status start-->
                         <div class="order-status-wrap order-details-page">
                             <table class="order-status-inner">
