@@ -61,6 +61,11 @@ class AppServiceProvider extends ServiceProvider
             if (is_dir($pluginManageViewsPath)) {
                 View::addNamespace('pluginmanage', $pluginManageViewsPath);
             }
+            // تسجيل views موديول Shipping (SideUp) لصفحة إعدادات SideUp
+            $shippingViewsPath = module_path('Shipping', 'Resources/views');
+            if (is_dir($shippingViewsPath)) {
+                View::addNamespace('shipping', $shippingViewsPath);
+            }
         }
 
         if (get_static_option('site_force_ssl_redirection') === 'on'){
