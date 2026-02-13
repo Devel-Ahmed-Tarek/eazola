@@ -206,6 +206,10 @@ class DatabaseSeeder extends Seeder
         foreach ($permissions as $permission) {
             \Spatie\Permission\Models\Permission::updateOrCreate(['name' => $permission, 'guard_name' => 'admin']);
         }
+
+        // Ensure Super Admin role has all landlord admin permissions (so plugin-manage and all menus work)
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'admin']);
+        $role->syncPermissions(\Spatie\Permission\Models\Permission::where('guard_name', 'admin')->pluck('name'));
     }
 
     private function tenant_new_permission_seed()

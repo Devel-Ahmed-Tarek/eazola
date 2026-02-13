@@ -14,7 +14,10 @@
 /* ------------------------------------------
      LANDLORD ADMIN ROUTES
 -------------------------------------------- */
-Route::group(['middleware' => ['auth:admin','adminglobalVariable', 'setlang'],'prefix' => 'admin-home'],function () {
+Route::group([
+    'middleware' => ['auth:admin', 'adminglobalVariable', 'setlang', 'role_or_permission:Super Admin|plugin-manage'],
+    'prefix' => 'admin-home'
+], function () {
     Route::get("plugin-manage/all",[\Modules\PluginManage\Http\Controllers\PluginManageController::class,"index"])->name("landlord.plugin.manage.all");
     Route::get("plugin-manage/new",[\Modules\PluginManage\Http\Controllers\PluginManageController::class,"add_new"])->name("landlord.plugin.manage.new");
     Route::post("plugin-manage/new",[\Modules\PluginManage\Http\Controllers\PluginManageController::class,"store_plugin"]);
