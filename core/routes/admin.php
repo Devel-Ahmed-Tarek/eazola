@@ -49,6 +49,15 @@ Route::group(['middleware' => ['auth:admin','adminglobalVariable','setlang'],'pr
     Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
     /* ------------------------------------------
+     PLUGIN MANAGE ROUTES (بدون تحقق صلاحيات - أي ادمن يدخل)
+   -------------------------------------------- */
+    Route::get('plugin-manage/all', [\Modules\PluginManage\Http\Controllers\PluginManageController::class, 'index'])->name('landlord.plugin.manage.all');
+    Route::get('plugin-manage/new', [\Modules\PluginManage\Http\Controllers\PluginManageController::class, 'add_new'])->name('landlord.plugin.manage.new');
+    Route::post('plugin-manage/new', [\Modules\PluginManage\Http\Controllers\PluginManageController::class, 'store_plugin']);
+    Route::post('plugin-manage/delete', [\Modules\PluginManage\Http\Controllers\PluginManageController::class, 'delete_plugin'])->name('landlord.plugin.manage.delete');
+    Route::post('plugin-manage/status', [\Modules\PluginManage\Http\Controllers\PluginManageController::class, 'change_status'])->name('landlord.plugin.manage.status.change');
+
+    /* ------------------------------------------
      PAGES MANAGE ROUTES
    -------------------------------------------- */
     Route::controller(PagesController::class)->name('landlord.')->prefix('pages')->group(function (){
