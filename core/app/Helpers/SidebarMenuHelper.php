@@ -1341,9 +1341,20 @@ class SidebarMenuHelper
                         $this->tenant_tax_settings_menus($menu_instance);
                     }
 
-                    // Shipping Manage - Check tenant menu visibility
-                    if (isPluginActive('ShippingModule') && $this->isTenantMenuVisible('shipping-settings-menu-items')) {
+                    // Shipping Manage (Zone, Method, SideUp) - يظهر لو ShippingModule أو Shipping (SideUp) مفعّل
+                    if ((isPluginActive('ShippingModule') || isPluginActive('Shipping')) && $this->isTenantMenuVisible('shipping-settings-menu-items')) {
                         $this->tenant_shipping_settings_menus($menu_instance);
+                    }
+
+                    // إعدادات SideUp – يظهر لأي أدمن تيننت عندما موديول Shipping مفعّل (طريقة الوصول لصفحة الإعدادات)
+                    if (isPluginActive('Shipping') && Route::has('tenant.admin.shipping.sideup.settings') && $this->isTenantMenuVisible('shipping-sideup-standalone')) {
+                        $menu_instance->add_menu_item('shipping-sideup-standalone', [
+                            'route' => 'tenant.admin.shipping.sideup.settings',
+                            'label' => __('SideUp Settings'),
+                            'parent' => null,
+                            'icon' => 'mdi mdi-truck-delivery',
+                            'permissions' => [],
+                        ]);
                     }
 
                     // Coupon Manage - Check tenant menu visibility
