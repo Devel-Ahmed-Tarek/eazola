@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Modules\EmailTemplate\Helpers\EmailTemplateHelper;
 
@@ -53,6 +54,14 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrap();
         Schema::defaultStringLength(191);
+
+        // تسجيل views موديول PluginManage حتى لو الموديول غير مفعّل (لأن الـ route في admin.php)
+        if (function_exists('module_path')) {
+            $pluginManageViewsPath = module_path('PluginManage', 'Resources/views');
+            if (is_dir($pluginManageViewsPath)) {
+                View::addNamespace('pluginmanage', $pluginManageViewsPath);
+            }
+        }
 
         if (get_static_option('site_force_ssl_redirection') === 'on'){
             URL::forceScheme('https');
