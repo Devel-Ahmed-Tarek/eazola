@@ -15,7 +15,7 @@
      LANDLORD ADMIN ROUTES
 -------------------------------------------- */
 Route::group([
-    'middleware' => ['auth:admin', 'adminglobalVariable', 'setlang', 'role_or_permission:Super Admin|plugin-manage'],
+    'middleware' => ['auth:admin', 'adminglobalVariable', 'setlang', 'role_or_permission:Super Admin|plugin-manage,admin'],
     'prefix' => 'admin-home'
 ], function () {
     Route::get("plugin-manage/all",[\Modules\PluginManage\Http\Controllers\PluginManageController::class,"index"])->name("landlord.plugin.manage.all");
