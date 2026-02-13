@@ -185,6 +185,18 @@ class ModuleMetaData
             $modules_status_data = json_decode(file_get_contents(base_path() . "/modules_statuses.json"), true);
         }
 
+        // Debug: log loaded modules_statuses.json and available module directories
+        try {
+            \Log::info('ModuleMetaData: modules_statuses.json loaded', [
+                'modules_status_keys' => array_keys($modules_status_data ?? []),
+            ]);
+            \Log::info('ModuleMetaData: detected module directories', [
+                'modules' => array_map(static fn ($dir) => pathinfo($dir, PATHINFO_BASENAME), $allDirectories ?: []),
+            ]);
+        } catch (\Throwable $e) {
+            // لا نكسر التنفيذ لو اللوج فشل
+        }
+
         foreach ($allDirectories as $dire) {
             //todo scan all the json file
             $currFolderName = pathinfo($dire, PATHINFO_BASENAME);
@@ -192,6 +204,10 @@ class ModuleMetaData
 
             //did not collect  meta info of the module which is disabled from module_status.json file
             if (!array_key_exists($currFolderName, $modules_status_data)) {
+                // Debug: module not present in modules_statuses.json
+                \Log::info('ModuleMetaData: module not in modules_statuses.json (skipped)', [
+                    'module' => $currFolderName,
+                ]);
                 continue;
             }
 
@@ -200,6 +216,11 @@ class ModuleMetaData
                 && isset($modules_status_data[$metaInformation->name])
                 && $modules_status_data[$metaInformation->name] === false
             ) {
+                // Debug: module explicitly disabled
+                \Log::info('ModuleMetaData: module disabled via modules_statuses.json (skipped)', [
+                    'module' => $currFolderName,
+                    'meta_name' => $metaInformation->name ?? null,
+                ]);
                 continue;
             }
 
@@ -207,6 +228,15 @@ class ModuleMetaData
                 $allModuleMeta[$currFolderName] = $metaInformation->nazmartMetaData;
                 $allModuleMeta[$currFolderName]->alias = $metaInformation->alias;
             }
+        }
+
+        // Debug: final enabled modules (those that will be used for menus / payments / etc.)
+        try {
+            \Log::info('ModuleMetaData: enabled modules after filtering', [
+                'enabled_modules' => array_keys($allModuleMeta),
+            ]);
+        } catch (\Throwable $e) {
+            // ignore logging failures
         }
 
         return $allModuleMeta;

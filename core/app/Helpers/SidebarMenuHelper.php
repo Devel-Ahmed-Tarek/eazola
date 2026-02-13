@@ -114,7 +114,19 @@ class SidebarMenuHelper
 
 
         // External Menu Render
-        foreach (getAllExternalMenu() as $externalMenu)
+        $externalMenus = getAllExternalMenu();
+
+        // Debug: log external menus registered by modules (plugins)
+        try {
+            \Log::info('SidebarMenu: external menus loaded', [
+                'count' => count($externalMenus),
+                'modules' => array_keys($externalMenus ?: []),
+            ]);
+        } catch (\Throwable $e) {
+            // ignore logging failures
+        }
+
+        foreach ($externalMenus as $moduleKey => $externalMenu)
         {
             foreach ($externalMenu as $individual_menu_item){
                 $convert_to_array = (array) $individual_menu_item;
@@ -123,6 +135,18 @@ class SidebarMenuHelper
                 }
                 $routeName = $convert_to_array['route'];
                 if (isset($routeName) && !empty($routeName) && Route::has($routeName)){
+                    // Debug: log each external menu item that is actually added
+                    try {
+                        \Log::info('SidebarMenu: adding external menu item', [
+                            'module' => $moduleKey,
+                            'id'     => $convert_to_array['id'] ?? null,
+                            'route'  => $routeName,
+                            'label'  => $convert_to_array['label'] ?? null,
+                        ]);
+                    } catch (\Throwable $e) {
+                        // ignore
+                    }
+
                     $menu_instance->add_menu_item($convert_to_array['id'], $convert_to_array);
                 }
             }
