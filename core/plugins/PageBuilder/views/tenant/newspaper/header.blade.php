@@ -1,8 +1,9 @@
 @php
-    $left_blog = $data['left_blog'];
-    $blogs = $data['blogs'];
+    $left_blog = $data['left_blog'] ?? null;
+    $blogs = $data['blogs'] ?? [];
 @endphp
 
+@if($left_blog)
 <div class="newspaper_banner newspaper_banner__padding">
     <div class="container" data-padding-top="{{$data['padding_top']}}" data-padding-bottom="{{$data['padding_bottom']}}">
 
@@ -16,7 +17,7 @@
                     </div>
                     <div class="newspaper_banner__content mt-4">
                         <div class="newspaper_banner__content__tag">
-                            <a href="{{ route('tenant.frontend.blog.category',['id'=> $left_blog->category_id, 'any' => \Illuminate\Support\Str::slug($left_blog->category?->title)]) }}" class="newspaper_banner__content__tag__item"><i class="las la-tags"></i>{{$left_blog->category?->title}}</a>
+                            <a href="{{ route('tenant.frontend.blog.category',['id'=> $left_blog->category_id, 'any' => \Illuminate\Support\Str::slug($left_blog->category?->title ?? '')]) }}" class="newspaper_banner__content__tag__item"><i class="las la-tags"></i>{{ $left_blog->category?->title }}</a>
                             <a href="{{ route('tenant.frontend.blog.single',$left_blog->slug) }}" class="newspaper_banner__content__tag__item"><i class="las la-clock"></i> {{ date('d M Y',strtotime($left_blog->created_at)) }}</a>
                         </div>
                         <h2 class="newspaper_banner__content__title mt-3"><a href="{{ route('tenant.frontend.blog.single',$left_blog->slug) }}">{{$left_blog->title}}</a></h2>
@@ -52,3 +53,4 @@
         </div>
     </div>
 </div>
+@endif
