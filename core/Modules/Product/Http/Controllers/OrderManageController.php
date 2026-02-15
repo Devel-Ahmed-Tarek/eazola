@@ -140,7 +140,12 @@ class OrderManageController extends Controller
 
         $account = ShippingAccount::where('provider', 'sideup')->first();
 
-        if (empty($account?->api_key) || empty($account?->base_url) || !$account->enabled) {
+        if (!$account || !$account->enabled || empty($account->base_url)) {
+            return;
+        }
+
+        $client = SideupClient::fromAccount($account);
+        if (!$client) {
             return;
         }
 
@@ -168,7 +173,6 @@ class OrderManageController extends Controller
                 'cod'       => $order->payment_gateway === 'cod',
             ];
 
-            $client  = new SideupClient($account->base_url, $account->api_key);
             $service = new SideupOrderService($client);
 
             $service->createShipmentForOrder($orderData);

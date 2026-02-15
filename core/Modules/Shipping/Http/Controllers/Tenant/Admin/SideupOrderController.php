@@ -22,8 +22,13 @@ class SideupOrderController extends Controller
 
         $account = ShippingAccount::where('provider', 'sideup')->first();
 
-        if (empty($account?->api_key) || empty($account?->base_url) || !$account->enabled) {
+        if (!$account || !$account->enabled || empty($account->base_url)) {
             return back()->with(FlashMsg::explain('danger', __('SideUp integration is not configured or disabled.')));
+        }
+
+        $client = SideupClient::fromAccount($account);
+        if (!$client) {
+            return back()->with(FlashMsg::explain('danger', __('Set API Key or Email + Password (or upload legacy JSON) in SideUp Settings.')));
         }
 
         // Build minimal order payload – نطوره لاحقاً حسب JSON الرسمي
@@ -51,7 +56,6 @@ class SideupOrderController extends Controller
         ];
 
         try {
-            $client = new SideupClient($account->base_url, $account->api_key);
             $service = new SideupOrderService($client);
 
             $service->createShipmentForOrder($orderData);
