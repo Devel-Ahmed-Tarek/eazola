@@ -33,7 +33,10 @@
                                        id="base_url"
                                        name="base_url"
                                        value="{{ old('base_url', $account->base_url ?? '') }}"
-                                       placeholder="https://api.sideup.io">
+                                       placeholder="https://portal.beta.sa.sideup.co/api">
+                                <small class="form-text text-muted">
+                                    {{ __('Examples:') }} https://portal.beta.sa.sideup.co/api (SA), https://portal.beta.eg.sideup.co/api (EG), https://sa.dev.sideup.org/api (Staging)
+                                </small>
                             </div>
 
                             <div class="form-group mb-3">
@@ -86,6 +89,22 @@
                                            name="legacy_json"
                                            accept=".json">
                                     <small class="form-text text-muted">{{ __('JSON keys: email, password, and optionally base_url') }}</small>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="d-block">{{ __('Default drop (zone / city / area)') }}</label>
+                                <p class="text-muted small mb-2">{{ __('Optional. SideUp requires zone_id, city_id, area_id for each order. Set defaults here or leave 0 to use SideUp defaults.') }}</p>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <input type="number" class="form-control" name="default_drop_zone" min="0" value="{{ old('default_drop_zone', $meta['default_drop']['zone'] ?? 0) }}" placeholder="{{ __('Zone ID') }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" class="form-control" name="default_drop_city" min="0" value="{{ old('default_drop_city', $meta['default_drop']['city'] ?? 0) }}" placeholder="{{ __('City ID') }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" class="form-control" name="default_drop_area" min="0" value="{{ old('default_drop_area', $meta['default_drop']['area'] ?? 0) }}" placeholder="{{ __('Area ID') }}">
+                                    </div>
                                 </div>
                             </div>
 

@@ -1,17 +1,24 @@
 # تكامل الشحن مع SideUp – دليل أدمن الموقع (Tenant Admin)
 
-هذا الملف يوضح **السيناريو الكامل** لاستخدام تكامل الشحن مع SideUp بحيث **أدمن الموقع (Tenant Admin)** يقدر يفعّل الشحن ويستخدمه مع طلبات المنتجات.
+هذا الملف يوضح **السيناريو الكامل** لاستخدام تكامل الشحن مع SideUp بحيث **أدمن الموقع (Tenant Admin)** يقدر يفعّل الشحن ويستخدمه مع طلبات المنتجات. التكامل مبني على **Merchant API Documentation (OpenAPI 1.0.2)** من SideUp.
 
 ---
 
 ## 1. نظرة عامة
 
 - **من يستخدم:** أدمن الموقع (Tenant) — كل متجر/موقع له إعداداته الخاصة.
-- **ماذا يفعل التكامل:** يربط طلبات المنتجات (Product Orders) بمنصة SideUp لإنشاء شحنات، تتبعها، وتحميل ملصقات الشحن.
+- **ماذا يفعل التكامل:** يربط طلبات المنتجات (Product Orders) بمنصة SideUp لإنشاء طلبات شحن (POST /merchants/order/store)، تتبعها، وتحميل ملصقات الشحن.
 - **أين الإعدادات:** إعدادات SideUp **لكل تيننت على حدة**.
 - **طرق الربط:** يمكن الربط بإحدى الطريقتين:
   - **API Key:** إدخال Base URL و API Key من لوحة SideUp.
-  - **Email + Password (Legacy):** إدخال إيميل وباسورد حساب SideUp، أو **تحميل ملف JSON قديم** يحتوي على: `email`, `password`, واختياريًا `base_url`. النظام يستخدمها لتسجيل الدخول واستلام توكن تلقائيًا.
+  - **Email + Password (Legacy):** إدخال إيميل وباسورد حساب SideUp، أو **تحميل ملف JSON قديم** يحتوي على: `email`, `password`, واختياريًا `base_url`. النظام يستخدم **POST /merchants/login** لاستلام JWT تلقائيًا ثم يرسل `Authorization: Bearer <token>` لجميع طلبات الـ API.
+- **عناوين الـ API (من OpenAPI):**
+  - **Main API (الطلبات والتسجيل):** يجب استخدام أحد عناوين الـ Main API كـ Base URL:
+    - السعودية: `https://portal.beta.sa.sideup.co/api`
+    - مصر: `https://portal.beta.eg.sideup.co/api`
+    - Staging SA: `https://sa.dev.sideup.org/api`
+    - Staging EG: `https://eg.dev.sideup.org/api`
+  - **خدمة الهوية (OAuth فقط):** `https://authentication.sideup.co` (Production) أو `https://authentication.sideup.org` (Staging) — التكامل الحالي يستخدم تسجيل الدخول عبر Main API (`/merchants/login`) وليس OAuth.
 
 ---
 
@@ -24,9 +31,10 @@
 | 1 | يسجّل الدخول إلى **لوحة إدارة الموقع (Tenant Admin)** على دومين المتجر (مثل `mystore.eazola.com`). | المتصفح |
 | 2 | يفتح صفحة **إعدادات SideUp**: من **القائمة الجانبية** → **SideUp Settings** (أو الرابط المباشر: `https://[دومين-المتجر]/admin-home/shipping/sideup`). | نفس الدومين |
 | 3 | يختار **طريقة الربط:** إما **API Key** (يدخل Base URL + API Key) أو **Email + Password (Legacy)** (يدخل الإيميل والباسورد، أو يرفع ملف JSON قديم بالمفاتيح: `email`, `password`, واختياريًا `base_url`). | نموذج الإعدادات |
-| 4 | يفعّل الخيار **Enable SideUp Integration**. | سويتش في نفس الصفحة |
-| 5 | يضغط **Save Settings**. | زر الحفظ |
-| 6 | (اختياري) يضغط **Test Connection** للتأكد أن الربط شغال. | زر في نفس الصفحة |
+| 4 | (اختياري) يملأ **Default drop** — Zone ID، City ID، Area ID من SideUp إن كان يعرفها؛ وإلا يتركها 0. طلبات الشحن تُرسل مع هذه القيم كموقع التسليم. | نفس الصفحة |
+| 5 | يفعّل الخيار **Enable SideUp Integration**. | سويتش في نفس الصفحة |
+| 6 | يضغط **Save Settings**. | زر الحفظ |
+| 7 | (اختياري) يضغط **Test Connection** للتأكد أن الربط شغال. | زر في نفس الصفحة |
 
 بعد هذه الخطوات يصبح التكامل **مفعّلاً لهذا المتجر فقط**. متاجر أخرى تحتاج نفس الإعداد على لوحة كل متجر.
 

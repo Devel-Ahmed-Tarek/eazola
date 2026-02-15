@@ -31,17 +31,16 @@ class SideupOrderController extends Controller
             return back()->with(FlashMsg::explain('danger', __('Set API Key or Email + Password (or upload legacy JSON) in SideUp Settings.')));
         }
 
-        // Build minimal order payload – نطوره لاحقاً حسب JSON الرسمي
         $shippingAddress = $order->shipping;
+        $meta = $account->meta ?? [];
+        $defaultDrop = $meta['default_drop'] ?? ['zone' => 0, 'city' => 0, 'area' => 0];
 
         $orderData = [
-            'id'      => $order->id,
-            'amount'  => $order->total_amount,
+            'id'        => $order->id,
+            'amount'    => $order->total_amount,
             'reference' => 'order_' . $order->id,
-            'from'    => [
-                // هنا لاحقاً نجيب عنوان التاجر من إعدادات التيننت
-            ],
-            'to'      => [
+            'from'      => [],
+            'to'        => [
                 'name'    => $order->name,
                 'phone'   => $order->phone,
                 'email'   => $order->email,
@@ -51,8 +50,9 @@ class SideupOrderController extends Controller
                 'country' => $shippingAddress?->country ?? $order->country,
                 'zip'     => $shippingAddress?->zip ?? $order->zipcode,
             ],
-            'items'   => json_decode($order->order_details, true) ?? [],
-            'cod'     => $order->payment_gateway === 'cod',
+            'drop'      => $defaultDrop,
+            'items'     => json_decode($order->order_details, true) ?? [],
+            'cod'       => $order->payment_gateway === 'cod',
         ];
 
         try {

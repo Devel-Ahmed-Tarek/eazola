@@ -65,8 +65,9 @@ class SideupClient
     }
 
     /**
-     * تسجيل الدخول بـ Email + Password واستلام التوكن (Legacy)
-     * يفترض SideUp يوفر endpoint مثل POST /auth/login يرجع { "token": "..." } أو { "access_token": "..." }
+     * تسجيل الدخول بـ Email + Password (طريقة SideUp الرسمية)
+     * من OpenAPI: POST /merchants/login بـ { email, password }
+     * الاستجابة: { status, message, data: { access_token, token_type, expires_in } }
      */
     protected static function loginAndGetToken(string $baseUrl, string $email, string $password): ?string
     {
@@ -74,7 +75,7 @@ class SideupClient
             $response = Http::acceptJson()
                 ->baseUrl($baseUrl)
                 ->timeout(15)
-                ->post('/auth/login', [
+                ->post('/merchants/login', [
                     'email'    => $email,
                     'password' => $password,
                 ]);
@@ -85,7 +86,7 @@ class SideupClient
             }
 
             $body = $response->json();
-            return $body['token'] ?? $body['access_token'] ?? null;
+            return $body['data']['access_token'] ?? $body['access_token'] ?? $body['token'] ?? null;
         } catch (\Throwable $e) {
             Log::error('SideUp login exception', ['message' => $e->getMessage()]);
             return null;
@@ -104,17 +105,17 @@ class SideupClient
     }
 
     /**
-     * مثال: إنشاء شحنة جديدة عند SideUp
-     *
-     * $payload لازم يكون مطابق للـ JSON Schema بتاعهم (من ملف الـ OpenAPI)
+     * إنشاء طلب شحن محلي (طريقة SideUp الرسمية من OpenAPI)
+     * POST /merchants/order/store
+     * المطلوب: receiver_name, receiver_phone, receiver_address, drop { zone, city, area }, item_cost (اختياري)، description، notes
      */
-    public function createShipment(array $payload): array
+    public function createOrder(array $payload): array
     {
         try {
-            $response = $this->client()->post('/shipments', $payload);
+            $response = $this->client()->post('/merchants/order/store', $payload);
 
             if ($response->failed()) {
-                Log::warning('SideUp createShipment failed', [
+                Log::warning('SideUp createOrder failed', [
                     'status' => $response->status(),
                     'body'   => $response->body(),
                 ]);
@@ -124,9 +125,27 @@ class SideupClient
 
             return $response->json() ?? [];
         } catch (\Throwable $e) {
-            Log::error('SideUp createShipment exception', [
+            Log::error('SideUp createOrder exception', [
                 'message' => $e->getMessage(),
             ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * إنشاء شحنة (للتوافق؛ الـ API الرسمي يستخدم createOrder مع payload من OpenAPI)
+     */
+    public function createShipment(array $payload): array
+    {
+        try {
+            $response = $this->client()->post('/shipments', $payload);
+            if ($response->failed()) {
+                Log::warning('SideUp createShipment failed', ['status' => $response->status(), 'body' => $response->body()]);
+                $response->throw();
+            }
+            return $response->json() ?? [];
+        } catch (\Throwable $e) {
+            Log::error('SideUp createShipment exception', ['message' => $e->getMessage()]);
             throw $e;
         }
     }

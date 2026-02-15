@@ -21,37 +21,57 @@ class SideupOrderService
     }
 
     /**
-     * @param  array  $orderData  تمثيل مبسّط للـ Order (هنتوسع فيه بعدين)
+     * إنشاء شحنة من طلب المنتج وفق OpenAPI SideUp: POST /merchants/order/store
+     *
+     * @param  array  $orderData  يجب أن يحتوي: to.name, to.phone, to.address؛ و drop { zone, city, area } (من إعدادات الحساب أو الطلب)
      */
     public function createShipmentForOrder(array $orderData): Shipment
     {
-        // TODO: هنا بنبني الـ Payload الحقيقي حسب JSON بتاع SideUp
+        $to = $orderData['to'] ?? [];
+        $drop = $orderData['drop'] ?? ['zone' => 0, 'city' => 0, 'area' => 0];
+
         $payload = [
-            'reference' => $orderData['reference'] ?? ('order_' . $orderData['id']),
-            'from'      => $orderData['from'] ?? [],
-            'to'        => $orderData['to'] ?? [],
-            'items'     => $orderData['items'] ?? [],
-            'cod'       => $orderData['cod'] ?? false,
-            'amount'    => $orderData['amount'] ?? 0,
+            'receiver_name'    => $to['name'] ?? '',
+            'receiver_phone'   => $to['phone'] ?? '',
+            'receiver_address' => $to['address'] ?? '',
+            'drop'             => [
+                'zone' => (int) ($drop['zone'] ?? 0),
+                'city' => (int) ($drop['city'] ?? 0),
+                'area' => (int) ($drop['area'] ?? 0),
+            ],
+            'item_cost'        => (float) ($orderData['amount'] ?? 0),
+            'description'      => $orderData['description'] ?? ('Order #' . ($orderData['id'] ?? '')),
+            'notes'            => $orderData['notes'] ?? null,
         ];
 
-        $response = $this->client->createShipment($payload);
+        if (! empty($to['extra_phone'] ?? null)) {
+            $payload['receiver_extra_phone'] = $to['extra_phone'];
+        }
+        if (isset($orderData['courier_id'])) {
+            $payload['courier_id'] = (int) $orderData['courier_id'];
+        }
+        if (isset($orderData['pickup_location'])) {
+            $payload['pickup_location'] = (int) $orderData['pickup_location'];
+        }
 
-        Log::info('SideUp shipment created', ['order_id' => $orderData['id'] ?? null, 'response' => $response]);
+        $response = $this->client->createOrder($payload);
+        $data = $response['data'] ?? $response;
+
+        Log::info('SideUp order created', ['order_id' => $orderData['id'] ?? null, 'response' => $response]);
 
         return Shipment::create([
-            'order_id'            => $orderData['id'] ?? null,
-            'provider'            => 'sideup',
-            'external_shipment_id'=> $response['id']     ?? null,
-            'tracking_number'     => $response['tracking_number'] ?? null,
-            'carrier_name'        => $response['carrier'] ?? null,
-            'service_type'        => $response['service'] ?? null,
-            'status'              => $response['status']  ?? 'created',
-            'label_url'           => $response['label_url'] ?? null,
-            'tracking_url'        => $response['tracking_url'] ?? null,
-            'shipping_cost'       => $response['price'] ?? null,
-            'currency'            => $response['currency'] ?? null,
-            'meta'                => $response,
+            'order_id'             => $orderData['id'] ?? null,
+            'provider'             => 'sideup',
+            'external_shipment_id'  => $data['id'] ?? null,
+            'tracking_number'      => $data['shipment_code'] ?? null,
+            'carrier_name'         => $data['carrier'] ?? null,
+            'service_type'         => $data['service'] ?? null,
+            'status'               => $data['status'] ?? 'to_be_assigned',
+            'label_url'            => $data['label_url'] ?? null,
+            'tracking_url'         => $data['tracking_url'] ?? null,
+            'shipping_cost'        => $data['merchant_delivery_fees'] ?? null,
+            'currency'             => $data['currency'] ?? null,
+            'meta'                 => $data,
         ]);
     }
 }

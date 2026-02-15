@@ -151,14 +151,14 @@ class OrderManageController extends Controller
 
         try {
             $shippingAddress = $order->shipping;
+            $meta = $account->meta ?? [];
+            $defaultDrop = $meta['default_drop'] ?? ['zone' => 0, 'city' => 0, 'area' => 0];
 
             $orderData = [
                 'id'        => $order->id,
                 'amount'    => $order->total_amount,
                 'reference' => 'order_' . $order->id,
-                'from'      => [
-                    // TODO: لاحقاً نجيب عنوان التاجر من إعدادات التيننت
-                ],
+                'from'      => [],
                 'to'        => [
                     'name'    => $order->name,
                     'phone'   => $order->phone,
@@ -169,6 +169,7 @@ class OrderManageController extends Controller
                     'country' => $shippingAddress?->country ?? $order->country,
                     'zip'     => $shippingAddress?->zip ?? $order->zipcode,
                 ],
+                'drop'      => $defaultDrop,
                 'items'     => json_decode($order->order_details, true) ?? [],
                 'cod'       => $order->payment_gateway === 'cod',
             ];

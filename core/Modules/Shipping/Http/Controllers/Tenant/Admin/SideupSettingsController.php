@@ -28,13 +28,16 @@ class SideupSettingsController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
-            'auth_type'   => 'nullable|in:api_key,email_password',
-            'api_key'     => 'nullable|string',
-            'base_url'    => 'nullable|url',
-            'email'       => 'nullable|email',
-            'password'    => 'nullable|string',
-            'enabled'     => 'nullable|string',
-            'legacy_json' => 'nullable|file|mimes:json',
+            'auth_type'         => 'nullable|in:api_key,email_password',
+            'api_key'           => 'nullable|string',
+            'base_url'          => 'nullable|url',
+            'email'             => 'nullable|email',
+            'password'          => 'nullable|string',
+            'enabled'           => 'nullable|string',
+            'legacy_json'       => 'nullable|file|mimes:json',
+            'default_drop_zone' => 'nullable|integer|min:0',
+            'default_drop_city' => 'nullable|integer|min:0',
+            'default_drop_area' => 'nullable|integer|min:0',
         ]);
 
         $account = ShippingAccount::firstOrNew(['provider' => 'sideup']);
@@ -78,6 +81,12 @@ class SideupSettingsController extends Controller
         if (($meta['auth_type'] ?? '') === self::AUTH_API_KEY) {
             $account->api_key = $data['api_key'] ?? null;
         }
+
+        $meta['default_drop'] = [
+            'zone' => (int) ($data['default_drop_zone'] ?? 0),
+            'city' => (int) ($data['default_drop_city'] ?? 0),
+            'area' => (int) ($data['default_drop_area'] ?? 0),
+        ];
         $account->meta = $meta;
         $account->save();
 
