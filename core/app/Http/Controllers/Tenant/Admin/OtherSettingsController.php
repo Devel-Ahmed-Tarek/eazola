@@ -102,16 +102,28 @@ class OtherSettingsController extends Controller
         $theme_setting_type = $request->theme_setting_type;
         $requested_theme = $request->tenant_default_theme;
 
-        if($theme_setting_type !== 'set_theme'){
+        if ($theme_setting_type !== 'set_theme') {
+            // عند تعيين السيم مع بيانات الديمو: نمسح صفحات السيم القديم أولاً ثم نضيف صفحات السيم الجديد فقط
+            $this->clearAllThemePagesAndAddons();
             $this->set_new_home($requested_theme);
         }
-        update_static_option('tenant_default_theme',$requested_theme);
+        update_static_option('tenant_default_theme', $requested_theme);
         $tenant_id = \tenant()->id;
         Tenant::where('id', $tenant_id)->update([
             'theme_slug' => $requested_theme
         ]);
 
         return response()->success(ResponseMessage::SettingsSaved());
+    }
+
+    /**
+     * مسح كل الصفحات وودجات الـ Page Builder الخاصة بالتيننت (قبل استبدال السيم بآخر مع بيانات الديمو).
+     */
+    private function clearAllThemePagesAndAddons(): void
+    {
+        PageBuilder::query()->delete();
+        Page::query()->delete();
+        delete_static_option('home_page');
     }
 
     public function set_new_home($requested_theme)

@@ -49,7 +49,10 @@
        <div class="col-lg-4">
            <div class="card page_builder_sidebar">
                <div class="card-body">
-                   <x-pagebuilder::widgets type="landlord"/>
+                   @php
+                       $builder_type = tenant() ? 'tenant' : 'landlord';
+                   @endphp
+                   <x-pagebuilder::widgets :type="$builder_type"/>
                </div>
            </div>
        </div>
