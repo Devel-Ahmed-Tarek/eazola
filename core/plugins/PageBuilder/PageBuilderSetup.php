@@ -327,6 +327,14 @@ class PageBuilderSetup
         return $addonLists;
     }
 
+    /**
+     * قائمة الودجات المتاحة لمسؤول التيننت (نفس القائمة المعتمدة على الباقة والسمات عند وجود tenant).
+     */
+    private static function tenant_registerd_widgets(): array
+    {
+        return self::registerd_widgets();
+    }
+
     public static function get_tenant_admin_panel_widgets(): string
     {
         $widgets_markup = '';
