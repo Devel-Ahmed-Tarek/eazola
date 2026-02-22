@@ -148,7 +148,7 @@
                 <div class="modal-body">
                     <p class="text-muted small mb-3">{{ __('Select the themes for which this page is a default page (imported when tenant switches to that theme with demo data). Click on the theme image to select or deselect.') }}</p>
                     <input type="hidden" id="default_themes_page_id" value="">
-                    <div class="theme-checkboxes theme-cards-wrapper row g-3" style="max-height: 400px; overflow-y: auto;">
+                    <div class="theme-checkboxes theme-cards-wrapper row g-3" style="max-height: 420px; overflow-y: auto;">
                         @forelse($themes ?? [] as $theme)
                             @php
                                 $theme_image = loadScreenshot($theme->slug);
@@ -156,13 +156,13 @@
                                 $img_src = !empty($custom_theme_image) ? $custom_theme_image : $theme_image;
                             @endphp
                             <div class="col-6 col-md-4 col-lg-3 theme-card-wrap">
-                                <input class="d-none theme-slug-cb" type="checkbox" name="theme_slugs[]" value="{{ $theme->slug }}" id="theme_cb_{{ $theme->id }}">
-                                <label class="theme-card-label d-block border rounded overflow-hidden text-center text-decoration-none text-dark mb-0 cursor-pointer position-relative" for="theme_cb_{{ $theme->id }}">
-                                    <div class="theme-card-img-wrap" style="height: 100px; background: #f0f0f0;">
-                                        <img src="{{ $img_src }}" alt="{{ $theme->title ?? $theme->slug }}" class="w-100 h-100 object-fit-cover" loading="lazy" onerror="this.style.display='none'">
+                                <input class="theme-slug-cb visually-hidden" type="checkbox" name="theme_slugs[]" value="{{ $theme->slug }}" id="theme_cb_{{ $theme->id }}">
+                                <label class="theme-card-label d-block border rounded overflow-hidden text-center text-decoration-none text-dark mb-0 position-relative" for="theme_cb_{{ $theme->id }}" style="cursor: pointer;">
+                                    <div class="theme-card-img-wrap bg-light" style="aspect-ratio: 4/3;">
+                                        <img src="{{ $img_src }}" alt="{{ $theme->title ?? $theme->slug }}" class="theme-card-img" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3ENo image%3C/text%3E%3C/svg%3E'">
                                     </div>
-                                    <div class="p-2 small">{{ $theme->title ?? $theme->slug }}</div>
-                                    <span class="theme-card-check position-absolute top-0 end-0 m-1 bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 22px; height: 22px; display: none !important;"><i class="las la-check" style="font-size: 12px;"></i></span>
+                                    <div class="p-2 small text-truncate" title="{{ $theme->title ?? $theme->slug }}">{{ $theme->title ?? $theme->slug }}</div>
+                                    <span class="theme-card-check position-absolute top-0 end-0 m-1 bg-success text-white rounded-circle align-items-center justify-content-center theme-card-check-icon"><i class="las la-check" style="font-size: 12px;"></i></span>
                                 </label>
                             </div>
                         @empty
@@ -180,12 +180,13 @@
         </div>
     </div>
     <style>
+        .theme-card-img-wrap { display: flex; align-items: center; justify-content: center; }
+        .theme-card-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .theme-card-label { transition: border-color .15s, box-shadow .15s; }
         .theme-card-label:hover { border-color: var(--bs-primary) !important; }
-        .theme-card-label:has(input:checked),
-        .theme-card-label.theme-selected { border-width: 2px !important; border-color: var(--bs-success) !important; }
-        .theme-card-label:has(input:checked) .theme-card-check,
-        .theme-card-label.theme-selected .theme-card-check { display: flex !important; }
-        .theme-card-label.cursor-pointer { cursor: pointer; }
+        .theme-card-label.theme-selected { border-width: 2px !important; border-color: var(--bs-success) !important; box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.25); }
+        .theme-card-check-icon { width: 24px; height: 24px; display: none; font-size: 12px; }
+        .theme-card-label.theme-selected .theme-card-check-icon { display: flex !important; }
     </style>
 
 @endsection
@@ -214,10 +215,12 @@
                 $('input[name="lang"]').val($(this).val());
             });
 
-            // اختر السيمات: عند فتح المودال نملأ الصفحة والـ checkboxes وحديث حالة الصور
+            // اختر السيمات: تحديث شكل الكارد حسب حالة الـ checkbox (الـ input أخو الـ label داخل نفس الـ wrap)
             function syncThemeCardSelection() {
-                $('.theme-card-label').each(function() {
-                    $(this).toggleClass('theme-selected', $(this).find('.theme-slug-cb').prop('checked'));
+                $('.theme-card-wrap').each(function() {
+                    var $wrap = $(this);
+                    var isChecked = $wrap.find('.theme-slug-cb').prop('checked');
+                    $wrap.find('.theme-card-label').toggleClass('theme-selected', isChecked);
                 });
             }
             $('#choose_default_themes_modal').on('show.bs.modal', function (e) {
@@ -229,11 +232,11 @@
                 $('#default_themes_page_id').val(pageId);
                 $('.theme-slug-cb').prop('checked', false);
                 defaultThemes.forEach(function(slug) {
-                    $('.theme-slug-cb[value="' + slug + '"]').prop('checked', true);
+                    $('#choose_default_themes_modal .theme-slug-cb[value="' + slug + '"]').prop('checked', true);
                 });
-                syncThemeCardSelection();
+                setTimeout(syncThemeCardSelection, 50);
             });
-            $(document).on('change', '.theme-slug-cb', syncThemeCardSelection);
+            $(document).on('change', '#choose_default_themes_modal .theme-slug-cb', syncThemeCardSelection);
 
             $('#save_default_themes_btn').on('click', function() {
                 var pageId = $('#default_themes_page_id').val();
