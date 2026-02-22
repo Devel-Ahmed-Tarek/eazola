@@ -699,6 +699,7 @@ Route::controller(FormBuilderController::class)->name('landlord.')->prefix('form
         Route::get('/pages-settings', 'pages_index')->name('landlord.admin.seeder.pages.index');
         Route::get('/pages-data-settings', 'pages_data_settings')->name('landlord.admin.seeder.pages.data.settings');
         Route::post('/pages-data-settings', 'update_pages_data_settings');
+        Route::post('/pages-default-themes', 'update_page_default_themes')->name('landlord.admin.seeder.pages.default.themes');
 
         //Blogs
         Route::get('/blog-settings', 'blog_index')->name('landlord.admin.seeder.blog.index');

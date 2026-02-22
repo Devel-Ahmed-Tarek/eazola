@@ -538,8 +538,9 @@ class SeederSettingsController extends Controller
         $dynamic_pages = file_get_contents('assets/tenant/page-layout/dynamic-pages.json');
         $all_data_decoded = json_decode($dynamic_pages);
         $default_lang = $request->lang ?? default_lang();
+        $themes = \App\Models\Themes::where('status', 1)->orderBy('id')->get(['id', 'title', 'slug']);
 
-        return view(self::BASE_PATH.'pages.page-data',compact('all_data_decoded','default_lang'));
+        return view(self::BASE_PATH.'pages.page-data', compact('all_data_decoded', 'default_lang', 'themes'));
     }
     public function update_pages_data_settings(Request $request)
     {
@@ -570,6 +571,39 @@ class SeederSettingsController extends Controller
         file_put_contents($only_path ,json_encode($all_data_decoded));
 
         return redirect()->back()->with(FlashMsg::item_update());
+    }
+
+    /**
+     * حفظ السيمات التي تُعتبر هذه الصفحة ديفولت لها (عند تغيير السيم تنزل مع ديمو السيم).
+     */
+    public function update_page_default_themes(Request $request)
+    {
+        $request->validate([
+            'page_id' => 'required',
+            'theme_slugs' => 'nullable|array',
+            'theme_slugs.*' => 'string',
+        ]);
+
+        $only_path = 'assets/tenant/page-layout/dynamic-pages.json';
+        if (!file_exists($only_path)) {
+            return response()->json(['success' => false, 'message' => __('File not found')], 404);
+        }
+
+        $content = file_get_contents($only_path);
+        $all_data_decoded = json_decode($content);
+        $page_id = (int) $request->page_id;
+        $theme_slugs = $request->theme_slugs ?? [];
+
+        foreach ($all_data_decoded->data ?? [] as $item) {
+            if ((int) $item->id === $page_id) {
+                $item->default_for_themes = $theme_slugs;
+                break;
+            }
+        }
+
+        file_put_contents($only_path, json_encode($all_data_decoded));
+
+        return response()->json(['success' => true, 'message' => __('Saved')]);
     }
 //Pages Data
 

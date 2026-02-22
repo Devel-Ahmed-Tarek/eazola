@@ -128,7 +128,6 @@ class OtherSettingsController extends Controller
 
     public function set_new_home($requested_theme)
     {
-
         $current_theme = $requested_theme;
 
         $object = new JsonDataModifier('', 'dynamic-pages');
@@ -140,46 +139,61 @@ class OtherSettingsController extends Controller
             'page_builder',
             'breadcrumb',
             'status',
-            'theme_slug'
-        ],true, true);
+            'theme_slug',
+            'default_for_themes',
+        ], true, true);
 
-
-
-        //For home pages
-
-        $filter_data = array_filter($data,function ($item) use ($current_theme){
-            if (in_array($item['theme_slug'],[null,$current_theme])){
-               if($item['theme_slug'] == $current_theme){
-                    return $item;
-               }
-            }
-        });
-
-
-        $homepageData = current($filter_data);
-
-        $mapped_data = array_map(function ($item){
-            unset($item['theme_slug']);
-            return $item;
-        },$filter_data);
-
-
-        $main_data = current($mapped_data);
-        if(is_array($main_data)){
-            if(Page::find($main_data['id']) == true){
-                update_static_option('home_page',$homepageData['id'] );
-                return redirect()->back()->with(['type'=>'success','msg'=> __('Home Already Imported')]);
-            }
-
-            Page::insert($main_data);
-
-            $homepage_id = $homepageData['id'] ?? null;
-            $home_page_layout_file = $current_theme.'-layout.json';
-            $this->upload_layout($home_page_layout_file, $homepage_id);
-
-            update_static_option('home_page',$homepage_id);
+        if (empty($data)) {
+            return;
         }
 
+        // الصفحات الديفولت للسيم: إما الصفحة معلمة بالسيم في default_for_themes، أو (للتوافق) theme_slug = السيم الحالي
+        $filter_data = array_filter($data, function ($item) use ($current_theme) {
+            $default_for = $item['default_for_themes'] ?? null;
+            if (is_array($default_for) && ! empty($default_for)) {
+                return in_array($current_theme, $default_for);
+            }
+            return ($item['theme_slug'] ?? null) === $current_theme;
+        });
+
+        $filter_data = array_values($filter_data);
+        if (empty($filter_data)) {
+            return;
+        }
+
+        // تحديد الصفحة الرئيسية: التي theme_slug = السيم الحالي، وإلا أول صفحة في القائمة
+        $homepageData = null;
+        foreach ($filter_data as $item) {
+            if (($item['theme_slug'] ?? null) === $current_theme) {
+                $homepageData = $item;
+                break;
+            }
+        }
+        if (! $homepageData) {
+            $homepageData = $filter_data[0];
+        }
+
+        foreach ($filter_data as $item) {
+            $for_insert = $item;
+            unset($for_insert['theme_slug'], $for_insert['default_for_themes']);
+            if (empty($for_insert) || ! is_array($for_insert)) {
+                continue;
+            }
+            if (Page::find($for_insert['id'] ?? 0)) {
+                continue;
+            }
+            Page::insert($for_insert);
+        }
+
+        $homepage_id = $homepageData['id'] ?? null;
+        if ($homepage_id) {
+            $home_page_layout_file = $current_theme . '-layout.json';
+            $layout_path = 'assets/tenant/page-layout/home-pages/' . $home_page_layout_file;
+            if (file_exists($layout_path)) {
+                $this->upload_layout($home_page_layout_file, $homepage_id);
+            }
+            update_static_option('home_page', $homepage_id);
+        }
     }
     private function upload_layout($file, $page_id)
     {
