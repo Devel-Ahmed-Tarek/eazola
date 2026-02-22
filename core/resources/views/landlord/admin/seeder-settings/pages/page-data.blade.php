@@ -137,25 +137,38 @@
         </div>
     </div>
 
-    {{-- مودال: اختر السيمات التي تكون فيها هذه الصفحة ديفولت --}}
+    {{-- مودال: اختر السيمات التي تكون فيها هذه الصفحة ديفولت (بصور السيمات) --}}
     <div class="modal fade" id="choose_default_themes_modal" tabindex="-1" aria-labelledby="choose_default_themes_label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="choose_default_themes_label">{{ __('Choose themes') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-muted small">{{ __('Select the themes for which this page is a default page (imported when tenant switches to that theme with demo data).') }}</p>
+                    <p class="text-muted small mb-3">{{ __('Select the themes for which this page is a default page (imported when tenant switches to that theme with demo data). Click on the theme image to select or deselect.') }}</p>
                     <input type="hidden" id="default_themes_page_id" value="">
-                    <div class="theme-checkboxes border rounded p-3" style="max-height: 280px; overflow-y: auto;">
+                    <div class="theme-checkboxes theme-cards-wrapper row g-3" style="max-height: 400px; overflow-y: auto;">
                         @forelse($themes ?? [] as $theme)
-                            <div class="form-check">
-                                <input class="form-check-input theme-slug-cb" type="checkbox" name="theme_slugs[]" value="{{ $theme->slug }}" id="theme_cb_{{ $theme->id }}">
-                                <label class="form-check-label" for="theme_cb_{{ $theme->id }}">{{ $theme->title ?? $theme->slug }}</label>
+                            @php
+                                $theme_image = loadScreenshot($theme->slug);
+                                $custom_theme_image = get_static_option_central($theme->slug . '_theme_image');
+                                $img_src = !empty($custom_theme_image) ? $custom_theme_image : $theme_image;
+                            @endphp
+                            <div class="col-6 col-md-4 col-lg-3 theme-card-wrap">
+                                <input class="d-none theme-slug-cb" type="checkbox" name="theme_slugs[]" value="{{ $theme->slug }}" id="theme_cb_{{ $theme->id }}">
+                                <label class="theme-card-label d-block border rounded overflow-hidden text-center text-decoration-none text-dark mb-0 cursor-pointer position-relative" for="theme_cb_{{ $theme->id }}">
+                                    <div class="theme-card-img-wrap" style="height: 100px; background: #f0f0f0;">
+                                        <img src="{{ $img_src }}" alt="{{ $theme->title ?? $theme->slug }}" class="w-100 h-100 object-fit-cover" loading="lazy" onerror="this.style.display='none'">
+                                    </div>
+                                    <div class="p-2 small">{{ $theme->title ?? $theme->slug }}</div>
+                                    <span class="theme-card-check position-absolute top-0 end-0 m-1 bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 22px; height: 22px; display: none !important;"><i class="las la-check" style="font-size: 12px;"></i></span>
+                                </label>
                             </div>
                         @empty
-                            <p class="text-muted small mb-0">{{ __('No themes available.') }}</p>
+                            <div class="col-12">
+                                <p class="text-muted small mb-0">{{ __('No themes available.') }}</p>
+                            </div>
                         @endforelse
                     </div>
                 </div>
@@ -166,6 +179,14 @@
             </div>
         </div>
     </div>
+    <style>
+        .theme-card-label:hover { border-color: var(--bs-primary) !important; }
+        .theme-card-label:has(input:checked),
+        .theme-card-label.theme-selected { border-width: 2px !important; border-color: var(--bs-success) !important; }
+        .theme-card-label:has(input:checked) .theme-card-check,
+        .theme-card-label.theme-selected .theme-card-check { display: flex !important; }
+        .theme-card-label.cursor-pointer { cursor: pointer; }
+    </style>
 
 @endsection
 
@@ -193,7 +214,12 @@
                 $('input[name="lang"]').val($(this).val());
             });
 
-            // اختر السيمات: عند فتح المودال نملأ الصفحة والـ checkboxes
+            // اختر السيمات: عند فتح المودال نملأ الصفحة والـ checkboxes وحديث حالة الصور
+            function syncThemeCardSelection() {
+                $('.theme-card-label').each(function() {
+                    $(this).toggleClass('theme-selected', $(this).find('.theme-slug-cb').prop('checked'));
+                });
+            }
             $('#choose_default_themes_modal').on('show.bs.modal', function (e) {
                 var btn = $(e.relatedTarget);
                 if (!btn.hasClass('btn-choose-themes')) return;
@@ -205,7 +231,9 @@
                 defaultThemes.forEach(function(slug) {
                     $('.theme-slug-cb[value="' + slug + '"]').prop('checked', true);
                 });
+                syncThemeCardSelection();
             });
+            $(document).on('change', '.theme-slug-cb', syncThemeCardSelection);
 
             $('#save_default_themes_btn').on('click', function() {
                 var pageId = $('#default_themes_page_id').val();
