@@ -10,10 +10,17 @@ use Database\Seeders\Tenant\ModuleData\MenuSeed;
 class DefaultPages
 {
 
+    /**
+     * عند إنشاء موقع جديد: تنزل فقط الصفحات الديفولت للسيم (نفس منطق "اختر السيمات" + تغيير السيم).
+     */
     public static function execute()
     {
             $payment_log = tenant()->payment_log()?->first() ?? [];
-            $current_theme = $payment_log->theme;
+            $current_theme = $payment_log->theme ?? null;
+
+            if (empty($current_theme)) {
+                return;
+            }
 
             $object = new JsonDataModifier('', 'dynamic-pages');
             $data = $object->getColumnDataForDynamicPage([
@@ -24,45 +31,60 @@ class DefaultPages
                 'page_builder',
                 'breadcrumb',
                 'status',
-                'theme_slug'
-            ],true, true);
+                'theme_slug',
+                'default_for_themes',
+            ], true, true);
 
-          //For home pages
-
-        $filter_data = array_filter($data,function ($item) use ($current_theme){
-            if (in_array($item['theme_slug'],[null,$current_theme])){
-                return $item;
+            if (empty($data)) {
+                return;
             }
-        });
-        $homepageData = array_filter($data,function ($item) use ($current_theme){
-            if (in_array($item['theme_slug'],[$current_theme])){
-                return $item;
+
+            // نفس فلتر تغيير السيم: الصفحة تنزل لو معلمة كديفولت لهذا السيم أو theme_slug = السيم (للتوافق)
+            $filter_data = array_filter($data, function ($item) use ($current_theme) {
+                $default_for = $item['default_for_themes'] ?? null;
+                if (is_array($default_for) && ! empty($default_for)) {
+                    return in_array($current_theme, $default_for);
+                }
+                return ($item['theme_slug'] ?? null) === $current_theme;
+            });
+
+            $filter_data = array_values($filter_data);
+            if (empty($filter_data)) {
+                return;
             }
-        });
 
-        $homepageData = current($homepageData);
+            // الصفحة الرئيسية: اللي theme_slug = السيم، وإلا أول صفحة
+            $homepageData = null;
+            foreach ($filter_data as $item) {
+                if (($item['theme_slug'] ?? null) === $current_theme) {
+                    $homepageData = $item;
+                    break;
+                }
+            }
+            if (! $homepageData) {
+                $homepageData = $filter_data[0];
+            }
 
-        $mapped_data = array_map(function ($item){
-                unset($item['theme_slug']);
-            return $item;
-        },$filter_data);
-
+            $mapped_data = array_map(function ($item) {
+                unset($item['theme_slug'], $item['default_for_themes']);
+                return $item;
+            }, $filter_data);
 
             Page::insert($mapped_data);
 
             $homepage_id = $homepageData['id'] ?? null;
-            $home_page_layout_file = $payment_log->theme.'-layout.json';
-
-            self::upload_layout($home_page_layout_file, $homepage_id);
-
-            try {
-                MenuSeed::execute($homepage_id);
-            }catch (\Exception $e){
-
+            if ($homepage_id) {
+                $home_page_layout_file = $current_theme . '-layout.json';
+                $layout_path = 'assets/tenant/page-layout/home-pages/' . $home_page_layout_file;
+                if (file_exists($layout_path)) {
+                    self::upload_layout($home_page_layout_file, $homepage_id);
+                }
+                try {
+                    MenuSeed::execute($homepage_id);
+                } catch (\Exception $e) {
+                }
+                update_static_option('home_page', $homepage_id);
             }
-
-            update_static_option('home_page',$homepage_id);
-
     }
 
 
