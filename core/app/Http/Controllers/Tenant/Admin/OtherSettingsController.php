@@ -233,4 +233,15 @@ class OtherSettingsController extends Controller
         }
     }
 
+    public function toggle_dark_mode(Request $request)
+    {
+        $enabled = !empty(get_static_option('dark_mode_for_admin_panel'));
+        update_static_option('dark_mode_for_admin_panel', $enabled ? '' : 'on');
+
+        return response()->json([
+            'success' => true,
+            'enabled' => ! $enabled,
+        ]);
+    }
+
 }

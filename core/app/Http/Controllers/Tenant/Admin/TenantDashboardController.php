@@ -41,6 +41,12 @@ class TenantDashboardController extends Controller
         return redirect()->to(get_tenant_website_url($user_details).'/admin-home');
     }
 
+    public function lang_change_admin(Request $request)
+    {
+        session()->put('lang', $request->lang);
+        return back();
+    }
+
     public function dashboard(){
 
         //Checking ecommerce status data exists if not then store

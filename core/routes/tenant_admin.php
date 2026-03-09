@@ -21,6 +21,7 @@ Route::middleware([
 ])->prefix('admin-home')->name('tenant.')->group(function () {
 
     Route::get('/', [\App\Http\Controllers\Tenant\Admin\TenantDashboardController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/lang-change/{lang}', [\App\Http\Controllers\Tenant\Admin\TenantDashboardController::class, 'lang_change_admin'])->name('admin.langchange');
 
     /* ------------------------------------------
        ADMIN DASHBOARD ROUTES
@@ -208,6 +209,7 @@ Route::middleware([
     Route::controller(\App\Http\Controllers\Tenant\Admin\OtherSettingsController::class)->prefix('theme')->group(function () {
         Route::get('/settings','theme_settings')->name('admin.theme');
         Route::post('/settings','update_theme_settings');
+        Route::post('/toggle-dark-mode','toggle_dark_mode')->name('admin.toggle.darkmode');
     });
 
     /* ------------------------------------------

@@ -339,6 +339,34 @@
             </div>
         </div>
         <ul class="navbar-nav navbar-nav-right">
+            {{-- Language switcher (admin panel) --}}
+            <li class="nav-item dropdown d-none d-lg-block">
+                @php
+                    $currentAdminLocale = app()->getLocale();
+                    $adminLanguages = \App\Models\Language::all();
+                @endphp
+                <a class="nav-link dropdown-toggle" id="adminLangDropdown" href="#" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    <i class="mdi mdi-translate"></i>
+                    <span class="ms-1 text-uppercase">{{ $currentAdminLocale }}</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="adminLangDropdown">
+                    @foreach($adminLanguages as $lang)
+                        <a class="dropdown-item" href="{{ route('tenant.admin.langchange', ['lang' => $lang->slug]) }}">
+                            {{ $lang->name }}
+                            @if($currentAdminLocale === $lang->slug)
+                                <i class="mdi mdi-check text-success ms-2"></i>
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            </li>
+            {{-- Dark mode toggle --}}
+            <li class="nav-item d-none d-lg-block">
+                <a href="#" class="nav-link" id="tenantAdminDarkModeToggle" title="{{ __('Toggle dark mode') }}">
+                    <i class="mdi mdi-theme-light-dark"></i>
+                </a>
+            </li>
             <li class="nav-item nav-profile dropdown">
                 <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -487,3 +515,26 @@
         </button>
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var darkToggle = document.getElementById('tenantAdminDarkModeToggle');
+        if (darkToggle) {
+            darkToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                fetch("{{ route('tenant.admin.toggle.darkmode') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                }).then(function () {
+                    window.location.reload();
+                }).catch(function () {
+                    window.location.reload();
+                });
+            });
+        }
+    });
+</script>
