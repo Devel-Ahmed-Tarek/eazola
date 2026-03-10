@@ -13,6 +13,7 @@ use App\Models\Themes;
 use Database\Seeders\Tenant\AllPages\DefaultPages;
 use Database\Seeders\Tenant\ModuleData\MenuSeed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class OtherSettingsController extends Controller
@@ -235,13 +236,17 @@ class OtherSettingsController extends Controller
 
     public function toggle_dark_mode(Request $request)
     {
+        Cache::forget('dark_mode_for_admin_panel');
         $enabled = !empty(get_static_option('dark_mode_for_admin_panel'));
         update_static_option('dark_mode_for_admin_panel', $enabled ? '' : 'on');
 
-        return response()->json([
-            'success' => true,
-            'enabled' => ! $enabled,
-        ]);
+        if ($request->expectsJson() || $request->isMethod('POST')) {
+            return response()->json([
+                'success' => true,
+                'enabled' => ! $enabled,
+            ]);
+        }
+        return redirect()->back();
     }
 
 }

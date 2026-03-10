@@ -363,7 +363,7 @@
             </li>
             {{-- Dark mode toggle --}}
             <li class="nav-item d-none d-lg-block">
-                <a href="#" class="nav-link" id="tenantAdminDarkModeToggle" title="{{ __('Toggle dark mode') }}">
+                <a href="{{ route('tenant.admin.toggle.darkmode') }}" class="nav-link" title="{{ __('Toggle dark mode') }}">
                     <i class="mdi mdi-theme-light-dark"></i>
                 </a>
             </li>
@@ -516,25 +516,3 @@
     </div>
 </nav>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var darkToggle = document.getElementById('tenantAdminDarkModeToggle');
-        if (darkToggle) {
-            darkToggle.addEventListener('click', function (e) {
-                e.preventDefault();
-                fetch("{{ route('tenant.admin.toggle.darkmode') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    },
-                }).then(function () {
-                    window.location.reload();
-                }).catch(function () {
-                    window.location.reload();
-                });
-            });
-        }
-    });
-</script>

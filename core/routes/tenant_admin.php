@@ -209,7 +209,8 @@ Route::middleware([
     Route::controller(\App\Http\Controllers\Tenant\Admin\OtherSettingsController::class)->prefix('theme')->group(function () {
         Route::get('/settings','theme_settings')->name('admin.theme');
         Route::post('/settings','update_theme_settings');
-        Route::post('/toggle-dark-mode','toggle_dark_mode')->name('admin.toggle.darkmode');
+        Route::get('/toggle-dark-mode','toggle_dark_mode')->name('admin.toggle.darkmode');
+        Route::post('/toggle-dark-mode','toggle_dark_mode');
     });
 
     /* ------------------------------------------
