@@ -1431,19 +1431,12 @@ class SidebarMenuHelper
                     }
                 }
 
-                // Brands - Check tenant menu visibility
-                if (in_array('brand',$check_all_feature) && $this->isTenantMenuVisible('brands')) {
-                    $this->tenant_brands_settings_menus($menu_instance);
-                }
+                // CONTENT MANAGEMENT (Blogs, Services, Knowledgebase, FAQs, Testimonials, Image Gallery, Brands)
+                $this->tenant_content_management_group($menu_instance, $check_all_feature);
 
                 // Custom Domain - Check tenant menu visibility
                 if (in_array('custom_domain',$check_all_feature) && $this->isTenantMenuVisible('custom-domain-request')) {
                     $this->tenant_custom_domain_request_settings_menus($menu_instance);
-                }
-
-                // Testimonial - Check tenant menu visibility
-                if (in_array('testimonial',$check_all_feature) && $this->isTenantMenuVisible('testimonial')) {
-                    $this->tenant_testimonial_settings_menus($menu_instance);
                 }
 
                 // Form Builder - Check tenant menu visibility
@@ -1470,28 +1463,9 @@ class SidebarMenuHelper
                     }
                 }
 
-                // Blogs - Check tenant menu visibility
-                if (in_array('blog',$check_all_feature) && $this->isTenantMenuVisible('blog-settings-menu-items')) {
-                    $this->tenant_blog_settings_menus($menu_instance);
-                }
-
                 // Advertisement - Check tenant menu visibility
                 if (in_array('advertisement',$check_all_feature) && $this->isTenantMenuVisible('advertisement-settings-menu-items')) {
                     $this->tenant_advertisement_settings_menus($menu_instance);
-                }
-
-                // Services - Check tenant menu visibility
-                if (isPluginActive('Service') && $this->isTenantMenuVisible('services-settings-menu-items')) {
-                    if (in_array('service', $check_all_feature)) {
-                        $this->tenant_services_settings_menus($menu_instance);
-                    }
-                }
-
-                // Knowledgebase - Check tenant menu visibility
-                if (isPluginActive('Knowledgebase') && $this->isTenantMenuVisible('knowledgebase-settings-menu-items')) {
-                    if (in_array('knowledgebase', $check_all_feature)) {
-                        $this->tenant_knowledgebase_settings_menu($menu_instance);
-                    }
                 }
 
                 // Newsletter - Check tenant menu visibility
@@ -1501,19 +1475,9 @@ class SidebarMenuHelper
                     }
                 }
 
-                // FAQs - Check tenant menu visibility
-                if (in_array('faq',$check_all_feature) && $this->isTenantMenuVisible('faq-settings-menu-items')) {
-                    $this->tenant_faq_settings($menu_instance);
-                }
-
                 // Price Plan - Check tenant menu visibility
                 if (in_array('wedding_price_plan',$check_all_feature) && $this->isTenantMenuVisible('wedding-price-plan-settings-menu-items')) {
                     $this->tenant_wedding_price_plan_settings($menu_instance);
-                }
-
-                // Image Gallery - Check tenant menu visibility
-                if (in_array('gallery',$check_all_feature) && $this->isTenantMenuVisible('image_gallery-settings-menu-items')) {
-                    $this->tenant_image_gallery($menu_instance);
                 }
 
                 // External Menu Render - Check tenant menu visibility for each
@@ -1898,7 +1862,7 @@ class SidebarMenuHelper
         $menu_instance->add_menu_item('knowledgebase-settings-menu-items', [
             'route' => '#',
             'label' => __('Knowledgebase'),
-            'parent' => null,
+            'parent' => 'content-management-menu',
             'permissions' => ['knowledgebase-list'],
             'icon' => 'mdi mdi-cash-multiple',
         ]);
@@ -1955,7 +1919,7 @@ class SidebarMenuHelper
         $menu_instance->add_menu_item('faq-settings-menu-items', [
             'route' => '#',
             'label' => __('Faqs'),
-            'parent' => null,
+            'parent' => 'content-management-menu',
             'permissions' => ['faq-list'],
             'icon' => 'mdi mdi-cash-multiple',
         ]);
@@ -2006,7 +1970,7 @@ class SidebarMenuHelper
         $menu_instance->add_menu_item('image_gallery-settings-menu-items', [
             'route' => '#',
             'label' => __('Image Gallery'),
-            'parent' => null,
+            'parent' => 'content-management-menu',
             'permissions' => ['image-gallery-list'],
             'icon' => 'mdi mdi-cash-multiple',
         ]);
@@ -2031,7 +1995,7 @@ class SidebarMenuHelper
         $menu_instance->add_menu_item('services-settings-menu-items', [
             'route' => '#',
             'label' => __('Services'),
-            'parent' => null,
+            'parent' => 'content-management-menu',
             'permissions' => ['service-list','service-create','service-edit','service-delete'],
             'icon' => 'mdi mdi-file',
         ]);
@@ -2087,12 +2051,60 @@ class SidebarMenuHelper
         }
     }
 
+    /**
+     * CONTENT MANAGEMENT: parent group for Blogs, Services, Knowledgebase, FAQs, Testimonials, Image Gallery, Brands.
+     */
+    private function tenant_content_management_group(MenuWithPermission $menu_instance, array $check_all_feature): void
+    {
+        $has_blog = in_array('blog', $check_all_feature) && $this->isTenantMenuVisible('blog-settings-menu-items');
+        $has_services = isPluginActive('Service') && in_array('service', $check_all_feature) && $this->isTenantMenuVisible('services-settings-menu-items');
+        $has_knowledgebase = isPluginActive('Knowledgebase') && in_array('knowledgebase', $check_all_feature) && $this->isTenantMenuVisible('knowledgebase-settings-menu-items');
+        $has_faq = in_array('faq', $check_all_feature) && $this->isTenantMenuVisible('faq-settings-menu-items');
+        $has_testimonial = in_array('testimonial', $check_all_feature) && $this->isTenantMenuVisible('testimonial');
+        $has_gallery = in_array('gallery', $check_all_feature) && $this->isTenantMenuVisible('image_gallery-settings-menu-items');
+        $has_brands = in_array('brand', $check_all_feature) && $this->isTenantMenuVisible('brands');
+
+        if (!$has_blog && !$has_services && !$has_knowledgebase && !$has_faq && !$has_testimonial && !$has_gallery && !$has_brands) {
+            return;
+        }
+
+        $menu_instance->add_menu_item('content-management-menu', [
+            'route' => '#',
+            'label' => __('Content Management'),
+            'parent' => null,
+            'permissions' => ['dashboard'],
+            'icon' => 'mdi mdi-file-document-multiple',
+        ]);
+
+        if ($has_blog) {
+            $this->tenant_blog_settings_menus($menu_instance);
+        }
+        if ($has_services) {
+            $this->tenant_services_settings_menus($menu_instance);
+        }
+        if ($has_knowledgebase) {
+            $this->tenant_knowledgebase_settings_menu($menu_instance);
+        }
+        if ($has_faq) {
+            $this->tenant_faq_settings($menu_instance);
+        }
+        if ($has_testimonial) {
+            $this->tenant_testimonial_settings_menus($menu_instance);
+        }
+        if ($has_gallery) {
+            $this->tenant_image_gallery($menu_instance);
+        }
+        if ($has_brands) {
+            $this->tenant_brands_settings_menus($menu_instance);
+        }
+    }
+
     private function tenant_brands_settings_menus(MenuWithPermission $menu_instance) : void
     {
         $menu_instance->add_menu_item('brands', [
             'route' => 'tenant.admin.brands',
             'label' => __('Brands'),
-            'parent' => null,
+            'parent' => 'content-management-menu',
             'permissions' => [ 'brand-list','brand-create','brand-edit','brand-delete'],
             'icon' => 'mdi mdi-slack',
         ]);
@@ -2103,7 +2115,7 @@ class SidebarMenuHelper
         $menu_instance->add_menu_item('blog-settings-menu-items', [
             'route' => '#',
             'label' => __('Blogs'),
-            'parent' => null,
+            'parent' => 'content-management-menu',
             'permissions' => ['blog-list','blog-create','blog-edit','blog-delete','blog-settings'],
             'icon' => 'mdi mdi-blogger',
         ]);
@@ -2178,7 +2190,7 @@ class SidebarMenuHelper
         $menu_instance->add_menu_item('testimonial', [
             'route' => 'tenant.admin.testimonial',
             'label' => __('Testimonial'),
-            'parent' => null,
+            'parent' => 'content-management-menu',
             'permissions' => ['testimonial-list', 'testimonial-create','testimonial-edit','testimonial-delete'],
             'icon' => 'mdi mdi-format-quote-close',
         ]);
