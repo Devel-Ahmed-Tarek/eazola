@@ -2223,67 +2223,18 @@ class SidebarMenuHelper
     private function tenant_appearance_settings_menus(MenuWithPermission $menu_instance) : void
     {
         $menu_instance->add_menu_item('appearance-settings-menu-items', [
-            'route' => '#',
+            'route' => 'tenant.admin.appearance.hub',
             'label' => __('Appearance Settings'),
             'parent' => null,
             'permissions' => ['menu-manage','topbar-manage','widget-builder','other-settings'],
             'icon' => 'mdi mdi-folder-outline',
-        ]);
-
-        $menu_instance->add_menu_item('theme-settings-all-tenant', [
-            'route' => 'tenant.admin.theme',
-            'label' => __('Theme Manage'),
-            'parent' => 'appearance-settings-menu-items',
-            'permissions' => ['theme-manage'],
-        ]);
-
-        $menu_instance->add_menu_item('menu-settings-all', [
-            'route' => 'tenant.admin.menu',
-            'label' => __('Menu Manage'),
-            'parent' => 'appearance-settings-menu-items',
-            'permissions' => ['menu-manage'],
-        ]);
-
-        $menu_instance->add_menu_item('widget-builder-settings-all', [
-            'route' => 'tenant.admin.widgets',
-            'label' => __('Widget Builder'),
-            'parent' => 'appearance-settings-menu-items',
-            'permissions' => ['widget-builder'],
-        ]);
-
-        $menu_instance->add_menu_item('topbar-settings-all', [
-            'route' => 'tenant.admin.topbar.settings',
-            'label' => __('Topbar Settings'),
-            'parent' => 'appearance-settings-menu-items',
-            'permissions' => [],
-        ]);
-
-        $menu_instance->add_menu_item('other-settings', [
-            'route' => 'tenant.admin.other.settings',
-            'label' => __('Other Settings'),
-            'parent' => 'appearance-settings-menu-items',
-            'permissions' => ['other-settings'],
-        ]);
-
-        $menu_instance->add_menu_item('404-settings-all', [
-            'route' => 'tenant.admin.404.page.settings',
-            'label' => __('404 Settings'),
-            'parent' => 'appearance-settings-menu-items',
-            'permissions' => [],
-        ]);
-
-        $menu_instance->add_menu_item('maintenance-settings-all', [
-            'route' => 'tenant.admin.maintains.page.settings',
-            'label' => __('Maintenance Settings'),
-            'parent' => 'appearance-settings-menu-items',
-            'permissions' => [],
         ]);
     }
 
     private function tenant_general_settings_menus(MenuWithPermission $menu_instance) : void
     {
         $menu_instance->add_menu_item('general-settings-menu-items', [
-            'route' => '#',
+            'route' => 'tenant.admin.general.hub',
             'label' => __('General Settings'),
             'parent' => null,
             'permissions' => ['general-settings-page-settings','general-settings-site-identity','general-settings-basic-settings','general-settings-color-settings',
@@ -2291,92 +2242,6 @@ class SidebarMenuHelper
                 'general-settings-smtp-settings','general-settings-custom-css-settings','general-settings-custom-js-settings','general-settings-database-upgrade-settings',
                 'general-settings-cache-clear-settings','general-settings-license-settings'],
             'icon' => 'mdi mdi-settings',
-        ]);
-        $menu_instance->add_menu_item('general-settings-reading-settings', [
-            'route' => 'tenant.admin.general.page.settings',
-            'label' => __('Page Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-page-settings'],
-        ]);
-
-        $menu_instance->add_menu_item('general-settings-site-identity', [
-            'route' => 'tenant.admin.general.site.identity',
-            'label' => __('Site Identity'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-site-identity'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-basic-settings', [
-            'route' => 'tenant.admin.general.basic.settings',
-            'label' => __('Basic Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-basic-settings'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-color-settings', [
-            'route' => 'tenant.admin.general.color.settings',
-            'label' => __('Color Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-color-settings'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-typography-settings', [
-            'route' => 'tenant.admin.general.typography.settings',
-            'label' => __('Typography Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-typography-settings'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-seo-settings', [
-            'route' => 'tenant.admin.general.seo.settings',
-            'label' => __('SEO Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-seo-settings'],
-        ]);
-//        $menu_instance->add_menu_item('general-settings-payment-gateway-settings', [
-//            'route' => 'tenant.admin.general.payment.settings',
-//            'label' => __('Payment Settings'),
-//            'parent' => 'general-settings-menu-items',
-//            'permissions' => ['general-settings-payment-settings'],
-//        ]);
-        $menu_instance->add_menu_item('general-settings-third-party-script-settings', [
-            'route' => 'tenant.admin.general.third.party.script.settings',
-            'label' => __('Third Party Script'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-third-party-script-settings'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-email-settings', [
-            'route' => 'tenant.admin.general.email.settings',
-            'label' => __('Email Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-smtp-settings'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-custom-css-settings', [
-            'route' => 'tenant.admin.general.custom.css.settings',
-            'label' => __('Custom CSS'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-custom-css-settings'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-custom-js-settings', [
-            'route' => 'tenant.admin.general.custom.js.settings',
-            'label' => __('Custom JS'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => ['general-settings-custom-js-settings'],
-        ]);
-
-        $menu_instance->add_menu_item('general-settings-cache-settings', [
-            'route' => 'tenant.admin.general.cache.settings',
-            'label' => __('Cache Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => [ 'general-settings-cache-clear-settings'],
-        ]);
-        $menu_instance->add_menu_item('general-settings-gdpr-settings', [
-            'route' => 'tenant.admin.general.gdpr.settings',
-            'label' => __('GDPR Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => [],
-        ]);
-        $menu_instance->add_menu_item('general-settings-sitemap-settings', [
-            'route' => 'tenant.admin.general.sitemap.settings',
-            'label' => __('Sitemap Settings'),
-            'parent' => 'general-settings-menu-items',
-            'permissions' => [],
         ]);
     }
 

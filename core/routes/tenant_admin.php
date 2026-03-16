@@ -26,6 +26,12 @@ Route::middleware([
     // Content Management hub page
     Route::get('/content-management', [\App\Http\Controllers\Tenant\Admin\ContentManagementController::class, 'index'])->name('admin.content.management');
 
+    // Appearance Settings hub page
+    Route::get('/appearance-settings', [\App\Http\Controllers\Tenant\Admin\AppearanceHubController::class, 'index'])->name('admin.appearance.hub');
+
+    // General Settings hub page
+    Route::get('/general-settings-hub', [\App\Http\Controllers\Tenant\Admin\GeneralSettingsHubController::class, 'index'])->name('admin.general.hub');
+
     /* ------------------------------------------
        ADMIN DASHBOARD ROUTES
    -------------------------------------------- */
