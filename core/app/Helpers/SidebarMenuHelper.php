@@ -1325,12 +1325,6 @@ class SidebarMenuHelper
                         $this->tenant_order_manage_settings_menus($menu_instance);
                     }
 
-                    // Badge Manage - Check tenant menu visibility
-                    if (isPluginActive('Badge') && $this->isTenantMenuVisible('badge-settings-menu-items'))
-                    {
-                        $this->tenant_badge_settings_menus($menu_instance);
-                    }
-
                     // Country Manage - Check tenant menu visibility
                     if ($this->isTenantMenuVisible('country-settings-menu-items')) {
                         $this->tenant_country_settings_menus($menu_instance);
@@ -1454,18 +1448,6 @@ class SidebarMenuHelper
                 // Pages - Check tenant menu visibility
                 if (in_array('page',$check_all_feature) && $this->isTenantMenuVisible('pages-settings-menu-items')) {
                     $this->tenant_pages_settings_menus($menu_instance);
-                }
-
-                // Portfolio - Check tenant menu visibility
-                if (isPluginActive('Portfolio') && $this->isTenantMenuVisible('portfolio-settings-menu-items')) {
-                    if (in_array('portfolio',$check_all_feature)) {
-                        $this->tenant_porfolio_settings_menu($menu_instance);
-                    }
-                }
-
-                // Advertisement - Check tenant menu visibility
-                if (in_array('advertisement',$check_all_feature) && $this->isTenantMenuVisible('advertisement-settings-menu-items')) {
-                    $this->tenant_advertisement_settings_menus($menu_instance);
                 }
 
                 // Newsletter - Check tenant menu visibility
@@ -2069,34 +2051,12 @@ class SidebarMenuHelper
         }
 
         $menu_instance->add_menu_item('content-management-menu', [
-            'route' => '#',
+            'route' => 'tenant.admin.content.management',
             'label' => __('Content Management'),
             'parent' => null,
             'permissions' => ['dashboard'],
             'icon' => 'mdi mdi-file-document-multiple',
         ]);
-
-        if ($has_blog) {
-            $this->tenant_blog_settings_menus($menu_instance);
-        }
-        if ($has_services) {
-            $this->tenant_services_settings_menus($menu_instance);
-        }
-        if ($has_knowledgebase) {
-            $this->tenant_knowledgebase_settings_menu($menu_instance);
-        }
-        if ($has_faq) {
-            $this->tenant_faq_settings($menu_instance);
-        }
-        if ($has_testimonial) {
-            $this->tenant_testimonial_settings_menus($menu_instance);
-        }
-        if ($has_gallery) {
-            $this->tenant_image_gallery($menu_instance);
-        }
-        if ($has_brands) {
-            $this->tenant_brands_settings_menus($menu_instance);
-        }
     }
 
     private function tenant_brands_settings_menus(MenuWithPermission $menu_instance) : void

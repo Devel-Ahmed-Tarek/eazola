@@ -23,6 +23,9 @@ Route::middleware([
     Route::get('/', [\App\Http\Controllers\Tenant\Admin\TenantDashboardController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/lang-change/{lang}', [\App\Http\Controllers\Tenant\Admin\TenantDashboardController::class, 'lang_change_admin'])->name('admin.langchange');
 
+    // Content Management hub page
+    Route::get('/content-management', [\App\Http\Controllers\Tenant\Admin\ContentManagementController::class, 'index'])->name('admin.content.management');
+
     /* ------------------------------------------
        ADMIN DASHBOARD ROUTES
    -------------------------------------------- */
