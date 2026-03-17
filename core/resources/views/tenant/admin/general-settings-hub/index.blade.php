@@ -389,6 +389,66 @@
                         </a>
                     </div>
 
+                    {{-- Payment Settings (entry point) --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.payment.currency.settings') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Payments') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-credit-card-outline"></i>
+                                        </span>
+                                        <span>{{ __('Payment Settings') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Configure currencies and payment gateways available for this tenant.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{-- Languages --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.languages') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Localization') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-translate"></i>
+                                        </span>
+                                        <span>{{ __('Languages') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Manage available languages and translations for your tenant.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{-- Custom Domain --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.custom.domain.requests') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Domain') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-web"></i>
+                                        </span>
+                                        <span>{{ __('Custom Domain Requests') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Review and manage custom domain mapping for this tenant.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>

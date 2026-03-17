@@ -186,6 +186,86 @@
                         </a>
                     </div>
 
+                    {{-- Page Settings (shortcut from General) --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.general.page.settings') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Pages') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-file-document-outline"></i>
+                                        </span>
+                                        <span>{{ __('Page Settings') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Control default home page and global page display options.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{-- Site Identity (shortcut from General) --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.general.site.identity') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Brand') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-shield-check-outline"></i>
+                                        </span>
+                                        <span>{{ __('Site Identity') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Logo, favicon and core brand information used in appearance.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{-- Color Settings (shortcut from General) --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.general.color.settings') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Design') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-palette"></i>
+                                        </span>
+                                        <span>{{ __('Color Settings') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Primary and secondary color palette for the tenant theme.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{-- Typography Settings (shortcut from General) --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.general.typography.settings') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Fonts') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-format-size"></i>
+                                        </span>
+                                        <span>{{ __('Typography Settings') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Fonts and sizes for headings and body text used in appearance.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
                     {{-- Menu Manage --}}
                     <div class="col-md-4">
                         <a href="{{ route('tenant.admin.menu') }}" class="text-decoration-none text-reset">

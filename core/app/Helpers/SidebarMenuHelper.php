@@ -1428,10 +1428,7 @@ class SidebarMenuHelper
                 // CONTENT MANAGEMENT (Blogs, Services, Knowledgebase, FAQs, Testimonials, Image Gallery, Brands)
                 $this->tenant_content_management_group($menu_instance, $check_all_feature);
 
-                // Custom Domain - Check tenant menu visibility
-                if (in_array('custom_domain',$check_all_feature) && $this->isTenantMenuVisible('custom-domain-request')) {
-                    $this->tenant_custom_domain_request_settings_menus($menu_instance);
-                }
+                // Custom Domain - now accessible from General Settings hub
 
                 // Form Builder - Check tenant menu visibility
                 if (in_array('form_builder',$check_all_feature) && $this->isTenantMenuVisible('form-builder-settings-menu-items')) {
