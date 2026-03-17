@@ -1430,11 +1430,6 @@ class SidebarMenuHelper
 
                 // Custom Domain - now accessible from General Settings hub
 
-                // Form Builder - Check tenant menu visibility
-                if (in_array('form_builder',$check_all_feature) && $this->isTenantMenuVisible('form-builder-settings-menu-items')) {
-                    $this->tenant_form_builder_settings_menus($menu_instance);
-                }
-
                 // My Package Orders - Check tenant menu visibility
                 if (in_array('own_order_manage',$check_all_feature) && $this->isTenantMenuVisible('tenant-payment-manage-settings-menu-items')) {
                     if ($admin->hasRole('Super Admin')) {
@@ -1444,12 +1439,7 @@ class SidebarMenuHelper
 
                 // Pages - now accessed from Appearance hub; keep feature flag for hub only
 
-                // Newsletter - Check tenant menu visibility
-                if(isPluginActive('NewsLetter') && $this->isTenantMenuVisible('newsletter')){
-                    if (in_array('newsletter',$check_all_feature)) {
-                        $this->tenant_newsletter_settings_menus($menu_instance);
-                    }
-                }
+                // Marketing (Form Builder + Newsletter) handled by marketing hub tab
 
                 // Price Plan - Check tenant menu visibility
                 if (in_array('wedding_price_plan',$check_all_feature) && $this->isTenantMenuVisible('wedding-price-plan-settings-menu-items')) {
@@ -1867,10 +1857,18 @@ class SidebarMenuHelper
 
     private function tenant_newsletter_settings_menus(MenuWithPermission $menu_instance) : void
     {
+        $menu_instance->add_menu_item('marketing-settings-menu-items', [
+            'route' => 'tenant.admin.marketing.hub',
+            'label' => __('Marketing'),
+            'parent' => null,
+            'permissions' => ['form-builder','newsletter-list'],
+            'icon' => 'mdi mdi-bullhorn-outline',
+        ]);
+
         $menu_instance->add_menu_item('newsletter', [
             'route' => '#',
             'label' => __('Newsletter Manage'),
-            'parent' => null,
+            'parent' => 'marketing-settings-menu-items',
             'permissions' => ['newsletter-list','newsletter-create','newsletter-edit','newsletter-delete'],
             'icon' => 'mdi mdi-newspaper',
         ]);
@@ -2194,7 +2192,7 @@ class SidebarMenuHelper
         $menu_instance->add_menu_item('form-builder-settings-menu-items', [
             'route' => '#',
             'label' => __('Form Builder'),
-            'parent' => null,
+            'parent' => 'marketing-settings-menu-items',
             'permissions' => ['form-builder'],
             'icon' => 'mdi mdi-folder-outline',
         ]);

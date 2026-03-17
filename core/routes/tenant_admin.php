@@ -32,6 +32,9 @@ Route::middleware([
     // General Settings hub page
     Route::get('/general-settings-hub', [\App\Http\Controllers\Tenant\Admin\GeneralSettingsHubController::class, 'index'])->name('admin.general.hub');
 
+    // Marketing hub page
+    Route::get('/marketing', [\App\Http\Controllers\Tenant\Admin\MarketingHubController::class, 'index'])->name('admin.marketing.hub');
+
     /* ------------------------------------------
        ADMIN DASHBOARD ROUTES
    -------------------------------------------- */
