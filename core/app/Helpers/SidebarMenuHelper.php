@@ -1482,10 +1482,7 @@ class SidebarMenuHelper
                     $this->tenant_general_settings_menus($menu_instance);
                 }
 
-                // Payment Settings - Check tenant menu visibility
-                if (in_array('payment_gateways',$check_all_feature) && $this->isTenantMenuVisible('payment_gateway-manage-settings-menu-items')) {
-                    $this->tenant_payment_gateway_manage_menus($menu_instance);
-                }
+                // Payment Settings - now handled via General Settings hub
 
                 // Languages - Check tenant menu visibility
                 if (in_array('language',$check_all_feature) && $this->isTenantMenuVisible('tenant-languages')) {

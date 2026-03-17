@@ -389,10 +389,10 @@
                         </a>
                     </div>
 
-                    {{-- Payment Settings (entry point) --}}
-                    <div class="col-md-4">
-                        <a href="{{ route('tenant.admin.payment.currency.settings') }}" class="text-decoration-none text-reset">
-                            <div class="card content-hub-card small-description h-100">
+                    {{-- Payment Settings (LIST, dynamic by tenant features) --}}
+                    @if(!empty($enabledGateways ?? []))
+                        <div class="col-md-4">
+                            <div class="card content-hub-card h-100">
                                 <div class="card-body">
                                     <span class="content-hub-tag manage-tag">{{ __('Payments') }}</span>
                                     <h5 class="card-title">
@@ -401,13 +401,22 @@
                                         </span>
                                         <span>{{ __('Payment Settings') }}</span>
                                     </h5>
-                                    <p class="card-text small text-muted mb-0">
-                                        {{ __('Configure currencies and payment gateways available for this tenant.') }}
+                                    <p class="card-text small text-muted mb-2">
+                                        {{ __('Configure currencies and available payment gateways for this tenant.') }}
                                     </p>
+                                    <ul class="list-unstyled mb-0 content-hub-links">
+                                        @foreach($enabledGateways as $gateway)
+                                            <li>
+                                                <a href="{{ route($gateway['route']) }}" class="d-block py-1">
+                                                    {{ $gateway['label'] }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
-                        </a>
-                    </div>
+                        </div>
+                    @endif
 
                     {{-- Languages --}}
                     <div class="col-md-4">
