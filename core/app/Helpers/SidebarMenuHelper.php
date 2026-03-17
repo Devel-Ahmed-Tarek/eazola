@@ -1484,16 +1484,7 @@ class SidebarMenuHelper
 
                 // Payment Settings - now handled via General Settings hub
 
-                // Languages - Check tenant menu visibility
-                if (in_array('language',$check_all_feature) && $this->isTenantMenuVisible('tenant-languages')) {
-                    $menu_instance->add_menu_item('tenant-languages', [
-                        'route' => 'tenant.admin.languages',
-                        'label' => __('Languages'),
-                        'parent' => null,
-                        'permissions' => ['language-list', 'language-create', 'language-edit', 'language-delete'],
-                        'icon' => 'mdi mdi-polymer ',
-                    ]);
-                }
+            
 
             }
         }
