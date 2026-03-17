@@ -1445,10 +1445,7 @@ class SidebarMenuHelper
                     }
                 }
 
-                // Pages - Check tenant menu visibility
-                if (in_array('page',$check_all_feature) && $this->isTenantMenuVisible('pages-settings-menu-items')) {
-                    $this->tenant_pages_settings_menus($menu_instance);
-                }
+                // Pages - now accessed from Appearance hub; keep feature flag for hub only
 
                 // Newsletter - Check tenant menu visibility
                 if(isPluginActive('NewsLetter') && $this->isTenantMenuVisible('newsletter')){

@@ -146,6 +146,26 @@
                 </div>
 
                 <div class="row content-hub-grid">
+                    {{-- Pages (first card) --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.pages') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('Pages') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                        </span>
+                                        <span>{{ __('All Pages') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Create and manage static pages used across your tenant site.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
                     {{-- Theme Manage --}}
                     <div class="col-md-4">
                         <a href="{{ route('tenant.admin.theme') }}" class="text-decoration-none text-reset">
