@@ -154,7 +154,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Pages') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-file-document-multiple"></i>
+                                            <i class="mdi mdi-file-multiple"></i>
                                         </span>
                                         <span>{{ __('All Pages') }}</span>
                                     </h5>
@@ -294,7 +294,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Widgets') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-view-grid-plus"></i>
+                                            <i class="mdi mdi-view-dashboard"></i>
                                         </span>
                                         <span>{{ __('Widget Builder') }}</span>
                                     </h5>
@@ -334,7 +334,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Other') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-tune-variant"></i>
+                                            <i class="mdi mdi-settings"></i>
                                         </span>
                                         <span>{{ __('Other Settings') }}</span>
                                     </h5>
@@ -374,7 +374,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('System Page') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-tools"></i>
+                                            <i class="mdi mdi-wrench"></i>
                                         </span>
                                         <span>{{ __('Maintenance Settings') }}</span>
                                     </h5>
