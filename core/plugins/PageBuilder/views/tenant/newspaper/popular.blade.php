@@ -17,25 +17,27 @@
                     <div class="newspaper_section__title border__bottom text-left">
                         <h4 class="title">{{$data['title']}}</h4>
                     </div>
-                    <div class="newspaper_popular__bottom mt-4">
-                        <div class="newspaper_banner__left">
-                            <div class="newspaper_banner__thumb">
-                                <a href="{{ route('tenant.frontend.blog.single',$left_blog->slug) }}">
-                                    {!! render_image_markup_by_attachment_id($left_blog->image) !!}
-                                </a>
-                            </div>
-                            <div class="newspaper_banner__content mt-4">
-                                <div class="newspaper_banner__content__tag">
-                                    <a href="{{ route('tenant.frontend.blog.category',['id'=> $left_blog->category_id, 'any' => \Illuminate\Support\Str::slug($left_blog->category?->title)]) }}" class="newspaper_banner__content__tag__item"><i class="las la-tags"></i>{{$left_blog->category?->title}}</a>
-                                    <a href="{{ route('tenant.frontend.blog.single',$left_blog->slug) }}" class="newspaper_banner__content__tag__item"><i class="las la-clock"></i> {{ date('d M Y',strtotime($left_blog->created_at)) }}</a>
+                    @if(!empty($left_blog))
+                        <div class="newspaper_popular__bottom mt-4">
+                            <div class="newspaper_banner__left">
+                                <div class="newspaper_banner__thumb">
+                                    <a href="{{ route('tenant.frontend.blog.single', $left_blog->slug) }}">
+                                        {!! render_image_markup_by_attachment_id($left_blog->image) !!}
+                                    </a>
                                 </div>
-                                <h2 class="newspaper_banner__content__title mt-3"><a href="{{ route('tenant.frontend.blog.single',$left_blog->slug) }}">{{$left_blog->title}}</a></h2>
-                                <p class="newspaper_banner__content__para mt-3">
-                                {!! $left_blog->excerpt ?? $strip_tags(\Illuminate\Support\Str::words($left_blog->blog_content,40)) !!}
-                                </p>
+                                <div class="newspaper_banner__content mt-4">
+                                    <div class="newspaper_banner__content__tag">
+                                        <a href="{{ route('tenant.frontend.blog.category',['id'=> $left_blog->category_id, 'any' => \Illuminate\Support\Str::slug($left_blog->category?->title)]) }}" class="newspaper_banner__content__tag__item"><i class="las la-tags"></i>{{$left_blog->category?->title}}</a>
+                                        <a href="{{ route('tenant.frontend.blog.single', $left_blog->slug) }}" class="newspaper_banner__content__tag__item"><i class="las la-clock"></i> {{ date('d M Y',strtotime($left_blog->created_at)) }}</a>
+                                    </div>
+                                    <h2 class="newspaper_banner__content__title mt-3"><a href="{{ route('tenant.frontend.blog.single', $left_blog->slug) }}">{{$left_blog->title}}</a></h2>
+                                    <p class="newspaper_banner__content__para mt-3">
+                                    {!! $left_blog->excerpt ?? $strip_tags(\Illuminate\Support\Str::words($left_blog->blog_content,40)) !!}
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
             <div class="col-xl-8">
