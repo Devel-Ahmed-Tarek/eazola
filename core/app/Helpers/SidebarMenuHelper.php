@@ -1439,7 +1439,8 @@ class SidebarMenuHelper
 
                 // Pages - now accessed from Appearance hub; keep feature flag for hub only
 
-                // Marketing (Form Builder + Newsletter) handled by marketing hub tab
+                // Marketing (Form Builder + Newsletter) hub
+                $this->tenant_marketing_hub_menu($menu_instance, $check_all_feature);
 
                 // Price Plan - Check tenant menu visibility
                 if (in_array('wedding_price_plan',$check_all_feature) && $this->isTenantMenuVisible('wedding-price-plan-settings-menu-items')) {
@@ -1542,6 +1543,28 @@ class SidebarMenuHelper
             'label' => __('Settings'),
             'parent' => 'donation-settings-menu-items',
             'permissions' => [],
+        ]);
+    }
+
+    private function tenant_marketing_hub_menu(MenuWithPermission $menu_instance, array $check_all_feature): void
+    {
+        $hasFormBuilder = in_array('form_builder', $check_all_feature, true) && $this->isTenantMenuVisible('form-builder-settings-menu-items');
+        $hasNewsletter = isPluginActive('NewsLetter') && in_array('newsletter', $check_all_feature, true) && $this->isTenantMenuVisible('newsletter');
+
+        if (!$hasFormBuilder && !$hasNewsletter) {
+            return;
+        }
+
+        if (!$this->isTenantMenuVisible('marketing-settings-menu-items')) {
+            return;
+        }
+
+        $menu_instance->add_menu_item('marketing-settings-menu-items', [
+            'route' => 'tenant.admin.marketing.hub',
+            'label' => __('Marketing'),
+            'parent' => null,
+            'permissions' => ['dashboard'],
+            'icon' => 'mdi mdi-bullhorn-outline',
         ]);
     }
 
