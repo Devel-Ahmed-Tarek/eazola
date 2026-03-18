@@ -154,7 +154,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Pages') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-file-document-multiple-outline"></i>
+                                            <i class="mdi mdi-file-document-multiple"></i>
                                         </span>
                                         <span>{{ __('All Pages') }}</span>
                                     </h5>
@@ -174,7 +174,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Theme') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-view-carousel-outline"></i>
+                                            <i class="mdi mdi-view-carousel"></i>
                                         </span>
                                         <span>{{ __('Theme Manage') }}</span>
                                     </h5>
@@ -274,7 +274,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Navigation') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-view-list-outline"></i>
+                                            <i class="mdi mdi-view-list"></i>
                                         </span>
                                         <span>{{ __('Menu Manage') }}</span>
                                     </h5>
@@ -294,7 +294,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Widgets') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-view-grid-plus-outline"></i>
+                                            <i class="mdi mdi-view-grid-plus"></i>
                                         </span>
                                         <span>{{ __('Widget Builder') }}</span>
                                     </h5>
@@ -354,7 +354,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('System Page') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-alert-octagram-outline"></i>
+                                            <i class="mdi mdi-alert-circle"></i>
                                         </span>
                                         <span>{{ __('404 Page Settings') }}</span>
                                     </h5>

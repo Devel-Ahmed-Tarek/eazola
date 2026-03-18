@@ -6,7 +6,7 @@
 
 @section('content')
     @php
-        $meta = $account->meta ?? [];
+        $meta = $account?->meta ?? [];
         $authType = old('auth_type', $meta['auth_type'] ?? 'api_key');
     @endphp
     <div class="col-lg-12 col-ml-12">
