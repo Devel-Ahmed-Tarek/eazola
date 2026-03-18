@@ -257,7 +257,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('Performance') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-speedometer-slow"></i>
+                                            <i class="mdi mdi-cached"></i>
                                         </span>
                                         <span>{{ __('Cache Settings') }}</span>
                                     </h5>
@@ -297,7 +297,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('SEO') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-sitemap-outline"></i>
+                                            <i class="mdi mdi-sitemap"></i>
                                         </span>
                                         <span>{{ __('Sitemap Settings') }}</span>
                                     </h5>
