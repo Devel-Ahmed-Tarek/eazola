@@ -98,6 +98,13 @@
             font-size: 13px;
             border-radius: 6px;
             padding-inline: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .content-hub-links a i.mdi {
+            font-size: 16px;
+            opacity: 0.9;
         }
         .content-hub-links a:hover {
             background: rgba(46, 204, 113, 0.08);
@@ -328,6 +335,7 @@
                                         @foreach($enabledGateways as $gateway)
                                             <li>
                                                 <a href="{{ route($gateway['route']) }}" class="d-block py-1">
+                                                    <i class="mdi mdi-chevron-right"></i>
                                                     {{ $gateway['label'] }}
                                                 </a>
                                             </li>

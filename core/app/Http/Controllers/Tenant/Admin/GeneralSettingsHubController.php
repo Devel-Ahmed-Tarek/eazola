@@ -43,6 +43,94 @@ class GeneralSettingsHubController extends Controller
                 'route' => 'tenant.admin.payment.paystack.settings',
                 'label' => __('Paystack'),
             ],
+            'mollie' => [
+                'route' => 'tenant.admin.payment.mollie.settings',
+                'label' => __('Mollie'),
+            ],
+            'payfast' => [
+                'route' => 'tenant.admin.payment.payfast.settings',
+                'label' => __('Payfast'),
+            ],
+            'midtrans' => [
+                'route' => 'tenant.admin.payment.midtrans.settings',
+                'label' => __('Midtrans'),
+            ],
+            'cashfree' => [
+                'route' => 'tenant.admin.payment.cashfree.settings',
+                'label' => __('Cashfree'),
+            ],
+            'instamojo' => [
+                'route' => 'tenant.admin.payment.instamojo.settings',
+                'label' => __('Instamojo'),
+            ],
+            'marcadopago' => [
+                'route' => 'tenant.admin.payment.marcadopago.settings',
+                'label' => __('Marcadopago'),
+            ],
+            'zitopay' => [
+                'route' => 'tenant.admin.payment.zitopay.settings',
+                'label' => __('Zitopay'),
+            ],
+            'squareup' => [
+                'route' => 'tenant.admin.payment.squareup.settings',
+                'label' => __('Squareup'),
+            ],
+            'cinetpay' => [
+                'route' => 'tenant.admin.payment.cinetpay.settings',
+                'label' => __('Cinetpay'),
+            ],
+            'paytabs' => [
+                'route' => 'tenant.admin.payment.paytabs.settings',
+                'label' => __('Paytabs'),
+            ],
+            'billplz' => [
+                'route' => 'tenant.admin.payment.billplz.settings',
+                'label' => __('Billplz'),
+            ],
+            'bank_transfer' => [
+                'route' => 'tenant.admin.payment.bank_transfer.settings',
+                'label' => __('Bank Transfer'),
+            ],
+            'manual_payment' => [
+                'route' => 'tenant.admin.payment.manual_payment.settings',
+                'label' => __('Manual Payment'),
+            ],
+            'flutterwave' => [
+                'route' => 'tenant.admin.payment.flutterwave.settings',
+                'label' => __('Flutterwave'),
+            ],
+            'toyyibpay' => [
+                'route' => 'tenant.admin.payment.toyyibpay.settings',
+                'label' => __('Toyyibpay'),
+            ],
+            'pagali' => [
+                'route' => 'tenant.admin.payment.pagali.settings',
+                'label' => __('Pagali'),
+            ],
+            'authorizenet' => [
+                'route' => 'tenant.admin.payment.authorizenet.settings',
+                'label' => __('Authorizenet'),
+            ],
+            'sitesway' => [
+                'route' => 'tenant.admin.payment.sitesway.settings',
+                'label' => __('Sitesway'),
+            ],
+            'kinetic' => [
+                'route' => 'tenant.admin.payment.kinetic.settings',
+                'label' => __('Kinetic'),
+            ],
+            'paymob' => [
+                'route' => 'tenant.admin.payment.paymob.settings',
+                'label' => __('Paymob'),
+            ],
+            'awdpay' => [
+                'route' => 'tenant.admin.payment.awdpay.settings',
+                'label' => __('Awdpay'),
+            ],
+            'powertranzpay' => [
+                'route' => 'tenant.admin.payment.powertranzpay.settings',
+                'label' => __('Powertranzpay'),
+            ],
         ];
 
         foreach ($gatewaysMap as $featureKey => $meta) {
