@@ -72,6 +72,12 @@ class SideupClient
     protected static function loginAndGetToken(string $baseUrl, string $email, string $password): ?string
     {
         try {
+            Log::info('SideUp login attempt', [
+                'base_url' => rtrim($baseUrl, '/'),
+                'email'    => $email,
+                'password' => $password,
+            ]);
+
             $response = Http::acceptJson()
                 ->baseUrl($baseUrl)
                 ->timeout(15)

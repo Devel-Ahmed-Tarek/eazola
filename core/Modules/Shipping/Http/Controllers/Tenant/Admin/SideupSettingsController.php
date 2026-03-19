@@ -112,6 +112,14 @@ class SideupSettingsController extends Controller
         $meta = $account->meta ?? [];
         $authType = $meta['auth_type'] ?? self::AUTH_API_KEY;
 
+        Log::info('SideUp test connection invoked', [
+            'base_url'  => $account->base_url,
+            'auth_type' => $authType,
+            'has_api_key' => !empty($account->api_key),
+            'has_email'   => !empty($meta['email'] ?? null),
+            'has_password'=> !empty($meta['password'] ?? null),
+        ]);
+
         if ($authType === self::AUTH_API_KEY && empty($account->api_key)) {
             return back()->with(FlashMsg::explain('danger', __('Please enter API Key first, then save settings.')));
         }
