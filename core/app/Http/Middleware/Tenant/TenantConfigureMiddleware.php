@@ -41,6 +41,8 @@ class TenantConfigureMiddleware
             Config::set('mail.mailers', $smtp_settings_values['site_smtp_driver'] ?? Config::get('mail.mailers'));
             $mailers = !empty($smtp_settings_values) ? $smtp_settings_values['site_smtp_driver'] : (get_static_option_central('site_smtp_driver') ?? 'smtp');
 
+            $mailFrom = $smtp_settings_values['site_global_email'] ?? null;
+
             Config::set([
                 "mail.mailers.{$mailers}.transport" => $smtp_settings_values['site_smtp_driver'] ?? Config::get('mail.mailers.smtp.transport'),
                 "mail.mailers.{$mailers}.host" => $smtp_settings_values['site_smtp_host'] ?? Config::get('mail.mailers.smtp.host'),
@@ -53,7 +55,7 @@ class TenantConfigureMiddleware
                 "mail.mailers.{$mailers}.verify_peer" => false,
                 "mail.mailers.{$mailers}.verify_peer_name" => false,
                 "mail.mailers.{$mailers}.allow_self_signed" => true,
-                "mail.from.address" => $smtp_settings_values['site_global_email'] ?? Config::get('mail.from.address')
+                "mail.from.address" => $mailFrom
             ]);
 
             //todo change booted config file on the fly
