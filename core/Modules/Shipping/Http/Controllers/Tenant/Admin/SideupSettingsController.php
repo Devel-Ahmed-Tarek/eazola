@@ -40,6 +40,14 @@ class SideupSettingsController extends Controller
             'default_drop_area' => 'nullable|integer|min:0',
         ]);
 
+        // Normalize common string inputs
+        if (!empty($data['base_url'])) {
+            $data['base_url'] = trim($data['base_url']);
+        }
+        if (!empty($data['email'])) {
+            $data['email'] = trim($data['email']);
+        }
+
         $account = ShippingAccount::firstOrNew(['provider' => 'sideup']);
         $account->base_url = $data['base_url'] ?? $account->base_url;
         $account->enabled = !empty($data['enabled']);
@@ -101,10 +109,23 @@ class SideupSettingsController extends Controller
             return back()->with(FlashMsg::explain('danger', __('Please save Base URL first.')));
         }
 
+        $meta = $account->meta ?? [];
+        $authType = $meta['auth_type'] ?? self::AUTH_API_KEY;
+
+        if ($authType === self::AUTH_API_KEY && empty($account->api_key)) {
+            return back()->with(FlashMsg::explain('danger', __('Please enter API Key first, then save settings.')));
+        }
+
+        if ($authType === self::AUTH_EMAIL_PASSWORD) {
+            if (empty($meta['email']) || empty($meta['password'])) {
+                return back()->with(FlashMsg::explain('danger', __('Please enter Email + Password (or upload legacy JSON), then save settings.')));
+            }
+        }
+
         try {
             $client = SideupClient::fromAccount($account);
             if (!$client) {
-                return back()->with(FlashMsg::explain('danger', __('Set either API Key or Email + Password (or upload legacy JSON).')));
+                return back()->with(FlashMsg::explain('danger', __('Unable to authenticate with SideUp. Please verify Base URL and credentials, then save and test again.')));
             }
             $client->getShipment('ping-test');
         } catch (\Throwable $e) {
