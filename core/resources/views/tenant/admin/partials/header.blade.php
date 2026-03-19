@@ -131,6 +131,15 @@
                 background-color: #2ECC71 !important;
                 background: #2ECC71 !important;
             }
+
+            /* Sidebar text bold + green icons */
+            .sidebar .nav .nav-item .nav-link .menu-title {
+                font-weight: 600;
+            }
+            .sidebar .nav .nav-item .nav-link i,
+            .sidebar .nav .nav-item .nav-link .mdi {
+                color: #2ECC71 !important;
+            }
         </style>
     {{-- @endif --}}
 
