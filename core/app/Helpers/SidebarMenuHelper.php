@@ -2058,7 +2058,7 @@ class SidebarMenuHelper
             'label' => __('Content Management'),
             'parent' => null,
             'permissions' => ['dashboard'],
-            'icon' => 'mdi mdi-file-document-multiple',
+            'icon' => 'mdi mdi-folder',
         ]);
     }
 
