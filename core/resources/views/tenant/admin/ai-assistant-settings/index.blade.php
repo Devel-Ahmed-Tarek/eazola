@@ -1,5 +1,10 @@
 @extends(route_prefix().'admin.admin-master')
 
+@php
+    $adminLang = \App\Facades\GlobalLanguage::user_lang_slug();
+    $adminDir = \App\Facades\GlobalLanguage::user_lang_dir();
+@endphp
+
 @section('title') {{ __('AI site reference') }} @endsection
 
 @section('style')
@@ -12,18 +17,24 @@
         .ai-ref-hint {
             font-size: 13px;
             color: #6c757d;
-            line-height: 1.6;
+            line-height: 1.75;
         }
         .ai-ref-textarea {
             min-height: 280px;
             font-size: 14px;
-            line-height: 1.55;
+            line-height: 1.75;
+            unicode-bidi: plaintext;
+        }
+        /* خط أوضح للعربية والإنجليزية معًا */
+        [dir="rtl"] .ai-ref-textarea,
+        [dir="auto"] .ai-ref-textarea {
+            font-family: system-ui, "Segoe UI", Tahoma, "Arial Unicode MS", Arial, sans-serif;
         }
     </style>
 @endsection
 
 @section('content')
-    <div class="col-lg-12">
+    <div class="col-lg-12" lang="{{ $adminLang }}" dir="{{ $adminDir }}">
         <div class="row">
             <div class="col-12 mt-3">
                 <x-error-msg/>
@@ -33,14 +44,14 @@
                 <div class="card ai-ref-card">
                     <div class="card-body">
                         <h4 class="header-title mb-2">
-                            <i class="mdi mdi-robot-outline me-1 text-success"></i>
+                            <i class="mdi mdi-lightbulb me-1 text-success"></i>
                             {{ __('AI site reference') }}
                         </h4>
                         <p class="ai-ref-hint mb-4">
                             {{ __('Describe your site once here: niche, audience, brand voice, main products or services, policies, and preferred language. This text is sent to the AI as permanent context whenever you use site-aware generation (e.g. articles, social copy).') }}
                         </p>
 
-                        <form action="{{ route('tenant.admin.ai.site.reference.update') }}" method="POST">
+                        <form action="{{ route('tenant.admin.ai.site.reference.update') }}" method="POST" accept-charset="UTF-8">
                             @csrf
                             <div class="form-group mb-3">
                                 <label for="ai_site_reference" class="form-label fw-semibold">{{ __('Site profile for AI') }}</label>
@@ -48,12 +59,15 @@
                                     class="form-control ai-ref-textarea"
                                     id="ai_site_reference"
                                     name="ai_site_reference"
+                                    dir="auto"
+                                    lang="{{ $adminLang }}"
+                                    spellcheck="true"
                                     placeholder="{{ __('Example: We are an online organic food store in Riyadh. Tone: friendly and professional. We ship nationwide. We do not mention competitors. Content language: Arabic (MSA).') }}"
                                 >{{ $reference }}</textarea>
                                 <small class="form-text text-muted">{{ __('Maximum :max characters.', ['max' => 50000]) }}</small>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                <i class="mdi mdi-content-save-outline me-1"></i>
+                                <i class="mdi mdi-content-save me-1"></i>
                                 {{ __('Save') }}
                             </button>
                             <a href="{{ route('tenant.admin.general.hub') }}" class="btn btn-light border ms-2">

@@ -204,7 +204,7 @@
                                     <span class="content-hub-tag manage-tag">{{ __('AI') }}</span>
                                     <h5 class="card-title">
                                         <span class="content-hub-icon">
-                                            <i class="mdi mdi-robot-outline"></i>
+                                            <i class="mdi mdi-lightbulb"></i>
                                         </span>
                                         <span>{{ __('AI site reference') }}</span>
                                     </h5>
