@@ -196,6 +196,26 @@
                         </a>
                     </div>
 
+                    {{-- AI site reference (مرجع الموقع للذكاء الاصطناعي) --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.ai.site.reference') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('AI') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-robot-outline"></i>
+                                        </span>
+                                        <span>{{ __('AI site reference') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Permanent site profile used as context for AI-assisted content (articles, social posts, etc.).') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
                     {{-- Email Settings --}}
                     <div class="col-md-4">
                         <a href="{{ route('tenant.admin.general.email.settings') }}" class="text-decoration-none text-reset">

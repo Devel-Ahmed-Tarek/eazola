@@ -8,6 +8,8 @@ use App\Helpers\SidebarMenuHelper;
 use App\Helpers\TenantHelper\TenantHelpers;
 use App\Helpers\ThemeMetaData;
 use App\Http\Services\RenderImageMarkupService;
+use App\Services\Ai\AiSiteContextService;
+use App\Services\Ai\OpenAIChatService;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
@@ -44,6 +46,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('ImageRenderFacade', function (){
             return new RenderImageMarkupService();
+        });
+
+        $this->app->singleton(OpenAIChatService::class, function () {
+            return new OpenAIChatService();
+        });
+
+        $this->app->singleton(AiSiteContextService::class, function () {
+            return new AiSiteContextService();
         });
 //        $this->app->singleton('TenantHelpers', function (){
 //            return new TenantHelpers();

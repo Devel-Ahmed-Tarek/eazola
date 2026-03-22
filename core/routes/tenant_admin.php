@@ -32,6 +32,10 @@ Route::middleware([
     // General Settings hub page
     Route::get('/general-settings-hub', [\App\Http\Controllers\Tenant\Admin\GeneralSettingsHubController::class, 'index'])->name('admin.general.hub');
 
+    // AI: مرجع معلومات الموقع (للاستخدام مع OpenAI)
+    Route::get('/ai-site-reference', [\App\Http\Controllers\Tenant\Admin\AiAssistantSettingsController::class, 'edit'])->name('admin.ai.site.reference');
+    Route::post('/ai-site-reference', [\App\Http\Controllers\Tenant\Admin\AiAssistantSettingsController::class, 'update'])->name('admin.ai.site.reference.update');
+
     // Marketing hub page
     Route::get('/marketing', [\App\Http\Controllers\Tenant\Admin\MarketingHubController::class, 'index'])->name('admin.marketing.hub');
 
