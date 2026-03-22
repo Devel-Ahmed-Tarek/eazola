@@ -36,6 +36,11 @@ Route::middleware([
     Route::get('/ai-site-reference', [\App\Http\Controllers\Tenant\Admin\AiAssistantSettingsController::class, 'edit'])->name('admin.ai.site.reference');
     Route::post('/ai-site-reference', [\App\Http\Controllers\Tenant\Admin\AiAssistantSettingsController::class, 'update'])->name('admin.ai.site.reference.update');
 
+    // AI: مساعد كتابة المدونة (توليد مسودة / تعديل المحتوى)
+    Route::post('/blog/ai-assist', [\App\Http\Controllers\Tenant\Admin\BlogAiAssistantController::class, 'assist'])
+        ->middleware('throttle:20,1')
+        ->name('admin.blog.ai.assist');
+
     // Marketing hub page
     Route::get('/marketing', [\App\Http\Controllers\Tenant\Admin\MarketingHubController::class, 'index'])->name('admin.marketing.hub');
 

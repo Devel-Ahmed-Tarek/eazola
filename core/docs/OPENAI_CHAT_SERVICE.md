@@ -1,5 +1,15 @@
 # OpenAI / ChatGPT — خدمة موحّدة (`OpenAIChatService`)
 
+## مدونة الموقع (توليد مسودة / تحسين المحتوى)
+
+في لوحة التيننت: **Blog → New / Edit** تظهر أزرار **Generate draft** و **Improve / edit with AI**.
+
+- المسار الخلفي: `POST /admin-home/blog/ai-assist` (`tenant.admin.blog.ai.assist`)، محدود بـ 20 طلبًا/دقيقة.
+- يتطلب `OPENAI_API_KEY` + صلاحية `blog-create` (توليد) أو `blog-create`/`blog-edit` (تحسين).
+- يُملأ العنوان، المقتطف، ومحرّر Summernote بـ HTML من الـ AI؛ راجع النص قبل الحفظ.
+
+`OPENAI_BLOG_ASSIST_MAX_TOKENS` (افتراضي 4096) في `.env` اختياري.
+
 ## مرجع الموقع (لكل tenant)
 
 من لوحة التحكم: **General Settings** → **AI site reference** (`/admin-home/ai-site-reference`).

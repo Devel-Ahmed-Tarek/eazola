@@ -40,6 +40,7 @@
                 </x-admin.header-wrapper>
                 <x-error-msg/>
                 <x-flash-msg/>
+                @include('tenant.admin.partials.blog-ai-assistant', ['lang_slug' => $lang_slug])
                 <form class="forms-sample" method="post" action="{{route(route_prefix().'admin.blog.new')}}">
                     @csrf
                 <div class="row">
@@ -139,4 +140,5 @@
             });
         })(jQuery)
     </script>
+    @include('tenant.admin.partials.blog-ai-script')
 @endsection

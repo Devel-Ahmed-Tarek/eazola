@@ -55,4 +55,9 @@ return [
     */
     'site_reference_option' => env('OPENAI_SITE_REFERENCE_OPTION', 'ai_site_reference'),
 
+    /*
+    | حد أقصى للتوكنات عند توليد/تعديل مقالات المدونة من لوحة التحكم
+    */
+    'blog_assist_max_tokens' => (int) env('OPENAI_BLOG_ASSIST_MAX_TOKENS', 4096),
+
 ];
