@@ -91,6 +91,9 @@ Route::middleware([
     Route::prefix('faq')->controller(\App\Http\Controllers\Tenant\Admin\FaqController::class)->group(function () {
         Route::get('/all', 'index')->name('admin.faq');
         Route::post('/all', 'store');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\FaqAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.faq.ai.assist');
         Route::post('/update', 'update')->name('admin.faq.update');
         Route::post('/delete/{id}', 'delete')->name('admin.faq.delete');
         Route::post('/bulk-action', 'bulk_action')->name('admin.faq.bulk.action');
