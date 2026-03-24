@@ -15,7 +15,7 @@ class KnowledgebaseRequest extends FormRequest
             'slug' => 'nullable|string',
             'description' => 'required|string',
             'status' => 'nullable|string',
-            'image' => 'required',
+            'image' => 'nullable|string|max:191',
         ];
     }
 

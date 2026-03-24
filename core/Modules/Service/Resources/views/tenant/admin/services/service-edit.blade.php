@@ -35,6 +35,7 @@
 
                 <x-error-msg/>
                 <x-flash-msg/>
+                @include('tenant.admin.partials.service-ai-assistant', ['lang_slug' => $lang_slug])
 
                 <form action="{{route('tenant.admin.service.update')}}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -141,4 +142,5 @@
             });
         })(jQuery)
     </script>
+    @include('tenant.admin.partials.service-ai-script')
 @endsection

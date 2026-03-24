@@ -46,6 +46,7 @@
 
                 <x-error-msg/>
                 <x-flash-msg/>
+                @include('tenant.admin.partials.knowledgebase-ai-assistant', ['lang_slug' => $lang_slug])
 
                 <form class="forms-sample" method="post" action="{{route('tenant.admin.knowledgebase.new')}}" enctype="multipart/form-data">
                     @csrf
@@ -140,4 +141,5 @@
             });
         })(jQuery)
     </script>
+    @include('tenant.admin.partials.knowledgebase-ai-script')
 @endsection

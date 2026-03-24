@@ -27,6 +27,9 @@ Route::middleware([
         Route::get('/', 'index')->name('admin.knowledgebase');
         Route::get('/new', 'create')->name('admin.knowledgebase.new');
         Route::post('/new', 'store');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\KnowledgebaseAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.knowledgebase.ai.assist');
         Route::get('/edit/{id}', 'edit')->name('admin.knowledgebase.edit');
         Route::post('/update/{id}', 'update')->name('admin.knowledgebase.update');
         Route::post('/delete/{id}', 'delete')->name('admin.knowledgebase.delete');

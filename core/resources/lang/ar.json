@@ -35,5 +35,21 @@
     "Please describe how you want to change the content.": "صف كيف تريد تعديل المحتوى.",
     "Editor is empty. Add some content first, or use Generate draft.": "المحرر فارغ. أضف محتوى أولاً أو استخدم «توليد مسودة».",
     "AI could not produce valid content. Try again or shorten the text.": "تعذّر إنتاج محتوى صالح. أعد المحاولة أو قلّل حجم النص.",
-    "No active blog categories found. Create at least one category first.": "لا توجد تصنيفات مدونة مفعلة. أنشئ تصنيفًا واحدًا على الأقل أولاً."
+    "No active blog categories found. Create at least one category first.": "لا توجد تصنيفات مدونة مفعلة. أنشئ تصنيفًا واحدًا على الأقل أولاً.",
+    "AI service assistant": "مساعد الخدمات بالذكاء الاصطناعي",
+    "Generate service draft with AI": "توليد مسودة خدمة بالذكاء الاصطناعي",
+    "Improve service with AI": "تحسين الخدمة بالذكاء الاصطناعي",
+    "You do not have permission to create services.": "ليس لديك صلاحية إنشاء خدمات.",
+    "You do not have permission to edit services.": "ليس لديك صلاحية تعديل الخدمات.",
+    "Please enter a topic or short brief for the service.": "يرجى إدخال موضوع أو فكرة مختصرة للخدمة.",
+    "Please describe how you want to change the service content.": "صف كيف تريد تعديل محتوى الخدمة.",
+    "AI could not produce valid service content. Try again.": "تعذّر إنتاج محتوى خدمة صالح. أعد المحاولة.",
+    "AI knowledgebase assistant": "مساعد قاعدة المعرفة بالذكاء الاصطناعي",
+    "Generate knowledgebase draft with AI": "توليد مسودة قاعدة معرفة بالذكاء الاصطناعي",
+    "Improve knowledgebase with AI": "تحسين قاعدة المعرفة بالذكاء الاصطناعي",
+    "You do not have permission to create knowledgebase articles.": "ليس لديك صلاحية إنشاء مقالات قاعدة المعرفة.",
+    "You do not have permission to edit knowledgebase articles.": "ليس لديك صلاحية تعديل مقالات قاعدة المعرفة.",
+    "Please enter a topic or short brief for the knowledgebase article.": "يرجى إدخال موضوع أو فكرة مختصرة لمقال قاعدة المعرفة.",
+    "Please describe how you want to change the knowledgebase content.": "صف كيف تريد تعديل محتوى قاعدة المعرفة.",
+    "AI could not produce valid knowledgebase content. Try again.": "تعذّر إنتاج محتوى صالح لقاعدة المعرفة. أعد المحاولة."
 }

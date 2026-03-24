@@ -15,7 +15,7 @@ class ServiceRequest extends FormRequest
             'description' => 'required|string',
             'status' => 'required|string',
             'category_id' => 'required|string',
-            'image' => 'required|string',
+            'image' => 'nullable|string|max:191',
         ];
     }
 

@@ -83,11 +83,11 @@ class ServiceAction
             'description' => [$request->lang => SanitizeInput::esc_html($request->meta_description)],
             'image' => $request->meta_image,
             //twitter
-            'tw_image' => $request->tw_image,
+            'tw_image' => $request->meta_tw_image ?? $request->tw_image,
             'tw_title' =>  SanitizeInput::esc_html($request->meta_tw_title),
             'tw_description' => SanitizeInput::esc_html($request->meta_tw_description),
             //facebook
-            'fb_image' => $request->fb_image,
+            'fb_image' => $request->meta_fb_image ?? $request->fb_image,
             'fb_title' => SanitizeInput::esc_html($request->meta_fb_title),
             'fb_description' => SanitizeInput::esc_html($request->meta_fb_description),
         ]);

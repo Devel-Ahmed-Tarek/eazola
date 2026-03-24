@@ -14,6 +14,9 @@ Route::middleware([
         Route::get('/', 'index')->name('admin.service');
         Route::get('/add', 'add')->name('admin.service.add');
         Route::post('/', 'store')->name('admin.services.store');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\ServiceAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.service.ai.assist');
         Route::get('/edit/{id}', 'edit_service')->name('admin.service.edit');
         Route::post('/update', 'update_service')->name('admin.service.update');
         Route::post('/delete/all/lang/{id}', 'delete')->name('admin.service.delete');
