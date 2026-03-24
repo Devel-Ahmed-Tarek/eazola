@@ -114,7 +114,7 @@
                         <div>
                             <h4 class="card-title mb-1">{{ __('Marketing') }}</h4>
                             <p class="content-hub-subtitle">
-                                {{ __('Tools to capture leads and communicate with your audience.') }}
+                                {{ __('Tools to capture leads, improve discovery, and communicate with your audience.') }}
                             </p>
                         </div>
                     </div>
@@ -155,6 +155,46 @@
                                     </h5>
                                     <p class="card-text small text-muted mb-0">
                                         {{ __('Manage subscribers and send campaigns to your newsletter list.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{-- SEO Settings --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.general.seo.settings') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('SEO') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-magnify"></i>
+                                        </span>
+                                        <span>{{ __('SEO Settings') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Global SEO meta tags and social sharing configuration.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{-- Sitemap Settings --}}
+                    <div class="col-md-4">
+                        <a href="{{ route('tenant.admin.general.sitemap.settings') }}" class="text-decoration-none text-reset">
+                            <div class="card content-hub-card small-description h-100">
+                                <div class="card-body">
+                                    <span class="content-hub-tag manage-tag">{{ __('SEO') }}</span>
+                                    <h5 class="card-title">
+                                        <span class="content-hub-icon">
+                                            <i class="mdi mdi-sitemap"></i>
+                                        </span>
+                                        <span>{{ __('Sitemap Settings') }}</span>
+                                    </h5>
+                                    <p class="card-text small text-muted mb-0">
+                                        {{ __('Generate and manage XML sitemaps for search engines.') }}
                                     </p>
                                 </div>
                             </div>
