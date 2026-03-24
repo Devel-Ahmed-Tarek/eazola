@@ -50,6 +50,19 @@
         }
     }
 
+    function setMediaField(fieldName, imageId) {
+        var id = parseInt(imageId || 0, 10);
+        if (!id) return;
+        var $input = $('input[name="' + fieldName + '"]');
+        if (!$input.length) return;
+        $input.val(id);
+        var $btn = $input.closest('.media-upload-btn-wrapper').find('.media_upload_form_btn');
+        if ($btn.length) {
+            $btn.attr('data-imgid', id);
+            $btn.text(@json(__('Change')));
+        }
+    }
+
     $(document).on('click', '.blog-ai-open-modal', function () {
         mode = $(this).data('blog-ai-mode') || 'generate';
         hideError();
@@ -102,6 +115,34 @@
             }
             if (res.blog_content) {
                 setEditorHtml(res.blog_content);
+            }
+            if (res.category_id) {
+                $('select[name="category_id"]').val(String(res.category_id)).trigger('change');
+            }
+            if (typeof res.meta_title !== 'undefined') {
+                $('input[name="meta_title"]').val(res.meta_title);
+            }
+            if (typeof res.meta_description !== 'undefined') {
+                $('textarea[name="meta_description"]').val(res.meta_description);
+            }
+            if (typeof res.meta_fb_title !== 'undefined') {
+                $('input[name="meta_fb_title"]').val(res.meta_fb_title);
+            }
+            if (typeof res.meta_fb_description !== 'undefined') {
+                $('textarea[name="meta_fb_description"]').val(res.meta_fb_description);
+            }
+            if (typeof res.meta_tw_title !== 'undefined') {
+                $('input[name="meta_tw_title"]').val(res.meta_tw_title);
+            }
+            if (typeof res.meta_tw_description !== 'undefined') {
+                $('textarea[name="meta_tw_description"]').val(res.meta_tw_description);
+            }
+            if (res.image_id) {
+                setMediaField('image', res.image_id);
+                // Fill SEO images too if empty
+                if (!$('input[name="meta_image"]').val()) setMediaField('meta_image', res.image_id);
+                if (!$('input[name="meta_fb_image"]').val()) setMediaField('meta_fb_image', res.image_id);
+                if (!$('input[name="meta_tw_image"]').val()) setMediaField('meta_tw_image', res.image_id);
             }
             if (typeof toastr !== 'undefined') {
                 toastr.success(strToastrOk);

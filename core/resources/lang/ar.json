@@ -34,5 +34,6 @@
     "Please enter a topic or short brief for the article.": "يرجى إدخال موضوع أو فكرة مختصرة للمقال.",
     "Please describe how you want to change the content.": "صف كيف تريد تعديل المحتوى.",
     "Editor is empty. Add some content first, or use Generate draft.": "المحرر فارغ. أضف محتوى أولاً أو استخدم «توليد مسودة».",
-    "AI could not produce valid content. Try again or shorten the text.": "تعذّر إنتاج محتوى صالح. أعد المحاولة أو قلّل حجم النص."
+    "AI could not produce valid content. Try again or shorten the text.": "تعذّر إنتاج محتوى صالح. أعد المحاولة أو قلّل حجم النص.",
+    "No active blog categories found. Create at least one category first.": "لا توجد تصنيفات مدونة مفعلة. أنشئ تصنيفًا واحدًا على الأقل أولاً."
 }

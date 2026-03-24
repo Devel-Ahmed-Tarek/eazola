@@ -20,7 +20,7 @@ class BlogInsertRequest extends FormRequest
             'title' => 'required|string',
             'status' => 'nullable',
             'slug' => 'nullable',
-            'image' => 'required',
+            'image' => 'nullable|string|max:191',
         ];
     }
 }

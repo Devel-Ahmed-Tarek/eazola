@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Tenant\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\Ai\Exceptions\OpenAIServiceException;
 use App\Services\Ai\OpenAIChatService;
+use App\Models\MediaUploader;
+use App\Helpers\SanitizeInput;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Modules\Blog\Entities\BlogCategory;
 
 class BlogAiAssistantController extends Controller
 {
@@ -56,13 +59,44 @@ class BlogAiAssistantController extends Controller
         }
 
         $lang = $validated['lang'] ?? app()->getLocale();
+        $categoryMap = BlogCategory::query()
+            ->where('status', 1)
+            ->get()
+            ->map(function (BlogCategory $cat) use ($lang) {
+                return [
+                    'id' => (int) $cat->id,
+                    'title' => (string) $cat->getTranslation('title', $lang),
+                ];
+            })
+            ->values()
+            ->all();
+
+        if (empty($categoryMap)) {
+            $fallbackCategory = new BlogCategory();
+            $fallbackCategory->setTranslation('title', $lang, SanitizeInput::esc_html(__('General')));
+            $fallbackCategory->status = 1;
+            $fallbackCategory->save();
+
+            $categoryMap = [[
+                'id' => (int) $fallbackCategory->id,
+                'title' => (string) $fallbackCategory->getTranslation('title', $lang),
+            ]];
+        }
+
+        $fallbackImageId = MediaUploader::query()
+            ->whereNotNull('path')
+            ->orderByDesc('id')
+            ->value('id');
 
         $jsonSystemExtra = implode("\n", [
             'You are a professional blog editor for a website.',
             'You must respond with ONE valid JSON object only (no markdown fences, no commentary).',
-            'The JSON must have exactly these keys: "title" (string), "excerpt" (string, max 190 characters), "blog_content" (string, HTML fragment).',
+            'The JSON must have exactly these keys: "title" (string), "excerpt" (string, max 190 characters), "blog_content" (string, HTML fragment), "category_id" (integer), "image_id" (integer|null), "meta_title" (string), "meta_description" (string), "meta_fb_title" (string), "meta_fb_description" (string), "meta_tw_title" (string), "meta_tw_description" (string).',
             'Use only safe HTML tags in blog_content: p, h2, h3, ul, ol, li, strong, em, br, a (href only). No script or style tags.',
             'Match the language of the user request (language/locale hint: '.$lang.').',
+            'Pick category_id from this exact list only: '.json_encode($categoryMap, JSON_UNESCAPED_UNICODE),
+            'If no image can be inferred, set image_id to '.(int) ($fallbackImageId ?: 0).'.',
+            'SEO fields must be concise and relevant to the generated content.',
         ]);
 
         try {
@@ -112,12 +146,27 @@ class BlogAiAssistantController extends Controller
             }
 
             $payload = $this->decodeBlogAiJson($result->content);
+            $validCategoryIds = collect($categoryMap)->pluck('id')->map(fn ($id) => (int) $id)->all();
+            if (! in_array((int) $payload['category_id'], $validCategoryIds, true)) {
+                $payload['category_id'] = (int) ($validCategoryIds[0] ?? 0);
+            }
+            if ((int) $payload['image_id'] <= 0) {
+                $payload['image_id'] = (int) ($fallbackImageId ?: 0);
+            }
 
             return response()->json([
                 'success'       => true,
                 'title'         => $payload['title'],
                 'excerpt'       => $payload['excerpt'],
                 'blog_content'  => $payload['blog_content'],
+                'category_id'   => $payload['category_id'],
+                'image_id'      => $payload['image_id'],
+                'meta_title'    => $payload['meta_title'],
+                'meta_description' => $payload['meta_description'],
+                'meta_fb_title' => $payload['meta_fb_title'],
+                'meta_fb_description' => $payload['meta_fb_description'],
+                'meta_tw_title' => $payload['meta_tw_title'],
+                'meta_tw_description' => $payload['meta_tw_description'],
             ]);
         } catch (OpenAIServiceException $e) {
             Log::warning('Blog AI assist failed', ['message' => $e->getMessage()]);
@@ -149,7 +198,7 @@ class BlogAiAssistantController extends Controller
     }
 
     /**
-     * @return array{title: string, excerpt: string, blog_content: string}
+     * @return array{title: string, excerpt: string, blog_content: string, category_id: int, image_id: int, meta_title: string, meta_description: string, meta_fb_title: string, meta_fb_description: string, meta_tw_title: string, meta_tw_description: string}
      */
     protected function decodeBlogAiJson(string $raw): array
     {
@@ -167,6 +216,14 @@ class BlogAiAssistantController extends Controller
             'title'        => (string) ($data['title'] ?? ''),
             'excerpt'      => mb_substr((string) ($data['excerpt'] ?? ''), 0, 191),
             'blog_content' => (string) ($data['blog_content'] ?? ''),
+            'category_id'  => (int) ($data['category_id'] ?? 0),
+            'image_id'     => max(0, (int) ($data['image_id'] ?? 0)),
+            'meta_title'   => (string) ($data['meta_title'] ?? ''),
+            'meta_description' => (string) ($data['meta_description'] ?? ''),
+            'meta_fb_title' => (string) ($data['meta_fb_title'] ?? ''),
+            'meta_fb_description' => (string) ($data['meta_fb_description'] ?? ''),
+            'meta_tw_title' => (string) ($data['meta_tw_title'] ?? ''),
+            'meta_tw_description' => (string) ($data['meta_tw_description'] ?? ''),
         ];
     }
 }
