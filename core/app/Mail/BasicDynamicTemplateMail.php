@@ -2,11 +2,11 @@
 
 namespace App\Mail;
 
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class BasicDynamicTemplateMail extends Mailable
 {
@@ -27,23 +27,35 @@ class BasicDynamicTemplateMail extends Mailable
 
             $payment_details = $this->data['logs'] ?? [];
 
-            $invoice_details = PDF::loadView('landlord.frontend.invoice.package-order', compact('payment_details'));
-
-            $invoice_details->setPaper('L');
-            $invoice_details->output();
-            $canvas = $invoice_details->getDomPDF()->getCanvas();
-
-            $height = $canvas->get_height();
-            $width = $canvas->get_width();
-
-            $canvas->set_opacity(.2, "Multiply");
-            $canvas->set_opacity(.2);
-            $canvas->page_text($width / 5, $height / 2, __('Paid'), null, 55, array(0, 0, 0), 2, 2, -30);
-
-            return $this->from(get_static_option('site_global_email'), get_static_option('site_' . get_user_lang() . '_title'))
+            $mailable = $this->from(
+                get_static_option('site_global_email'),
+                get_static_option('site_' . get_user_lang() . '_title')
+            )
                 ->subject($this->data['subject'])
-                ->markdown('emails.basic-dynamic-template')
-                ->attachData($invoice_details->output(), "invoice.pdf");
+                ->markdown('emails.basic-dynamic-template');
+
+            if (class_exists(\Barryvdh\DomPDF\Facade::class)) {
+                $invoice_details = \Barryvdh\DomPDF\Facade::loadView('landlord.frontend.invoice.package-order', compact('payment_details'));
+
+                $invoice_details->setPaper('L');
+                $invoice_details->output();
+                $canvas = $invoice_details->getDomPDF()->getCanvas();
+
+                $height = $canvas->get_height();
+                $width = $canvas->get_width();
+
+                $canvas->set_opacity(.2, "Multiply");
+                $canvas->set_opacity(.2);
+                $canvas->page_text($width / 5, $height / 2, __('Paid'), null, 55, array(0, 0, 0), 2, 2, -30);
+
+                return $mailable->attachData($invoice_details->output(), "invoice.pdf");
+            }
+
+            Log::warning('DomPDF facade not found. Sending email without invoice PDF.', [
+                'mail_type' => $this->data['type'] ?? null,
+            ]);
+
+            return $mailable;
 
         }else{
 
