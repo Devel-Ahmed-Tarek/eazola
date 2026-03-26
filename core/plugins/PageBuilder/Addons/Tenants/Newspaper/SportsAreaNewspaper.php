@@ -140,7 +140,9 @@ class SportsAreaNewspaper extends PageBuilderBase
                 $blogs =  $blogs->where('status', 1)->where('category_id',$category)->orderBy($order_by,$order)->take(4)->get();
             }
         }else{
-            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->get(2);
+            // Laravel: get(2) يعني columns = 2 (يعمل select 2) وليس limit.
+            // استخدم take(2)->get() لتحديد عدد العناصر.
+            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->take(2)->get();
         }
 
 

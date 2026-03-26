@@ -113,7 +113,8 @@ class BlogArea extends PageBuilderBase
                 $blogs =  $blogs->where('status', 1)->where('category_id',$category)->orderBy($order_by,$order)->take(6)->get();
             }
         }else{
-            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->get(6);
+            // Laravel: get(6) => columns=6 (select 6) => wrong. Use take(6)->get().
+            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->take(6)->get();
         }
 
 

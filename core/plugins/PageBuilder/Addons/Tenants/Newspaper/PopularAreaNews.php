@@ -147,7 +147,8 @@ class PopularAreaNews extends PageBuilderBase
                 $blogs =  $blogs->where('status', 1)->where('category_id',$category)->orderBy($order_by,$order)->take(4)->get();
             }
         }else{
-            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->get(4);
+            // Laravel: get(4) => columns=4 (select 4) => wrong. Use take(4)->get().
+            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->take(4)->get();
         }
         ;
 

@@ -125,7 +125,8 @@ class HighlightAreaNewspaper extends PageBuilderBase
                 $blogs =  $blogs->where('status', 1)->where('category_id',$category)->orderBy($order_by,$order)->take(4)->get();
             }
         }else{
-            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->get(2);
+            // Laravel: get(2) => columns=2 (select 2) => wrong. Use take(2)->get().
+            $blogs = $blogs->where('status', 1)->orderBy($order_by,$order)->take(2)->get();
         }
 
 
