@@ -99,7 +99,11 @@
 
 
 @php
-    $route = route('tenant.dynamic.page', get_page_slug(get_static_option('job_page')))
+    $jobPageSlug = get_page_slug(get_static_option('job_page'));
+    // Avoid UrlGenerationException when job_page is not configured yet.
+    $route = !empty($jobPageSlug)
+        ? route('tenant.dynamic.page', $jobPageSlug)
+        : url()->current();
 @endphp
 
 <form action="{{$route}}" method="get" class="all_filter_form">
