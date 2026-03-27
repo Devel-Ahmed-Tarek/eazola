@@ -1,6 +1,9 @@
 @php
-    $end_date = $data["campaign"]->end_date;
+    $campaign = $data['campaign'] ?? null;
+    $end_date = $campaign?->end_date ?? null;
 @endphp
+
+@if(!empty($end_date))
 <section class="offerCartArea wow fadeInUp" data-wow-delay="0.0s">
     <div class="container">
         <div class="row">
@@ -58,3 +61,4 @@
         </div>
     </div>
 </section>
+@endif

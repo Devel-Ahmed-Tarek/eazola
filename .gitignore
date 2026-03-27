@@ -6,6 +6,7 @@ core/storage/framework
 core/public/storage
 core/.env
 core/.env.*
+core/resources/lang/ar.json
 
 # General
 npm-debug.log
