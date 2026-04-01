@@ -21,6 +21,7 @@ class BlogInsertRequest extends FormRequest
             'status' => 'nullable',
             'slug' => 'nullable',
             'image' => 'nullable|string|max:191',
+            'ai_bulk_translations_json' => 'nullable|string|max:5000000',
         ];
     }
 }

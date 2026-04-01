@@ -40,9 +40,10 @@
                 </x-admin.header-wrapper>
                 <x-error-msg/>
                 <x-flash-msg/>
-                @include('tenant.admin.partials.blog-ai-assistant', ['lang_slug' => $lang_slug])
+                @include('tenant.admin.partials.blog-ai-assistant', ['lang_slug' => $lang_slug, 'blog_id' => null])
                 <form class="forms-sample" method="post" action="{{route(route_prefix().'admin.blog.new')}}">
                     @csrf
+                    <input type="hidden" name="ai_bulk_translations_json" id="ai_bulk_translations_json" value="" />
                 <div class="row">
 
                 <div class="col-md-8">

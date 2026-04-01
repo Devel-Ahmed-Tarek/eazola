@@ -40,6 +40,9 @@ Route::middleware([
     Route::post('/blog/ai-assist', [\App\Http\Controllers\Tenant\Admin\BlogAiAssistantController::class, 'assist'])
         ->middleware('throttle:20,1')
         ->name('admin.blog.ai.assist');
+    Route::post('/blog/ai-apply-translations', [\App\Http\Controllers\Tenant\Admin\BlogAiAssistantController::class, 'applyTranslations'])
+        ->middleware('throttle:20,1')
+        ->name('admin.blog.ai.apply.translations');
 
     // Marketing hub page
     Route::get('/marketing', [\App\Http\Controllers\Tenant\Admin\MarketingHubController::class, 'index'])->name('admin.marketing.hub');

@@ -26,6 +26,7 @@ class BlogUpdateRequest extends FormRequest
             'meta_tags' => 'nullable|string',
             'meta_description' => 'nullable|string',
             'image' => 'nullable|string|max:191',
+            'ai_bulk_translations_json' => 'nullable|string|max:5000000',
         ];
     }
 }
