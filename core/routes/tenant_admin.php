@@ -136,6 +136,9 @@ Route::middleware([
     Route::prefix('image-gallery')->controller(\App\Http\Controllers\Tenant\Admin\ImageGalleryController::class)->group(function () {
         Route::get('/all', 'index')->name('admin.image.gallery');
         Route::post('/all', 'store');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\ImageGalleryAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.image.gallery.ai.assist');
         Route::post('/update', 'update')->name('admin.image.gallery.update');
         Route::post('/clone', 'clone')->name('admin.image.gallery.clone');
         Route::post('/delete/{id}', 'delete')->name('admin.image.gallery.delete');
@@ -286,6 +289,9 @@ Route::middleware([
     Route::controller(\App\Http\Controllers\Landlord\Admin\TestimonialController::class)->prefix('testimonial')->group(function () {
         Route::get('/all', 'index')->name('admin.testimonial');
         Route::post('/all', 'store');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\TestimonialAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.testimonial.ai.assist');
         Route::post('/clone', 'clone')->name('admin.testimonial.clone');
         Route::post('/update', 'update')->name('admin.testimonial.update');
         Route::post('/delete/{id}', 'delete')->name('admin.testimonial.delete');

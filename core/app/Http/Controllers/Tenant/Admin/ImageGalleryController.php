@@ -30,6 +30,7 @@ class ImageGalleryController extends Controller
             'title' => 'required|string|max:191',
             'status' => 'required|string|max:191',
             'image' => 'required|string|max:191',
+            'ai_bulk_translations_json' => 'nullable|string|max:5000000',
         ]);
 
         $testimonial = new ImageGallery();
@@ -39,6 +40,7 @@ class ImageGalleryController extends Controller
         $testimonial->status = $request->status;
         $testimonial->image = $request->image;
         $testimonial->save();
+        $this->mergeAiBulkTranslationsIfPresent($testimonial, $request);
 
         return response()->success(ResponseMessage::SettingsSaved());
     }
@@ -48,6 +50,7 @@ class ImageGalleryController extends Controller
             'title' => 'required|string|max:191',
             'status' => 'required|string|max:191',
             'image' => 'required|string|max:191',
+            'ai_bulk_translations_json' => 'nullable|string|max:5000000',
         ]);
 
         $testimonial = ImageGallery::find($request->id);
@@ -57,6 +60,7 @@ class ImageGalleryController extends Controller
         $testimonial->status = $request->status;
         $testimonial->image = $request->image;
         $testimonial->save();
+        $this->mergeAiBulkTranslationsIfPresent($testimonial, $request);
 
         return response()->success(ResponseMessage::SettingsSaved());
     }
@@ -85,6 +89,29 @@ class ImageGalleryController extends Controller
             $item->delete();
         }
         return response()->json(['status' => 'ok']);
+    }
+
+    private function mergeAiBulkTranslationsIfPresent(ImageGallery $gallery, Request $request): void
+    {
+        $raw = $request->input('ai_bulk_translations_json');
+        if (! is_string($raw) || trim($raw) === '') {
+            return;
+        }
+
+        $bulk = json_decode($raw, true);
+        if (! is_array($bulk)) {
+            return;
+        }
+
+        foreach ($bulk as $slug => $t) {
+            if (! is_string($slug) || ! is_array($t)) {
+                continue;
+            }
+            $gallery->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['title'] ?? '')))
+                ->setTranslation('subtitle', $slug, SanitizeInput::esc_html((string) ($t['subtitle'] ?? '')));
+        }
+
+        $gallery->save();
     }
 
 }
