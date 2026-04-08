@@ -16,6 +16,7 @@ class ServiceRequest extends FormRequest
             'status' => 'required|string',
             'category_id' => 'required|string',
             'image' => 'nullable|string|max:191',
+            'ai_bulk_translations_json' => 'nullable|string|max:5000000',
         ];
     }
 

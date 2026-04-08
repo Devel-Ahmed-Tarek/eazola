@@ -49,10 +49,11 @@
 
                         <x-error-msg/>
                         <x-flash-msg/>
-                        @include('tenant.admin.partials.knowledgebase-ai-assistant', ['lang_slug' => $lang_slug])
+                        @include('tenant.admin.partials.knowledgebase-ai-assistant', ['lang_slug' => $lang_slug, 'knowledgebase_id' => $knowledgebase->id])
 
                         <form class="forms-sample" method="post" action="{{route('tenant.admin.knowledgebase.update',$knowledgebase->id)}}" enctype="multipart/form-data">
                             @csrf
+                            <input type="hidden" name="ai_bulk_translations_json" id="kb_ai_bulk_translations_json" value="" />
                             <div class="row">
 
                                 <div class="col-md-8">

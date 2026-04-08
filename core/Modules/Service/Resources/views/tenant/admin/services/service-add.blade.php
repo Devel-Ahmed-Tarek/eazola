@@ -33,11 +33,12 @@
                 </x-admin.header-wrapper>
                 <x-error-msg/>
                 <x-flash-msg/>
-                @include('tenant.admin.partials.service-ai-assistant', ['lang_slug' => $lang_slug])
+                @include('tenant.admin.partials.service-ai-assistant', ['lang_slug' => $lang_slug, 'service_id' => null])
 
 
                 <form action="{{route('tenant.admin.services.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="ai_bulk_translations_json" id="service_ai_bulk_translations_json" value="" />
 
                      <input type="hidden" name="lang" value="{{$default_lang}}"/>
                         <div class="row">

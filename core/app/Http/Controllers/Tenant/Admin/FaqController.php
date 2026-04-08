@@ -37,6 +37,7 @@ class FaqController extends Controller
         $testimonial->category_id = $request->category_id;
         $testimonial->status = $request->status;
         $testimonial->save();
+        $this->mergeAiBulkTranslationsIfPresent($testimonial, $request);
 
         return response()->success(ResponseMessage::SettingsSaved());
     }
@@ -53,6 +54,7 @@ class FaqController extends Controller
         $testimonial->category_id = $request->category_id;
         $testimonial->status = $request->status;
         $testimonial->save();
+        $this->mergeAiBulkTranslationsIfPresent($testimonial, $request);
 
         return response()->success(ResponseMessage::SettingsSaved());
     }
@@ -68,6 +70,29 @@ class FaqController extends Controller
             $item->delete();
         }
         return response()->json(['status' => 'ok']);
+    }
+
+    private function mergeAiBulkTranslationsIfPresent(Faq $faq, Request $request): void
+    {
+        $raw = $request->input('ai_bulk_translations_json');
+        if (!is_string($raw) || trim($raw) === '') {
+            return;
+        }
+
+        $bulk = json_decode($raw, true);
+        if (!is_array($bulk)) {
+            return;
+        }
+
+        foreach ($bulk as $slug => $t) {
+            if (!is_string($slug) || !is_array($t)) {
+                continue;
+            }
+            $faq->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['title'] ?? '')))
+                ->setTranslation('description', $slug, SanitizeInput::esc_html((string) ($t['description'] ?? '')));
+        }
+
+        $faq->save();
     }
 
 }

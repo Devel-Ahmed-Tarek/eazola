@@ -16,6 +16,7 @@ class KnowledgebaseRequest extends FormRequest
             'description' => 'required|string',
             'status' => 'nullable|string',
             'image' => 'nullable|string|max:191',
+            'ai_bulk_translations_json' => 'nullable|string|max:5000000',
         ];
     }
 

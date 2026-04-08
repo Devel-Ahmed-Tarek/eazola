@@ -20,6 +20,7 @@ class KnowledgebaseAdminAction
         try {
             $event = new Knowledgebase();
             $this->common_data($event,$request,'create');
+            $this->mergeAiBulkTranslationsIfPresent($event, $request);
             DB::commit();
 
             $notice['msg'] = __('Knowledgebase Created Successfully..');
@@ -48,6 +49,7 @@ class KnowledgebaseAdminAction
             }else{
                 $this->common_data($knowledgebase,$request,'update');
             }
+            $this->mergeAiBulkTranslationsIfPresent($knowledgebase, $request);
 
             DB::commit();
 
@@ -194,6 +196,59 @@ class KnowledgebaseAdminAction
             }
             return $names;
 
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $bulk
+     */
+    public function applyAiBulkTranslationsArray(Knowledgebase $knowledgebase, array $bulk): void
+    {
+        foreach ($bulk as $slug => $t) {
+            if (!is_string($slug) || !is_array($t)) {
+                continue;
+            }
+            $knowledgebase->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['title'] ?? '')))
+                ->setTranslation('description', $slug, (string) ($t['description'] ?? ''));
+        }
+        $knowledgebase->save();
+
+        $meta = $knowledgebase->metainfo;
+        if ($meta === null) {
+            return;
+        }
+
+        foreach ($bulk as $slug => $t) {
+            if (!is_string($slug) || !is_array($t)) {
+                continue;
+            }
+            $meta->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['meta_title'] ?? '')));
+            $meta->setTranslation('description', $slug, SanitizeInput::esc_html((string) ($t['meta_description'] ?? '')));
+        }
+
+        $def = \App\Facades\GlobalLanguage::default_slug();
+        if (isset($bulk[$def]) && is_array($bulk[$def])) {
+            $b = $bulk[$def];
+            $meta->fb_title = SanitizeInput::esc_html((string) ($b['meta_fb_title'] ?? ''));
+            $meta->fb_description = SanitizeInput::esc_html((string) ($b['meta_fb_description'] ?? ''));
+            $meta->tw_title = SanitizeInput::esc_html((string) ($b['meta_tw_title'] ?? ''));
+            $meta->tw_description = SanitizeInput::esc_html((string) ($b['meta_tw_description'] ?? ''));
+        }
+        $meta->save();
+    }
+
+    private function mergeAiBulkTranslationsIfPresent(Knowledgebase $knowledgebase, Request $request): void
+    {
+        $raw = $request->input('ai_bulk_translations_json');
+        if (!is_string($raw) || trim($raw) === '') {
+            return;
+        }
+
+        $bulk = json_decode($raw, true);
+        if (!is_array($bulk)) {
+            return;
+        }
+
+        $this->applyAiBulkTranslationsArray($knowledgebase, $bulk);
     }
 
 }

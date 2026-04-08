@@ -111,6 +111,7 @@
                         <div class="modal-body">
                             @csrf
                             <input type="hidden" name="lang" value="{{$default_lang}}">
+                            <input type="hidden" name="ai_bulk_translations_json" id="faq_ai_bulk_translations_json_create" value="">
                             <x-fields.input name="title" label="{{__('Title')}}" />
                             <x-fields.textarea name="description" label="{{__('Description')}}"/>
 
@@ -149,6 +150,7 @@
                             @csrf
                             <input type="hidden" name="lang" value="{{$default_lang}}">
                             <input type="hidden" name="id" class="faq_id" value="">
+                            <input type="hidden" name="ai_bulk_translations_json" id="faq_ai_bulk_translations_json_edit" value="">
                             <x-fields.input name="title" label="{{__('Title')}}" class="edit_title" />
 
                             <x-fields.textarea name="description" label="{{__('Description')}}" class="edit_description"/>
@@ -184,6 +186,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="bg-light rounded-3 p-3 border mb-3">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="faq_ai_all_langs" checked>
+                            <label class="form-check-label fw-semibold" for="faq_ai_all_langs">{{ __('All site languages at once') }}</label>
+                        </div>
+                        <small class="text-muted d-block mt-1">{{ __('For improve mode, save the FAQ item first.') }}</small>
+                    </div>
                     <div id="faq-ai-panel-generate">
                         <label class="form-label">{{ __('Topic or brief') }}</label>
                         <textarea class="form-control" id="faq_ai_topic" rows="4"></textarea>
@@ -257,6 +266,13 @@
                 faqAiMode = $(this).data('faq-ai-mode') || 'generate';
                 faqTargetForm = $(this).data('target-form') || 'create';
                 faqHideError();
+                var $all = $('#faq_ai_all_langs');
+                if (faqAiMode === 'refine' && faqTargetForm !== 'edit') {
+                    $all.prop('checked', false).prop('disabled', true);
+                } else {
+                    $all.prop('disabled', false);
+                    if (faqAiMode === 'generate') $all.prop('checked', true);
+                }
                 if (faqAiMode === 'generate') {
                     $('#faq-ai-panel-generate').removeClass('d-none');
                     $('#faq-ai-panel-refine').addClass('d-none');
@@ -272,9 +288,12 @@
             $('#faq_ai_run_btn').on('click', function () {
                 faqHideError();
                 var form = faqGetForm();
+                var allLangs = $('#faq_ai_all_langs').is(':checked');
+                var currentLang = $('select[name="lang"]').val() || $('input[name="lang"]').val() || ($('#faqAiModal').data('ai-lang') || 'en');
                 var payload = {
                     mode: faqAiMode,
-                    lang: $('#faqAiModal').data('ai-lang') || 'en'
+                    lang: currentLang,
+                    all_languages: allLangs
                 };
                 if (faqAiMode === 'generate') {
                     payload.topic = $('#faq_ai_topic').val() || '';
@@ -282,6 +301,9 @@
                     payload.instruction = $('#faq_ai_instruction').val() || '';
                     payload.current_title = faqTargetForm === 'edit' ? form.find('.edit_title').val() : form.find('input[name="title"]').val();
                     payload.current_description = faqTargetForm === 'edit' ? form.find('.edit_description').val() : form.find('textarea[name="description"]').val();
+                    if (allLangs && faqTargetForm === 'edit') {
+                        payload.faq_id = parseInt(form.find('.faq_id').val() || '0', 10);
+                    }
                 }
 
                 $('#faq-ai-loading').removeClass('d-none');
@@ -301,14 +323,21 @@
                         faqShowError(res.message);
                         return;
                     }
+                    var dataForLang = (res.all_languages && res.translations) ? (res.translations[currentLang] || {}) : res;
                     if (faqTargetForm === 'edit') {
-                        form.find('.edit_title').val(res.title || '');
-                        form.find('.edit_description').val(res.description || '');
+                        form.find('.edit_title').val(dataForLang.title || '');
+                        form.find('.edit_description').val(dataForLang.description || '');
                         if (res.category_id) form.find('.edit_cat').val(String(res.category_id));
+                        if (res.all_languages && res.translations) {
+                            $('#faq_ai_bulk_translations_json_edit').val(JSON.stringify(res.translations));
+                        }
                     } else {
-                        form.find('input[name="title"]').val(res.title || '');
-                        form.find('textarea[name="description"]').val(res.description || '');
+                        form.find('input[name="title"]').val(dataForLang.title || '');
+                        form.find('textarea[name="description"]').val(dataForLang.description || '');
                         if (res.category_id) form.find('select[name="category_id"]').val(String(res.category_id));
+                        if (res.all_languages && res.translations) {
+                            $('#faq_ai_bulk_translations_json_create').val(JSON.stringify(res.translations));
+                        }
                     }
                     if (typeof toastr !== 'undefined') toastr.success(@json(__('AI content applied. Please review before saving.')));
                     if (faqModal) faqModal.hide();

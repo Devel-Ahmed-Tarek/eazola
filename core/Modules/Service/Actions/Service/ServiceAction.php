@@ -26,6 +26,7 @@ class ServiceAction
             $service = new Service();
             $this->common_action($service, $request,'create');
             $service->save();
+            $this->mergeAiBulkTranslationsIfPresent($service, $request);
 
             $this->message['msg'] = __('Service Created Successfully..!');
             $this->message['type'] = 'success';
@@ -51,6 +52,7 @@ class ServiceAction
             }else{
                 $this->common_action($service, $request,'update');
             }
+            $this->mergeAiBulkTranslationsIfPresent($service, $request);
 
             $this->message['msg'] = __('Service updated Successfully..!');
             $this->message['type'] = 'success';
@@ -93,6 +95,59 @@ class ServiceAction
         ]);
 
 
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $bulk
+     */
+    public function applyAiBulkTranslationsArray(Service $service, array $bulk): void
+    {
+        foreach ($bulk as $slug => $t) {
+            if (!is_string($slug) || !is_array($t)) {
+                continue;
+            }
+            $service->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['title'] ?? '')))
+                ->setTranslation('description', $slug, (string) ($t['description'] ?? ''));
+        }
+        $service->save();
+
+        $meta = $service->metainfo;
+        if ($meta === null) {
+            return;
+        }
+
+        foreach ($bulk as $slug => $t) {
+            if (!is_string($slug) || !is_array($t)) {
+                continue;
+            }
+            $meta->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['meta_title'] ?? '')));
+            $meta->setTranslation('description', $slug, SanitizeInput::esc_html((string) ($t['meta_description'] ?? '')));
+        }
+
+        $def = GlobalLanguage::default_slug();
+        if (isset($bulk[$def]) && is_array($bulk[$def])) {
+            $b = $bulk[$def];
+            $meta->fb_title = SanitizeInput::esc_html((string) ($b['meta_fb_title'] ?? ''));
+            $meta->fb_description = SanitizeInput::esc_html((string) ($b['meta_fb_description'] ?? ''));
+            $meta->tw_title = SanitizeInput::esc_html((string) ($b['meta_tw_title'] ?? ''));
+            $meta->tw_description = SanitizeInput::esc_html((string) ($b['meta_tw_description'] ?? ''));
+        }
+        $meta->save();
+    }
+
+    private function mergeAiBulkTranslationsIfPresent(Service $service, Request $request): void
+    {
+        $raw = $request->input('ai_bulk_translations_json');
+        if (!is_string($raw) || trim($raw) === '') {
+            return;
+        }
+
+        $bulk = json_decode($raw, true);
+        if (!is_array($bulk)) {
+            return;
+        }
+
+        $this->applyAiBulkTranslationsArray($service, $bulk);
     }
 
 
