@@ -93,11 +93,16 @@ class PortfolioController extends Controller
         return redirect()->back()->with($response);
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $portfolio = Portfolio::findOrFail($id);
         $all_category = PortfolioCategory::select('id','title')->get();
-        return view(self::BASE_PATH . 'edit-portfolio')->with(['portfolio' => $portfolio, 'all_category' => $all_category]);
+
+        return view(self::BASE_PATH . 'edit-portfolio')->with([
+            'portfolio' => $portfolio,
+            'all_category' => $all_category,
+            'default_lang' => $request->get('lang') ?? GlobalLanguage::default_slug(),
+        ]);
     }
 
     public function update(PortfolioRequest $request, $id, PortfolioAdminAction $action)

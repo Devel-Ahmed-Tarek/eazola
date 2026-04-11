@@ -42,12 +42,15 @@
                 <x-error-msg/>
                 <x-flash-msg/>
 
-                <form class="forms-sample" method="post" action="{{route('tenant.admin.portfolio.new')}}" enctype="multipart/form-data">
+                @include('tenant.admin.partials.portfolio-ai-assistant', ['portfolio_id' => null, 'lang_slug' => $lang_slug])
+
+                <form class="forms-sample js-portfolio-ai-form" method="post" action="{{route('tenant.admin.portfolio.new')}}" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="ai_bulk_translations_json" id="portfolio_ai_bulk_translations_json" value="">
                     <div class="row">
 
                         <div class="col-md-8">
-                            <x-fields.input type="hidden" name="lang" value="{{$lang_slug}}"/>
+                            <x-fields.input type="hidden" name="lang" value="{{ $default_lang }}"/>
                             <x-fields.input type="text" name="title" label="{{__('Title')}}" class="title" id="title" value="{{ old('title') }}"/>
 
                             <x-slug.add-markup/>
@@ -119,6 +122,7 @@
     <x-summernote.js/>
     <x-media-upload.js/>
     <x-slug.js.add :module="'portfolio'"/>
+    @include('tenant.admin.partials.portfolio-ai-script')
 
     <script>
         (function ($) {

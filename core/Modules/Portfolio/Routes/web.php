@@ -27,6 +27,9 @@ Route::middleware([
     Route::controller(PortfolioController::class)->prefix('portfolio')->name('tenant.')->group(function(){
         Route::get('/', 'index')->name('admin.portfolio');
         Route::get('/new', 'create')->name('admin.portfolio.new');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\PortfolioAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.portfolio.ai.assist');
         Route::post('/new', 'store');
         Route::get('/edit/{id}', 'edit')->name('admin.portfolio.edit');
         Route::post('/update/{id}', 'update')->name('admin.portfolio.update');

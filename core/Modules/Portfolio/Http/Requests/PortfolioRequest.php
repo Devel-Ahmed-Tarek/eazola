@@ -18,6 +18,7 @@ class PortfolioRequest extends FormRequest
             'image' => 'required|string',
             'image_gallery' => 'nullable|string',
             'url' => 'nullable|string',
+            'ai_bulk_translations_json' => 'nullable|string|max:5000000',
         ];
     }
 

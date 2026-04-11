@@ -15,7 +15,10 @@ class Advertise extends \Plugins\WidgetBuilder\WidgetBase
         $output .= $this->default_fields();
         $widget_saved_values = $this->get_settings();
 
-        $advertisements = Advertisement::where(['status'=> 1])->get()->pluck('title','id')->toArray();
+        $lang = function_exists('get_user_lang') ? get_user_lang() : app()->getLocale();
+        $advertisements = Advertisement::where(['status' => 1])->get()->mapWithKeys(function ($row) use ($lang) {
+            return [$row->id => $row->getTranslation('title', $lang) ?: $row->getTranslation('title', \App\Facades\GlobalLanguage::default_slug())];
+        })->toArray();
 
         $output .= Select::get([
             'name' => 'advertisement',

@@ -9,6 +9,9 @@
 @endsection
 
 @section('content')
+    @php
+        $lang_slug = request()->get('lang') ?? \App\Facades\GlobalLanguage::default_slug();
+    @endphp
     <div class="col-lg-12 col-ml-12 padding-bottom-30">
         <div class="row">
             <div class="col-lg-12">
@@ -19,16 +22,29 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="header-wrap d-flex justify-content-between">
+                        <div class="header-wrap d-flex flex-wrap justify-content-between align-items-center gap-2">
                             <div class="left-content">
                                 <h4 class="header-title">{{__('Add New Advertisement')}}   </h4>
                             </div>
-                            <div class="right-content">
+                            <div class="right-content d-flex flex-wrap align-items-center gap-2">
+                                <form action="{{ route('tenant.admin.advertisement.new') }}" method="get" class="mb-0">
+                                    <x-fields.select name="lang" title="{{ __('Language') }}">
+                                        @foreach(\App\Facades\GlobalLanguage::all_languages(1) as $lang)
+                                            <option value="{{ $lang->slug }}" @if($lang->slug === $lang_slug) selected @endif>{{ $lang->name }}</option>
+                                        @endforeach
+                                    </x-fields.select>
+                                </form>
                                 <a class="btn btn-info btn-sm" href="{{route('tenant.admin.advertisement')}}">{{__('All Advertisements')}}</a>
                             </div>
                         </div>
-                        <form action="{{route('tenant.admin.advertisement.store')}}" method="post" enctype="multipart/form-data">
+
+                        @include('tenant.admin.partials.advertisement-ai-assistant', ['advertisement_id' => null, 'lang_slug' => $lang_slug])
+
+                        <form class="js-advertisement-form" action="{{route('tenant.admin.advertisement.store')}}" method="post" enctype="multipart/form-data">
                             @csrf
+                            <input type="hidden" name="lang" value="{{ $default_lang }}">
+                            <input type="hidden" name="ai_bulk_translations_json" id="adv_ai_bulk_translations_json" value="">
+                            <input type="hidden" name="advertisement_id_for_ai" value="0">
 
                             <div class="tab-content margin-top-40">
 
@@ -106,10 +122,14 @@
 
 @section('scripts')
     <x-media-upload.js/>
+    @include('tenant.admin.partials.advertisement-ai-script')
     <script>
         (function ($) {
             "use strict";
             $(document).ready(function () {
+                $(document).on('change','select[name="lang"]',function (){
+                    $(this).closest('form').trigger('submit');
+                });
                 <x-btn.submit/>
                 $('.image').hide();
                 $(document).on('change','#type',function(e){

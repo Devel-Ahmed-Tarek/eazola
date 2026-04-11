@@ -242,6 +242,9 @@ Route::group(['middleware' => ['auth:admin','adminglobalVariable','setlang'],'pr
     Route::controller(BrandController::class)->name('landlord.')->prefix('brands')->group(function (){
         Route::get('/', 'index')->name('admin.brands');
         Route::post('/', 'store');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\BrandAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.brands.ai.assist');
         Route::post('/update', 'update')->name('admin.brands.update');
         Route::post('/delete/{id}', 'delete')->name('admin.brands.delete');
         Route::post('/bulk-action', 'bulk_action')->name('admin.brands.bulk.action');

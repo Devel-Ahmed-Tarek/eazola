@@ -2,6 +2,7 @@
 
 namespace Modules\Portfolio\Actions\Portfolio;
 
+use App\Facades\GlobalLanguage;
 use App\Helpers\SanitizeInput;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,7 @@ class PortfolioAdminAction
 
             $portfolio->save();
             $portfolio->metainfo()->create($Metas);
+            $this->mergeAiBulkTranslationsIfPresent($portfolio, $request);
             DB::commit();
 
             $notice['msg'] = __('Portfolio Updated Successfully..!');
@@ -116,6 +118,8 @@ class PortfolioAdminAction
                 'fb_description' => SanitizeInput::esc_html($request->meta_fb_description),
             ]);
 
+            $this->mergeAiBulkTranslationsIfPresent($portfolio, $request);
+
             DB::commit();
             $notice['msg'] = __('Portfolio Updated Successfully..!');
             $notice['type'] = 'success';
@@ -128,6 +132,59 @@ class PortfolioAdminAction
          }
 
          return $notice;
+    }
+
+    public function applyAiBulkTranslationsArray(Portfolio $portfolio, array $bulk): void
+    {
+        foreach ($bulk as $slug => $t) {
+            if (! is_string($slug) || ! is_array($t)) {
+                continue;
+            }
+            $portfolio->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['title'] ?? '')))
+                ->setTranslation('description', $slug, (string) ($t['description'] ?? ''))
+                ->setTranslation('client', $slug, SanitizeInput::esc_html((string) ($t['client'] ?? '')))
+                ->setTranslation('design', $slug, SanitizeInput::esc_html((string) ($t['design'] ?? '')))
+                ->setTranslation('typography', $slug, SanitizeInput::esc_html((string) ($t['typography'] ?? '')));
+        }
+        $portfolio->save();
+
+        $meta = $portfolio->metainfo;
+        if ($meta === null) {
+            return;
+        }
+
+        foreach ($bulk as $slug => $t) {
+            if (! is_string($slug) || ! is_array($t)) {
+                continue;
+            }
+            $meta->setTranslation('title', $slug, SanitizeInput::esc_html((string) ($t['meta_title'] ?? '')));
+            $meta->setTranslation('description', $slug, SanitizeInput::esc_html((string) ($t['meta_description'] ?? '')));
+        }
+
+        $def = GlobalLanguage::default_slug();
+        if (isset($bulk[$def]) && is_array($bulk[$def])) {
+            $b = $bulk[$def];
+            $meta->fb_title = SanitizeInput::esc_html((string) ($b['meta_fb_title'] ?? ''));
+            $meta->fb_description = SanitizeInput::esc_html((string) ($b['meta_fb_description'] ?? ''));
+            $meta->tw_title = SanitizeInput::esc_html((string) ($b['meta_tw_title'] ?? ''));
+            $meta->tw_description = SanitizeInput::esc_html((string) ($b['meta_tw_description'] ?? ''));
+        }
+        $meta->save();
+    }
+
+    protected function mergeAiBulkTranslationsIfPresent(Portfolio $portfolio, Request $request): void
+    {
+        $raw = $request->input('ai_bulk_translations_json');
+        if (! is_string($raw) || trim($raw) === '') {
+            return;
+        }
+
+        $bulk = json_decode($raw, true);
+        if (! is_array($bulk)) {
+            return;
+        }
+
+        $this->applyAiBulkTranslationsArray($portfolio, $bulk);
     }
 
     public function clone_execute(Request $request)

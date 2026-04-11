@@ -15,7 +15,7 @@
 @endsection
 @section('content')
     @php
-        $lang_slug = request()->get('lang') ?? default_lang();
+        $lang_slug = request()->get('lang') ?? $default_lang;
     @endphp
     <div class="col-lg-12 col-ml-12 padding-bottom-30">
         <div class="row">
@@ -44,12 +44,14 @@
                         <x-error-msg/>
                         <x-flash-msg/>
 
+                        @include('tenant.admin.partials.portfolio-ai-assistant', ['portfolio_id' => $portfolio->id, 'lang_slug' => $lang_slug])
 
-                        <form class="forms-sample" method="post" action="{{route('tenant.admin.portfolio.update',$portfolio->id)}}" enctype="multipart/form-data">
+                        <form class="forms-sample js-portfolio-ai-form" method="post" action="{{route('tenant.admin.portfolio.update',$portfolio->id)}}" enctype="multipart/form-data">
                             @csrf
+                            <input type="hidden" name="ai_bulk_translations_json" id="portfolio_ai_bulk_translations_json" value="">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <x-fields.input type="hidden" name="lang" value="{{$lang_slug}}"/>
+                                    <x-fields.input type="hidden" name="lang" value="{{ $default_lang }}"/>
                                     <x-fields.input type="text" name="title" label="{{__('Title')}}" class="title" value="{{$portfolio->getTranslation('title',$lang_slug)}}" id="title"/>
 
                                     <x-slug.edit-markup value="{{$portfolio->slug}}"/>
@@ -126,6 +128,7 @@
     <x-summernote.js/>
     <x-media-upload.js/>
     <x-slug.js.edit :module="'portfolio'"/>
+    @include('tenant.admin.partials.portfolio-ai-script')
 
     <script>
         (function($){

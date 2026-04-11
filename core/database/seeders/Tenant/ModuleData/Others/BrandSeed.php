@@ -2,9 +2,7 @@
 
 namespace Database\Seeders\Tenant\ModuleData\Others;
 
-use App\Helpers\ImageDataSeedingHelper;
-use App\Helpers\SanitizeInput;
-use App\Models\Brand;
+use App\Facades\GlobalLanguage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -12,14 +10,24 @@ class BrandSeed extends Seeder
 {
     public static function execute()
     {
-        DB::statement("INSERT INTO `brands` (`url`, `image`, `status`, `created_at`, `updated_at`)
-VALUES
-	('#','77',1,'2022-09-03 11:56:25','2022-09-03 11:58:56'),
-	('#','76',1,'2022-09-03 11:56:36','2022-09-03 11:56:36'),
-	('#','75',1,'2022-09-03 11:56:43','2022-09-03 11:56:43'),
-	('#','74',1,'2022-09-03 11:58:21','2022-09-03 11:58:21'),
-	('#','73',1,'2022-09-03 11:58:35','2022-09-03 11:58:35'),
-	('#','72',1,'2022-09-03 11:58:43','2022-09-03 11:58:43'),
-	('s','72',1,'2022-09-03 12:32:36','2022-09-03 12:32:36')");
+        try {
+            $slug = GlobalLanguage::default_slug();
+        } catch (\Throwable $e) {
+            $slug = 'en';
+        }
+
+        $urlHash = json_encode([$slug => '#'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $urlS = json_encode([$slug => 's'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $now = now();
+
+        DB::table('brands')->insert([
+            ['url' => $urlHash, 'image' => '77', 'status' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['url' => $urlHash, 'image' => '76', 'status' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['url' => $urlHash, 'image' => '75', 'status' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['url' => $urlHash, 'image' => '74', 'status' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['url' => $urlHash, 'image' => '73', 'status' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['url' => $urlHash, 'image' => '72', 'status' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['url' => $urlS, 'image' => '72', 'status' => 1, 'created_at' => $now, 'updated_at' => $now],
+        ]);
     }
 }

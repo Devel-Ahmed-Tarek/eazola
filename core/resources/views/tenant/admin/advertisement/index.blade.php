@@ -9,6 +9,9 @@
 @endsection
 
 @section('content')
+    @php
+        $lang_slug = request()->get('lang') ?? $default_lang;
+    @endphp
     <div class="col-lg-12 col-ml-12 padding-bottom-30">
         <div class="row">
             <div class="col-lg-12">
@@ -19,18 +22,25 @@
             <div class="col-lg-12 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <div class="header-wrap d-flex justify-content-between">
+                        <div class="header-wrap d-flex flex-wrap justify-content-between align-items-center gap-2">
                             <div class="left-content">
                                 <h4 class="header-title">{{__('All Advertisements')}}  </h4>
                                  @can('advertisement-delete')
                                   <x-bulk-action/>
                                  @endcan
                             </div>
+                            <div class="right-content d-flex flex-wrap align-items-center gap-2">
+                                <form action="{{ route('tenant.admin.advertisement') }}" method="get" class="mb-0">
+                                    <x-fields.select name="lang" title="{{ __('Language') }}">
+                                        @foreach(\App\Facades\GlobalLanguage::all_languages(1) as $lang)
+                                            <option value="{{ $lang->slug }}" @if($lang->slug === $lang_slug) selected @endif>{{ $lang->name }}</option>
+                                        @endforeach
+                                    </x-fields.select>
+                                </form>
                             @can('advertisement-create')
-                            <div class="right-content">
-                                <a href="{{ route('tenant.admin.advertisement.new')}}" class="btn btn-primary">{{__('Add New Advertisement')}}</a>
+                                <a href="{{ route('tenant.admin.advertisement.new', ['lang' => $lang_slug]) }}" class="btn btn-primary">{{__('Add New Advertisement')}}</a>
+                            @endcan
                             </div>
-                             @endcan
                         </div>
                         <div class="table-wrap table-responsive">
                             <table class="table table-default">
@@ -57,7 +67,7 @@
                                                 <x-bulk-delete-checkbox :id="$data->id"/>
                                             </td>
                                             <td>{{$data->id}}</td>
-                                            <td>{{$data->title}}</td>
+                                            <td>{{ $data->getTranslation('title', $lang_slug) }}</td>
                                             <td>{{__(str_replace('_',' ',$data->type))}}</td>
                                             <td>{{$data->size}}</td>
                                             <td>
