@@ -27,15 +27,7 @@
                     <div class="header-info-right">
 
                         <ul class="user-account">
-                            @if (auth()->check())
-                                @php
-                                    $route = auth()->guest() == 'admin' ? route('tenant.admin.dashboard') : route('tenant.user.home');
-                                @endphp
-                                <li class="listItem"><a href="{{ $route }}">{{ __('Dashboard') }}</a> <span>/</span>
-                                    <a href="{{ route('tenant.user.logout') }}">{{ __('Logout') }}</a>
-                                </li>
-                            @else
-
+                            @if (!auth()->check())
                                 <li class="listItem">
                                     @if(!empty(get_static_option('tenant_login_show_hide')))
                                      <a href="{{ route('tenant.user.login') }}">{{ __('Login') }}</a>
@@ -48,16 +40,7 @@
                             @endif
                         </ul>
                         <div class="language_dropdown @if(get_user_lang_direction() == 'rtl') ml-1 @else mr-1 @endif d-none" id="languages_selector">
-                            @if (auth()->check())
-                                @php
-                                    $route = auth()->guest() == 'admin' ? route('tenant.admin.dashboard') : route('tenant.user.home');
-                                @endphp
-                                <div class="selected-language">{{ __('Account') }}<i class="fas fa-caret-down"></i></div>
-                                <ul>
-                                    <li class="listItem"><a href="{{ $route }}">{{ __('Dashboard') }}</a>
-                                    <li class="listItem"><a href="{{ route('tenant.user.logout') }}">{{ __('Logout') }}</a></li>
-                                </ul>
-                            @else
+                            @if (!auth()->check())
                                 <div class="selected-language">{{ __('Login') }}<i class="fas fa-caret-down"></i></div>
                                 <ul>
                                     <li class="listItem"><a class="listItem" href="{{ route('tenant.user.login') }}">{{ __('Login') }}</a>

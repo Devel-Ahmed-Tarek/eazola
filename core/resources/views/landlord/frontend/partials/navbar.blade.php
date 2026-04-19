@@ -32,15 +32,9 @@
             <!-- Menu Right -->
             <div class="nav-right-content">
                 <div class="btn-wrapper">
-                    @if( Auth::guard('web')->check())
-                        @php
-                            $route = auth()->guest() == 'admin' ? route('landlord.admin.dashboard') : route('landlord.user.home');
-                        @endphp
-                        <a class="cmn-btn " href="{{$route}}">{{ __('Dashboard') }}  </a>
-                        <a class="cmn-btn " href="{{route('landlord.user.logout') }}">{{ __('Logout') }}</a>
-                     @else
+                    @guest('web')
                         <a href="{{route('landlord.user.login')}}" class="cmn-btn" target="_blank">{{__("Login")}}</a>
-                    @endif
+                    @endguest
                 </div>
             </div>
 
