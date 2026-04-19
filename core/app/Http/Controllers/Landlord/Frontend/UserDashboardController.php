@@ -44,7 +44,6 @@ class UserDashboardController extends Controller
 
         $package_orders = PaymentLogs::where('user_id', $this->logged_user_details()->id)->count();
         $support_tickets = SupportTicket::where('user_id', $this->logged_user_details()->id)->count();
-        $recent_logs = PaymentLogs::where('user_id', $this->logged_user_details()->id)->orderBy('id', 'desc')->take(6)->get();
 
         $price_plans = PricePlan::where(['status'=>1])->get();
         $themes = Themes::where(['status'=>1,'is_available' =>1])->get();
@@ -60,7 +59,6 @@ class UserDashboardController extends Controller
             [
                 'package_orders' => $package_orders,
                 'support_tickets' => $support_tickets,
-                'recent_logs' => $recent_logs,
                 'price_plans' => $price_plans,
                 'themes' => $themes,
                 'payment_gateways' => $payment_gateways,

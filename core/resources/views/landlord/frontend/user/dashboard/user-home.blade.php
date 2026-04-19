@@ -135,63 +135,14 @@
             </div>
         </div>
 
-        <h2 class="ud-section-title">
-            <i class="las la-receipt"></i>
-            {{ __('Recent orders') }}
-        </h2>
-        <div class="ud-table-card">
-            <div class="table-responsive">
-                <table class="table table-bordered mb-0 recent_payment_table">
-                    <thead>
-                        <tr>
-                            <th>{{ __('ID') }}</th>
-                            <th>{{ __('Package Name') }}</th>
-                            <th>{{ __('Amount') }}</th>
-                            <th>{{ __('Domain') }}</th>
-                            <th>{{ __('Start Date') }}</th>
-                            <th>{{ __('Expire Date') }}</th>
-                            <th>{{ __('Order Status') }}</th>
-                            <th>{{ __('Payment History') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody class="w-100">
-                    @foreach($recent_logs as $key=> $data)
-
-                        @php
-                            $tenantHelperForLog = \App\Helpers\TenantHelper\TenantHelpers::init()->setTenantId($data->tenant_id);
-                            $paymentLogHistory = \App\Models\PaymentLogHistory::where('user_id', Auth()->guard('web')->user()->id)->where('tenant_id',$data->tenant_id)->first();
-                        @endphp
-                        <tr>
-                            <td>{{$key +1}}</td>
-                            <td>{{$data->package_name}}</td>
-                            <td>{{ amount_with_currency_symbol($data->package_price) }}</td>
-                            <td>{{ $data->tenant_id . '.' . env('CENTRAL_DOMAIN') }}</td>
-                            <td>
-                                {{$tenantHelperForLog->getTenantStartDate()}}
-
-                            </td>
-                            <td>
-                                {{$tenantHelperForLog->getTenantExpiredDate() }}
-                            </td>
-                            <td>{{$data->status}}</td>
-                            <td>
-                                @if(!empty($data->payment_status) && $data->payment_status == 'complete' && !is_null($tenantHelperForLog->getTenant()) && $paymentLogHistory)
-                                <a href="{{route('landlord.user.dashboard.payment.log.history',$data->tenant_id)}}" class="btn btn-success btn-sm">{{__('View Details')}}</a>
-                                @elseif( in_array($data->payment_status,['pending','complete']) && $data->status === 'trial' && is_null($tenantHelperForLog->getTenant()))
-                                    {{__('Waiting For Admin Approval')}}
-                                @elseif( is_null($paymentLogHistory))
-                                    {{__('No Payment History Found')}}
-                                @elseif($data->status == 'complete' && $data->payment_status == 'complete' && $paymentLogHistory)
-                                    <a href="{{route('landlord.user.dashboard.payment.log.history',$data->tenant_id)}}" class="btn btn-success btn-sm">{{__('View Details')}} </a>
-                                @elseif($data->status !== 'trial')
-                                    {{$data->payment_status }}
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+        <div class="ud-orders-cta mt-4">
+            <div>
+                <strong>{{ __('Order history') }}</strong>
+                <p class="mb-0 small text-muted">{{ __('Full list opens on its own page with pagination.') }}</p>
             </div>
+            <a href="{{ route('landlord.user.dashboard.package.order') }}" class="btn btn-primary">
+                {{ __('Payment Logs') }} <i class="las la-angle-right ms-1"></i>
+            </a>
         </div>
     </div>
 

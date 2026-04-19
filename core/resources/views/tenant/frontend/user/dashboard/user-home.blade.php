@@ -222,37 +222,14 @@
             </div>
         @endif
 
-        @if(count($recent_logs) > 0)
-            <h2 class="ud-section-title mt-4">
-                <i class="las la-receipt"></i>
-                {{ __('Recent product orders') }}
-            </h2>
-            <div class="ud-table-card">
-                <div class="table-responsive">
-                    <table class="table table-bordered mb-0">
-                        <thead>
-                            <tr>
-                                <th>{{ __('ID') }}</th>
-                                <th>{{ __('Product name') }}</th>
-                                <th>{{ __('Qty') }}</th>
-                                <th>{{ __('Amount') }}</th>
-                                <th>{{ __('Date') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($recent_logs as $key => $data)
-                                <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ $data->package_name }}</td>
-                                    <td>—</td>
-                                    <td>{{ amount_with_currency_symbol($data->package_price) }}</td>
-                                    <td>{{ date('d-m-Y', strtotime($data->created_at)) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+        <div class="ud-orders-cta mt-4">
+            <div>
+                <strong>{{ __('Order history') }}</strong>
+                <p class="mb-0 small text-muted">{{ __('Full list opens on its own page with pagination.') }}</p>
             </div>
-        @endif
+            <a href="{{ route('tenant.user.dashboard.product.order') }}" class="btn btn-primary">
+                {{ __('Product Logs') }} <i class="las la-angle-right ms-1"></i>
+            </a>
+        </div>
     </div>
 @endsection

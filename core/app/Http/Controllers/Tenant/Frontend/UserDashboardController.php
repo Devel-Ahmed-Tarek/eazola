@@ -6,7 +6,6 @@ use App\Events\SupportMessage;
 use App\Helpers\ResponseMessage;
 use App\Http\Controllers\Controller;
 use App\Mail\BasicMail;
-use App\Models\PaymentLogs;
 use App\Models\SupportTicket;
 use App\Models\SupportTicketMessage;
 use App\Models\Tenant;
@@ -49,7 +48,6 @@ class UserDashboardController extends Controller
         $job_applications = JobPaymentLog::where('user_id',$this->logged_user_details()->id)->count();
         $wedding_plans = WeddingPaymentLog::where('user_id',$this->logged_user_details()->id)->count();
         $total_appointment = AppointmentPaymentLog::where('user_id',$this->logged_user_details()->id)->count();
-        $recent_logs = PaymentLogs::where('user_id',$this->logged_user_details()->id)->orderBy('id','desc')->take(10)->get();
 
         if(Schema::hasTable('booking_informations'))
         {
@@ -91,7 +89,6 @@ class UserDashboardController extends Controller
                 'total_event' => $total_event,
                 'total_donation' => $total_donation,
                 'support_tickets' => $support_tickets,
-                'recent_logs' => $recent_logs,
                 'job_applications' => $job_applications,
                 'total_product' => $total_product,
                 'wedding_plans' => $wedding_plans,
