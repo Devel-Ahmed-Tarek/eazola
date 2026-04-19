@@ -9,24 +9,14 @@
 @endsection
 
 @section('style')
-    <style>
-         .form-Wrapper {
-            background: #FFFFFF;
-            -webkit-box-shadow: 0px 2px 11px 3px rgba(26, 40, 68, 0.06);
-            box-shadow: 0px 2px 11px 3px rgba(26, 40, 68, 0.06) !important;
-            border-radius: 12px;
-            padding: 50px 60px;
-            border-radius: 8px;
-            border: 1px solid #E5E5E5;
-        }
-    </style>
+    <link rel="stylesheet" href="{{global_asset('assets/common/css/auth-modern.css')}}">
 @endsection
 
 @section('content')
 
 
 
-<section class="loginArea section-padding2">
+<section class="loginArea section-padding2 auth-modern">
     <div class="container">
         <div class="row justify-content-center">
 

@@ -6,9 +6,13 @@
 @section('page-title')
     {{__('User Register')}}
 @endsection
+
+@section('style')
+    <link rel="stylesheet" href="{{global_asset('assets/common/css/auth-modern.css')}}">
+@endsection
 @section('content')
 
-<section class="registerArea section-padding">
+<section class="registerArea section-padding auth-modern">
     <div class="container">
 
         <div class="row justify-content-center">

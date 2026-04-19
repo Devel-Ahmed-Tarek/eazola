@@ -1,0 +1,74 @@
+.auth-modern {
+    position: relative;
+}
+
+.auth-modern .section-tittle .tittle {
+    font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #111827;
+}
+
+.auth-modern .section-tittle .tittle .color {
+    color: var(--main-color-one, #10b981);
+}
+
+.auth-modern .form-Wrapper,
+.auth-modern .account-form {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 16px 45px rgba(15, 23, 42, 0.08);
+    border-radius: 18px;
+    padding: clamp(1.25rem, 3.5vw, 2.3rem);
+}
+
+.auth-modern .input-form input,
+.auth-modern .input-form .phone,
+.auth-modern .nice-select {
+    height: 54px;
+    border-radius: 12px;
+    border: 1px solid #d6dce5;
+    background: #f9fafb;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.auth-modern .input-form input:focus,
+.auth-modern .input-form .phone:focus,
+.auth-modern .nice-select:focus,
+.auth-modern .nice-select.open {
+    border-color: var(--main-color-one, #10b981);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
+}
+
+.auth-modern .cmn-btn1 {
+    border-radius: 12px;
+    height: 54px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+}
+
+.auth-modern .cmn-btn-outline0 {
+    border-radius: 12px;
+    border: 1px solid #d8dee8;
+    background: #fff;
+}
+
+.auth-modern .cmn-btn-outline0:hover {
+    border-color: var(--main-color-one, #10b981);
+    background: #f3fffb;
+}
+
+.auth-modern .sinUp {
+    font-size: 15px;
+}
+
+.auth-modern .sinUp a {
+    font-weight: 600;
+}
+
+.auth-modern .passRemember {
+    margin-top: 2px;
+}

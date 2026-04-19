@@ -9,6 +9,7 @@
 @endsection
 
 @section('style')
+    <link rel="stylesheet" href="{{global_asset('assets/common/css/auth-modern.css')}}">
     <style>
         .nice-select {
             position: relative;
@@ -90,7 +91,7 @@
     </section>
 
 
-    <div class="loginArea bottom-padding {{$feature_show_hide_con}} register_page">
+    <div class="loginArea bottom-padding {{$feature_show_hide_con}} register_page auth-modern">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xxl-6 col-xl-7 col-lg-9 login-Wrapper">

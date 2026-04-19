@@ -8,6 +8,10 @@
     {{__('User Login')}}
 @endsection
 
+@section('style')
+    <link rel="stylesheet" href="{{global_asset('assets/common/css/auth-modern.css')}}">
+@endsection
+
 @section('content')
 
     @php
@@ -33,7 +37,7 @@
         }
     @endphp
 
-    <div class="loginArea section-padding2 loginArea login-Wrapper">
+    <div class="loginArea section-padding2 loginArea login-Wrapper auth-modern">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xxl-6 col-xl-7 col-lg-9 login-Wrapper">
