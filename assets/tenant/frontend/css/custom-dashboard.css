@@ -3895,7 +3895,7 @@
     margin-bottom: 20px;
 }
 
-/* User dashboard: full width + sticky sidebar (desktop) */
+/* User dashboard: full width; desktop: sidebar column fixed in place, only main area scrolls */
 .dashboard-layout-full {
     max-width: 100%;
     padding-left: 0 !important;
@@ -3922,7 +3922,7 @@
 }
 
 .dashboard-layout-full .dashboard-contents-wrapper {
-    align-items: flex-start;
+    align-items: stretch;
 }
 
 .dashboard-layout-full .dashboard-right {
@@ -3931,21 +3931,38 @@
 }
 
 @media (min-width: 992px) {
+    /* Lock row height to viewport band so the document scroll does not move the sidebar with content */
     .dashboard-layout-full .dashboard-contents-wrapper {
         gap: 24px;
+        align-items: stretch;
+        min-height: calc(100vh - 9rem);
+        max-height: calc(100vh - 9rem);
+        overflow: hidden;
     }
 
     .dashboard-layout-full .dashboard-left-content {
-        position: sticky;
-        top: 1rem;
-        align-self: flex-start;
-        max-height: calc(100vh - 2rem);
-        overflow-y: auto;
+        position: relative;
+        top: auto;
+        flex-shrink: 0;
+        align-self: stretch;
+        height: 100%;
+        max-height: 100%;
         overflow-x: hidden;
+        overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
 
     .dashboard-layout-full .dashboard-left-content .dashboard-close-main {
         max-height: none;
+    }
+
+    /* Only this column scrolls with long page content */
+    .dashboard-layout-full .dashboard-right {
+        min-height: 0;
+        align-self: stretch;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
     }
 }
