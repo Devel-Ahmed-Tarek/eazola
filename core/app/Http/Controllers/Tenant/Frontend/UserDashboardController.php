@@ -54,13 +54,12 @@ class UserDashboardController extends Controller
         if(Schema::hasTable('booking_informations'))
         {
             $user_id = $this->logged_user_details()->id;
-            $orders = BookingInformation::where('user_id', $user_id)->with('user')->paginate(10);
-
+            $bookingQuery = BookingInformation::where('user_id', $user_id);
             $hotel_bookings = [
-                "total_reservations" => $orders->where('status', '!=', 3)->count(),
-                "accepted_reservations" => $orders->where('status', 1)->count(),
-                "cancled_reservations" => $orders->where('status', 3)->count(),
-                "pending_reservations" => $orders->where('status', 0)->count(),
+                "total_reservations" => (clone $bookingQuery)->where('status', '!=', 3)->count(),
+                "accepted_reservations" => (clone $bookingQuery)->where('status', 1)->count(),
+                "cancled_reservations" => (clone $bookingQuery)->where('status', 3)->count(),
+                "pending_reservations" => (clone $bookingQuery)->where('status', 0)->count(),
             ];
         }else{
             $hotel_bookings=[
@@ -76,14 +75,13 @@ class UserDashboardController extends Controller
         if(Schema::hasTable('food_menus'))
         {
             $user_id = $this->logged_user_details()->id;
-            $orders = MenuOrder::where('user_id', $user_id)->with('user')->paginate(10);
-
+            $menuQuery = MenuOrder::where('user_id', $user_id);
             $restaurant_orders = [
-                "total_orders" => $orders->where('status', '!=', 3)->count(),
-                "accepted_orders" => $orders->where('status', 1)->count(),
-                "canceled_orders" => $orders->where('status', 3)->count(),
-                "pending_orders" => $orders->where('status', 0)->count(),
-                "inprogress_orders" => $orders->where('status', 2)->count(),
+                "total_orders" => (clone $menuQuery)->where('status', '!=', 3)->count(),
+                "accepted_orders" => (clone $menuQuery)->where('status', 1)->count(),
+                "canceled_orders" => (clone $menuQuery)->where('status', 3)->count(),
+                "pending_orders" => (clone $menuQuery)->where('status', 0)->count(),
+                "inprogress_orders" => (clone $menuQuery)->where('status', 2)->count(),
             ];
         }
 

@@ -8,6 +8,7 @@
 @endsection
 
 @section('style')
+    <link rel="stylesheet" href="{{ global_asset('assets/tenant/frontend/css/user-dashboard-home.css') }}">
     <style>
         .badge{
             font-size: 15px;
@@ -24,52 +25,74 @@
     @php
         $auth_user = \Illuminate\Support\Facades\Auth::guard('web')->user();
     @endphp
-    <div class="row g-4 ">
-        <div class="col-md-12">
-            <div class="btn-wrapper mb-3 mt-2 float-right" >
-                <a href="#" class="btn btn-success mx-2" data-bs-toggle="modal" data-bs-target="#create_website_modal">{{__('Create a website')}}</a>
-            </div>
-        </div>
-        <div class="col-xl-6 col-md-6 orders-child">
-            <div class="single-orders">
-                <div class="orders-flex-content">
-                    <div class="icon">
-                        <i class="las la-tasks"></i>
+    <div class="user-dashboard-home">
+        <div class="ud-welcome">
+            <div class="ud-welcome-inner d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div>
+                    <h1>{{ __('Hello, :name', ['name' => $auth_user->name ?? __('User')]) }}</h1>
+                    <p>{{ __('Manage your sites, orders, and support from one place.') }}</p>
+                    <div class="ud-date">
+                        <i class="las la-calendar-alt"></i>
+                        {{ \Carbon\Carbon::now()->locale(app()->getLocale())->isoFormat('dddd, D MMMM YYYY') }}
                     </div>
-                    <div class="contents">
-                        <h2 class="order-titles"> {{$package_orders ?? ''}} </h2>
-                        <span class="order-para">{{__('Total Orders')}} </span>
-                    </div>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-light px-4 py-2" data-bs-toggle="modal" data-bs-target="#create_website_modal">{{ __('Create a website') }}</a>
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-md-6 orders-child">
-            <div class="single-orders">
-                <div class="orders-flex-content">
-                    <div class="icon">
-                        <i class="las la-tasks"></i>
+
+        <h2 class="ud-section-title">
+            <i class="las la-chart-pie"></i>
+            {{ __('Overview') }}
+        </h2>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="ud-stat-card">
+                    <div class="ud-stat-card__top">
+                        <div>
+                            <p class="ud-stat-card__value">{{ $package_orders ?? 0 }}</p>
+                            <p class="ud-stat-card__label">{{ __('Total Orders') }}</p>
+                        </div>
+                        <div class="ud-stat-card__icon ud-stat-card__icon--a" aria-hidden="true">
+                            <i class="las la-shopping-cart"></i>
+                        </div>
                     </div>
-                    <div class="contents">
-                        <h2 class="order-titles"> {{$support_tickets ?? ''}} </h2>
-                        <span class="order-para">{{__('Support Tickets')}} </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="ud-stat-card">
+                    <div class="ud-stat-card__top">
+                        <div>
+                            <p class="ud-stat-card__value">{{ $support_tickets ?? 0 }}</p>
+                            <p class="ud-stat-card__label">{{ __('Support Tickets') }}</p>
+                        </div>
+                        <div class="ud-stat-card__icon ud-stat-card__icon--b" aria-hidden="true">
+                            <i class="las la-headset"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-12 mt-5">
-            <div class="subdomains mb-5">
-                <h4 class="mb-3 text-uppercase text-center">{{__('Your Website')}}</h4>
-                <div class="payment">
-                    <table class="table table-responsive table-bordered recent_payment_table">
-                        <thead>
-                        <th>{{__('ID')}}</th>
-                        <th>{{__('Site')}}</th>
-                        <th>{{__('Browse')}}</th>
-                        <th>{{__('Action')}}</th>
-                        </thead>
+        <h2 class="ud-section-title">
+            <i class="las la-globe"></i>
+            {{ __('Your websites') }}
+        </h2>
+        <div class="ud-table-card mb-5">
+            <div class="table-responsive">
+                <table class="table table-bordered mb-0 recent_payment_table">
+                    <thead>
+                        <tr>
+                            <th>{{ __('ID') }}</th>
+                            <th>{{ __('Site') }}</th>
+                            <th>{{ __('Browse') }}</th>
+                            <th>{{ __('Action') }}</th>
+                        </tr>
+                    </thead>
 
-                        <tbody class="w-100">
+                    <tbody class="w-100">
                         @php
                             $user = \Illuminate\Support\Facades\Auth::guard('web')->user();
                         @endphp
@@ -107,24 +130,29 @@
                                 </td>
                             </tr>
                         @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <h4 class="mb-3 text-uppercase text-center">{{__('Recent Orders')}}</h4>
-            <div class="payment">
-                <table class="table table-responsive table-bordered recent_payment_table">
+        <h2 class="ud-section-title">
+            <i class="las la-receipt"></i>
+            {{ __('Recent orders') }}
+        </h2>
+        <div class="ud-table-card">
+            <div class="table-responsive">
+                <table class="table table-bordered mb-0 recent_payment_table">
                     <thead>
-                    <th>{{__('ID')}}</th>
-                    <th>{{__('Package Name')}}</th>
-                    <th>{{__('Amount')}}</th>
-                    <th>{{__('Domain')}}</th>
-                    <th>{{__('Start Date')}}</th>
-                    <th>{{__('Expire Date')}}</th>
-                    <th>{{__('Order Status')}}</th>
-                   <th>{{__('Payment History')}}</th>
-
+                        <tr>
+                            <th>{{ __('ID') }}</th>
+                            <th>{{ __('Package Name') }}</th>
+                            <th>{{ __('Amount') }}</th>
+                            <th>{{ __('Domain') }}</th>
+                            <th>{{ __('Start Date') }}</th>
+                            <th>{{ __('Expire Date') }}</th>
+                            <th>{{ __('Order Status') }}</th>
+                            <th>{{ __('Payment History') }}</th>
+                        </tr>
                     </thead>
                     <tbody class="w-100">
                     @foreach($recent_logs as $key=> $data)

@@ -1,0 +1,256 @@
+/* User dashboard home — modern card layout (scoped) */
+.user-dashboard-home {
+    --ud-surface: #ffffff;
+    --ud-border: rgba(15, 23, 42, 0.08);
+    --ud-muted: #64748b;
+    --ud-heading: var(--heading-color, #0f172a);
+    --ud-radius: 16px;
+    --ud-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.user-dashboard-home .ud-welcome {
+    background: linear-gradient(135deg, var(--main-color-one, #0d9488) 0%, #1e293b 100%);
+    border-radius: var(--ud-radius);
+    padding: 1.75rem 1.75rem 1.75rem 2rem;
+    color: #fff;
+    margin-bottom: 1.75rem;
+    box-shadow: var(--ud-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.user-dashboard-home .ud-welcome::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 45%);
+    pointer-events: none;
+}
+
+.user-dashboard-home .ud-welcome-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.user-dashboard-home .ud-welcome h1 {
+    font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+    font-weight: 700;
+    margin: 0 0 0.35rem;
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+
+.user-dashboard-home .ud-welcome p {
+    margin: 0;
+    opacity: 0.92;
+    font-size: 0.95rem;
+    max-width: 36rem;
+}
+
+.user-dashboard-home .ud-welcome .btn-light {
+    color: var(--main-color-one, #0d9488);
+    font-weight: 600;
+    border: 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.user-dashboard-home .ud-welcome .btn-light:hover {
+    background: #fff;
+    color: var(--main-color-one, #0d9488);
+    transform: translateY(-1px);
+}
+
+.user-dashboard-home .ud-welcome .ud-date {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    opacity: 0.85;
+}
+
+.user-dashboard-home .ud-section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ud-heading);
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--ud-border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-dashboard-home .ud-section-title i {
+    color: var(--main-color-one);
+    font-size: 1.25rem;
+}
+
+.user-dashboard-home .ud-stat-card {
+    background: var(--ud-surface);
+    border: 1px solid var(--ud-border);
+    border-radius: var(--ud-radius);
+    padding: 1.35rem 1.25rem;
+    height: 100%;
+    box-shadow: var(--ud-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.user-dashboard-home .ud-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.user-dashboard-home .ud-stat-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.user-dashboard-home .ud-stat-card__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.user-dashboard-home .ud-stat-card__icon--a {
+    background: rgba(13, 148, 136, 0.12);
+    color: var(--main-color-one);
+}
+.user-dashboard-home .ud-stat-card__icon--b {
+    background: rgba(101, 96, 255, 0.12);
+    color: #6560ff;
+}
+.user-dashboard-home .ud-stat-card__icon--c {
+    background: rgba(199, 31, 102, 0.12);
+    color: #c71f66;
+}
+.user-dashboard-home .ud-stat-card__icon--d {
+    background: rgba(255, 107, 44, 0.14);
+    color: #ff6b2c;
+}
+
+.user-dashboard-home .ud-stat-card__value {
+    font-size: clamp(1.75rem, 3vw, 2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--ud-heading);
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.user-dashboard-home .ud-stat-card__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ud-muted);
+    margin: 0;
+    line-height: 1.35;
+}
+
+.user-dashboard-home .ud-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.user-dashboard-home .ud-mini-card {
+    background: var(--ud-surface);
+    border: 1px solid var(--ud-border);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.user-dashboard-home .ud-mini-card__text span {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ud-muted);
+    font-weight: 600;
+}
+
+.user-dashboard-home .ud-mini-card__text strong {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--ud-heading);
+    margin-top: 0.2rem;
+}
+
+.user-dashboard-home .ud-mini-card__ico {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    background: #f1f5f9;
+    color: var(--main-color-one);
+}
+
+.user-dashboard-home .ud-table-card {
+    background: var(--ud-surface);
+    border: 1px solid var(--ud-border);
+    border-radius: var(--ud-radius);
+    overflow: hidden;
+    box-shadow: var(--ud-shadow);
+}
+
+.user-dashboard-home .ud-table-card .table {
+    margin-bottom: 0;
+}
+
+.user-dashboard-home .ud-table-card thead th {
+    background: #f8fafc;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: var(--ud-muted);
+    border-bottom: 1px solid var(--ud-border);
+    padding: 0.9rem 1rem;
+    white-space: nowrap;
+}
+
+.user-dashboard-home .ud-table-card tbody td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    font-size: 0.925rem;
+    border-color: var(--ud-border);
+}
+
+.user-dashboard-home .ud-table-card tbody tr:hover {
+    background: #fafbfc;
+}
+
+.user-dashboard-home .ud-paginate {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--ud-border);
+    background: #fafbfc;
+}
+
+@media (max-width: 575.98px) {
+    .user-dashboard-home .ud-welcome {
+        padding: 1.25rem;
+    }
+}
+
+[dir="rtl"] .user-dashboard-home .ud-mini-card {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .user-dashboard-home .ud-stat-card__top {
+    flex-direction: row-reverse;
+}
