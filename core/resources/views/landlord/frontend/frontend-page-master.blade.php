@@ -1,5 +1,9 @@
 @include('landlord.frontend.partials.header')
-<section class="sliderAreaInner sectionBg1 @if((in_array(request()->route()->getName(),['landlord.homepage','landlord.dynamic.page']) && $page_post->breadcrumb == 0 ))
+@php
+    $landlordUserDashboard = request()->route() && str_starts_with(request()->route()->getName() ?? '', 'landlord.user.');
+@endphp
+@if(!$landlordUserDashboard)
+<section class="sliderAreaInner sectionBg1 @if((in_array(request()->route()->getName(),['landlord.homepage','landlord.dynamic.page']) && isset($page_post) && $page_post->breadcrumb == 0 ))
      d-none
 @endif">
     <div class="heroPadding2">
@@ -31,6 +35,7 @@
         {!! render_image_markup_by_attachment_id(get_static_option('breadcrumb_right_image'),'bouncingAnimation') !!}
     </div>
 </section>
+@endif
 
 @yield('content')
 @include('landlord.frontend.partials.footer')
