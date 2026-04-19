@@ -1,10 +1,14 @@
 @extends('landlord.frontend.frontend-page-master')
 
+@section('style')
+    <link rel="stylesheet" href="{{ global_asset('assets/tenant/frontend/css/custom-dashboard.css') }}">
+@endsection
+
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid dashboard-layout-full">
     <div class="body-overlay"></div>
-    <div class="dashboard-area landlord dashboard-padding" data-padding-top="100" data-padding-bottom="100">
+    <div class="dashboard-area landlord dashboard-padding" data-padding-top="0" data-padding-bottom="100">
         <div class="container-fluid">
             <div class="dashboard-contents-wrapper">
                 <div class="dashboard-icon">

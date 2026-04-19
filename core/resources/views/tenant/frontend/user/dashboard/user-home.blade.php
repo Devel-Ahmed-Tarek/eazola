@@ -221,15 +221,5 @@
                 @endif
             </div>
         @endif
-
-        <div class="ud-orders-cta mt-4">
-            <div>
-                <strong>{{ __('Order history') }}</strong>
-                <p class="mb-0 small text-muted">{{ __('Full list opens on its own page with pagination.') }}</p>
-            </div>
-            <a href="{{ route('tenant.user.dashboard.product.order') }}" class="btn btn-primary">
-                {{ __('Product Logs') }} <i class="las la-angle-right ms-1"></i>
-            </a>
-        </div>
     </div>
 @endsection

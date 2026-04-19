@@ -241,30 +241,6 @@
     background: #fafbfc;
 }
 
-.user-dashboard-home .ud-orders-cta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.15rem 1.35rem;
-    background: var(--ud-surface);
-    border: 1px solid var(--ud-border);
-    border-radius: var(--ud-radius);
-    box-shadow: var(--ud-shadow);
-}
-
-.user-dashboard-home .ud-orders-cta strong {
-    display: block;
-    color: var(--ud-heading);
-    font-size: 1rem;
-    margin-bottom: 0.2rem;
-}
-
-[dir="rtl"] .user-dashboard-home .ud-orders-cta .las.la-angle-right {
-    transform: scaleX(-1);
-}
-
 @media (max-width: 575.98px) {
     .user-dashboard-home .ud-welcome {
         padding: 1.25rem;

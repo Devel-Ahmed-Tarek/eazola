@@ -8,6 +8,7 @@
 @endsection
 
 @section('style')
+    @parent
     <link rel="stylesheet" href="{{ global_asset('assets/tenant/frontend/css/user-dashboard-home.css') }}">
     <style>
         .badge{
@@ -133,16 +134,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <div class="ud-orders-cta mt-4">
-            <div>
-                <strong>{{ __('Order history') }}</strong>
-                <p class="mb-0 small text-muted">{{ __('Full list opens on its own page with pagination.') }}</p>
-            </div>
-            <a href="{{ route('landlord.user.dashboard.package.order') }}" class="btn btn-primary">
-                {{ __('Payment Logs') }} <i class="las la-angle-right ms-1"></i>
-            </a>
         </div>
     </div>
 

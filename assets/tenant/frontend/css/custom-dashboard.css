@@ -3894,3 +3894,58 @@
 .parent .title {
     margin-bottom: 20px;
 }
+
+/* User dashboard: full width + sticky sidebar (desktop) */
+.dashboard-layout-full {
+    max-width: 100%;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.dashboard-layout-full .dashboard-area.dashboard-padding {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1.5rem !important;
+}
+
+.dashboard-layout-full .dashboard-area .container-fluid {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+@media (min-width: 576px) {
+    .dashboard-layout-full .dashboard-area .container-fluid {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+.dashboard-layout-full .dashboard-contents-wrapper {
+    align-items: flex-start;
+}
+
+.dashboard-layout-full .dashboard-right {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (min-width: 992px) {
+    .dashboard-layout-full .dashboard-contents-wrapper {
+        gap: 24px;
+    }
+
+    .dashboard-layout-full .dashboard-left-content {
+        position: sticky;
+        top: 1rem;
+        align-self: flex-start;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .dashboard-layout-full .dashboard-left-content .dashboard-close-main {
+        max-height: none;
+    }
+}

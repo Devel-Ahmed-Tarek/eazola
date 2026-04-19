@@ -7,6 +7,7 @@
 @endsection
 
 @section('style')
+    @parent
     <style>
 
         button.low,

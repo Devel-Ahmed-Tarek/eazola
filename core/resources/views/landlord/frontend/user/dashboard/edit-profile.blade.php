@@ -1,6 +1,7 @@
 @extends('landlord.frontend.user.dashboard.user-master')
 
 @section('style')
+    @parent
     <style>
         .edit_profile .nice-select .list{
             height: 300px;

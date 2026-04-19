@@ -3,8 +3,7 @@
     {{__('All Reservation')}}
 @endsection
 @section('style')
-    <link rel="stylesheet" href="{{global_asset('assets/tenant/frontend/css/custom-dashboard.css')}}">
-
+    @parent
     <style>
         button.low,
         button.status-open{

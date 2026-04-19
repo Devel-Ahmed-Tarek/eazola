@@ -3,6 +3,7 @@
     {{__('Menu Order View')}}
 @endsection
 @section('style')
+    @parent
     <x-summernote.css/>
     <style>
         span.low,

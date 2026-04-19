@@ -4,7 +4,7 @@
 @endsection
 
 @section('style')
-    <link rel="stylesheet" href="{{global_asset('assets/tenant/frontend/css/custom-dashboard.css')}}">
+    @parent
     <link href="{{ global_asset('assets/landlord/admin/css/materialdesignicons.min.css') }}" rel="stylesheet">
     <style>
         .nice-select.open .list{
