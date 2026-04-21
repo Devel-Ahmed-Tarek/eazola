@@ -92,7 +92,8 @@ class PageAiAssistantController extends Controller
             $schema = $schemaService->normalizeSchema($decoded);
 
             if ($mode === 'structured') {
-                $sanitizedHtml = $schemaService->renderStarterTemplate($schema);
+                $sanitizedHtml = $schemaService->extractRenderableHtml($decoded)
+                    ?? $schemaService->renderStarterTemplate($schema);
             } elseif ($sanitizedHtml === '') {
                 $sanitizedHtml = $schemaService->renderStarterTemplate($schema);
             }

@@ -203,6 +203,30 @@ class CustomPageSchemaService
 HTML;
     }
 
+    /**
+     * Try to extract full renderable HTML from model JSON payload.
+     *
+     * @param array<string, mixed> $payload
+     */
+    public function extractRenderableHtml(array $payload): ?string
+    {
+        $uiBindings = (array) ($payload['ui_bindings'] ?? []);
+        foreach ($uiBindings as $binding) {
+            if (!is_array($binding)) {
+                continue;
+            }
+
+            foreach (['render_html', 'html', 'template_html', 'page_html'] as $key) {
+                $html = trim((string) ($binding[$key] ?? ''));
+                if ($html !== '' && str_contains($html, '<')) {
+                    return $this->sanitizeRawHtml($html);
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function buildSystemPrompt(string $mode, string $lang): string
     {
         $contract = implode(',', self::CONTRACT);
@@ -214,6 +238,8 @@ HTML;
             'fields entries must include: name,label,type,required,placeholder,options.',
             'Allowed field types: text,email,number,date,datetime-local,tel,select,textarea.',
             'actions must include create and list when possible.',
+            'To avoid generic repeated output, add one ui_bindings item containing a full custom page HTML in key render_html (with inline CSS, semantic sections, no JS).',
+            'The render_html should reflect the user prompt style, colors, and page sections.',
             'Do not include executable javascript.',
             'Language locale hint: '.$lang,
             'Mode: '.$mode,
