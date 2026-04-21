@@ -9,12 +9,17 @@ use App\Models\Page;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class AiCustomPageDataController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
+        if (!$this->aiTablesReady()) {
+            return response()->json(['success' => false, 'message' => __('AI custom page storage is not ready yet.')], 503);
+        }
+
         $page = $this->resolvePageFromRequest($request);
         if (!$page) {
             return response()->json(['success' => false, 'message' => __('Target page not found.')], 404);
@@ -59,6 +64,10 @@ class AiCustomPageDataController extends Controller
 
     public function records(Request $request): JsonResponse
     {
+        if (!$this->aiTablesReady()) {
+            return response()->json(['success' => true, 'rows' => []]);
+        }
+
         $page = $this->resolvePageFromRequest($request);
         if (!$page) {
             return response()->json(['success' => false, 'message' => __('Target page not found.'), 'rows' => []], 404);
@@ -115,5 +124,11 @@ class AiCustomPageDataController extends Controller
         }
 
         return trim(strip_tags((string) $value));
+    }
+
+    private function aiTablesReady(): bool
+    {
+        return Schema::hasTable('ai_custom_page_blueprints')
+            && Schema::hasTable('ai_custom_page_submissions');
     }
 }

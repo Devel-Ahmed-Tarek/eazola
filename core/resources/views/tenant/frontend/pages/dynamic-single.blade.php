@@ -33,7 +33,7 @@
 @endsection
 
 @section('scripts')
-    @if(optional($page_post->aiCustomBlueprint)->id)
+    @if(\Illuminate\Support\Facades\Schema::hasTable('ai_custom_page_blueprints') && optional($page_post->aiCustomBlueprint)->id)
         @include('tenant.frontend.partials.ai-custom-page-bindings', ['page_post' => $page_post])
     @endif
 @endsection

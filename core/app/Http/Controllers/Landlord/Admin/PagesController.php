@@ -12,6 +12,7 @@ use App\Services\Ai\CustomPageSchemaService;
 use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -46,7 +47,16 @@ class PagesController extends Controller
 
     public function edit_page($id)
     {
-        $page = Page::with(['metainfo', 'aiCustomBlueprint'])->findOrfail($id);
+        $query = Page::with('metainfo');
+        if (Schema::hasTable('ai_custom_page_blueprints')) {
+            $query->with('aiCustomBlueprint');
+        }
+
+        $page = $query->findOrfail($id);
+        if (!$page->relationLoaded('aiCustomBlueprint')) {
+            $page->setRelation('aiCustomBlueprint', null);
+        }
+
         return view('landlord.admin.pages.edit',compact('page'));
     }
 
@@ -212,6 +222,10 @@ class PagesController extends Controller
 
     private function syncAiCustomBlueprint(Page $page, Request $request): void
     {
+        if (!Schema::hasTable('ai_custom_page_blueprints')) {
+            return;
+        }
+
         $schema = $this->decodeJsonInput((string) $request->input('ai_custom_schema_json', ''));
         $bindings = $this->decodeJsonInput((string) $request->input('ai_custom_bindings_json', ''));
         $requiredRoutes = $this->decodeJsonInput((string) $request->input('ai_custom_required_routes_json', ''));

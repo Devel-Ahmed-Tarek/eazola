@@ -11,6 +11,7 @@ use App\Services\Ai\OpenAIChatService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class PageAiAssistantController extends Controller
 {
@@ -21,6 +22,13 @@ class PageAiAssistantController extends Controller
 
     public function assist(Request $request, OpenAIChatService $openai, CustomPageSchemaService $schemaService): JsonResponse
     {
+        if (!$this->aiTablesReady()) {
+            return response()->json([
+                'success' => false,
+                'message' => __('AI custom page tables are missing. Run database migrations first.'),
+            ], 503);
+        }
+
         $admin = auth('admin')->user();
         if (!$admin || !($admin->can('page-create') || $admin->can('page-edit'))) {
             return response()->json(['success' => false, 'message' => __('You do not have permission to use AI page assistant.')], 403);
@@ -147,6 +155,13 @@ class PageAiAssistantController extends Controller
 
     public function submissions(Request $request): JsonResponse
     {
+        if (!$this->aiTablesReady()) {
+            return response()->json([
+                'success' => false,
+                'message' => __('AI custom page tables are missing. Run database migrations first.'),
+            ], 503);
+        }
+
         $admin = auth('admin')->user();
         if (!$admin || !($admin->can('page-list') || $admin->can('page-edit'))) {
             return response()->json(['success' => false, 'message' => __('You do not have permission to view submissions.')], 403);
@@ -232,6 +247,12 @@ class PageAiAssistantController extends Controller
         }
 
         return $output;
+    }
+
+    private function aiTablesReady(): bool
+    {
+        return Schema::hasTable('ai_custom_page_blueprints')
+            && Schema::hasTable('ai_custom_page_submissions');
     }
 
     /**
