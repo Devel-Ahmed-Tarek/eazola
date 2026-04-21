@@ -206,7 +206,7 @@ HTML;
     /**
      * Prompt-aware template so structured mode is not static.
      */
-    public function renderPromptAwareTemplate(array $schema, string $prompt = '', string $lang = 'en'): string
+    public function renderPromptAwareTemplate(array $schema, string $prompt = '', string $lang = 'en', bool $includeDataBinding = true): string
     {
         $text = mb_strtolower($prompt.' '.$schema['page_title'].' '.$schema['page_summary']);
         $isRtl = str_contains($text, 'arabic') || str_contains($text, 'rtl') || preg_match('/[\x{0600}-\x{06FF}]/u', $text);
@@ -257,21 +257,43 @@ HTML;
             </section>';
         }
 
-        $fieldsHtml = '';
-        foreach ((array) ($schema['fields'] ?? []) as $field) {
-            $name = e((string) ($field['name'] ?? 'field'));
-            $label = e((string) ($field['label'] ?? $name));
-            $type = e((string) ($field['type'] ?? 'text'));
-            $placeholder = e((string) ($field['placeholder'] ?? ''));
-            $required = !empty($field['required']) ? 'required' : '';
+        $formSection = '';
+        $recordsSection = '';
+        if ($includeDataBinding) {
+            $fieldsHtml = '';
+            foreach ((array) ($schema['fields'] ?? []) as $field) {
+                $name = e((string) ($field['name'] ?? 'field'));
+                $label = e((string) ($field['label'] ?? $name));
+                $type = e((string) ($field['type'] ?? 'text'));
+                $placeholder = e((string) ($field['placeholder'] ?? ''));
+                $required = !empty($field['required']) ? 'required' : '';
 
-            if ($type === 'textarea') {
-                $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><textarea name=\"{$name}\" {$required} placeholder=\"{$placeholder}\"></textarea></div>";
-            } elseif ($type === 'select') {
-                $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><select name=\"{$name}\" {$required}></select></div>";
-            } else {
-                $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><input type=\"{$type}\" name=\"{$name}\" {$required} placeholder=\"{$placeholder}\"/></div>";
+                if ($type === 'textarea') {
+                    $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><textarea name=\"{$name}\" {$required} placeholder=\"{$placeholder}\"></textarea></div>";
+                } elseif ($type === 'select') {
+                    $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><select name=\"{$name}\" {$required}></select></div>";
+                } else {
+                    $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><input type=\"{$type}\" name=\"{$name}\" {$required} placeholder=\"{$placeholder}\"/></div>";
+                }
             }
+
+            $formSection = '
+  <section class="ai-section" id="ai-order-form">
+    <h3>'.$cta.'</h3>
+    <form data-ai-custom-form="1">
+      <div class="ai-grid">'.$fieldsHtml.'</div>
+      <button type="submit" class="ai-submit">'.$cta.'</button>
+    </form>
+  </section>';
+
+            $recordsSection = '
+  <section class="ai-section">
+    <h3>Latest records</h3>
+    <table class="ai-table">
+      <thead><tr><th>#</th><th>Data</th><th>Date</th></tr></thead>
+      <tbody data-ai-custom-list="1"></tbody>
+    </table>
+  </section>';
         }
 
         $dir = $isRtl ? 'rtl' : 'ltr';
@@ -309,21 +331,8 @@ HTML;
   {$features}
   {$faq}
 
-  <section class="ai-section" id="ai-order-form">
-    <h3>{$cta}</h3>
-    <form data-ai-custom-form="1">
-      <div class="ai-grid">{$fieldsHtml}</div>
-      <button type="submit" class="ai-submit">{$cta}</button>
-    </form>
-  </section>
-
-  <section class="ai-section">
-    <h3>Latest records</h3>
-    <table class="ai-table">
-      <thead><tr><th>#</th><th>Data</th><th>Date</th></tr></thead>
-      <tbody data-ai-custom-list="1"></tbody>
-    </table>
-  </section>
+  {$formSection}
+  {$recordsSection}
 </div>
 HTML;
     }

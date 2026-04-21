@@ -16,6 +16,8 @@
         const $prompt = $('#page_ai_prompt');
         const $rawWrap = $('#page_ai_html_wrap');
         const $rawHtml = $('#page_ai_raw_html');
+        const $goal = $('#page_ai_generation_goal');
+        const $targetSection = $('#page_ai_target_section');
         const $error = $('#page-ai-error');
         const $loading = $('#page-ai-loading');
         const $runBtn = $('#page_ai_run_btn');
@@ -92,6 +94,9 @@
                     mode: $modeSelect.val(),
                     prompt: $prompt.val(),
                     raw_html: $rawHtml.val(),
+                    generation_goal: $goal.val() || 'new_page',
+                    target_section: $targetSection.val(),
+                    current_content: $('textarea[name="page_content"]').val() || '',
                     lang: lang,
                     page_id: pageId
                 },

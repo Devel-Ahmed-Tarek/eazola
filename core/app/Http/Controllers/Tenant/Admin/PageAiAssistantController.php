@@ -39,6 +39,9 @@ class PageAiAssistantController extends Controller
             'lang' => 'nullable|string|max:20',
             'prompt' => 'nullable|string|max:12000',
             'raw_html' => 'nullable|string|max:500000',
+            'generation_goal' => 'nullable|string|in:new_page,section_edit',
+            'target_section' => 'nullable|string|max:120',
+            'current_content' => 'nullable|string|max:500000',
             'page_id' => 'nullable|integer|exists:pages,id',
         ]);
 
@@ -53,6 +56,9 @@ class PageAiAssistantController extends Controller
         $lang = $validated['lang'] ?? app()->getLocale();
         $prompt = trim((string) ($validated['prompt'] ?? ''));
         $rawHtml = (string) ($validated['raw_html'] ?? '');
+        $generationGoal = (string) ($validated['generation_goal'] ?? 'new_page');
+        $targetSection = trim((string) ($validated['target_section'] ?? ''));
+        $currentContent = (string) ($validated['current_content'] ?? '');
 
         try {
             $schema = [];
@@ -69,12 +75,22 @@ class PageAiAssistantController extends Controller
                     $prompt = 'Analyze this custom html and produce a complete page schema with create/list bindings.';
                 }
 
-                $userMessage = "User instruction:\n".$prompt."\n\nHTML:\n".$sanitizedHtml."\n\nExtracted field candidates:\n".json_encode($candidateFields, JSON_UNESCAPED_UNICODE);
+                $userMessage = "User instruction:\n".$prompt
+                    ."\n\nGeneration goal: ".$generationGoal
+                    .($targetSection !== '' ? "\nTarget section: ".$targetSection : '')
+                    ."\n\nHTML:\n".$sanitizedHtml
+                    ."\n\nExtracted field candidates:\n".json_encode($candidateFields, JSON_UNESCAPED_UNICODE);
             } else {
                 if ($prompt === '') {
                     return response()->json(['success' => false, 'message' => __('Please write a brief for the custom page.')], 422);
                 }
-                $userMessage = "Build a complete custom page schema with data bindings.\n\nBrief:\n".$prompt;
+                $userMessage = "Build a complete custom page schema.\n\nBrief:\n".$prompt
+                    ."\n\nGeneration goal: ".$generationGoal
+                    .($targetSection !== '' ? "\nTarget section: ".$targetSection : '');
+
+                if ($generationGoal === 'section_edit' && trim($currentContent) !== '') {
+                    $userMessage .= "\n\nCurrent page HTML (update only the requested section, keep other sections stable):\n".$currentContent;
+                }
             }
 
             $result = $openai->chatWithSiteReference(
@@ -90,15 +106,16 @@ class PageAiAssistantController extends Controller
 
             $decoded = $this->decodeJson($result->content);
             $schema = $schemaService->normalizeSchema($decoded);
+            $requireDataBinding = $this->shouldRequireDataBinding($prompt, $mode, $sanitizedHtml, $generationGoal);
 
             if ($mode === 'structured') {
                 $sanitizedHtml = $schemaService->extractRenderableHtml($decoded)
-                    ?? $schemaService->renderPromptAwareTemplate($schema, $prompt, $lang);
+                    ?? $schemaService->renderPromptAwareTemplate($schema, $prompt, $lang, $requireDataBinding);
             } elseif ($sanitizedHtml === '') {
                 $sanitizedHtml = $schemaService->renderStarterTemplate($schema);
             }
 
-            $sanitizedHtml = $this->ensureBindingMarkers($sanitizedHtml, $schemaService);
+            $sanitizedHtml = $this->ensureBindingMarkers($sanitizedHtml, $schemaService, $requireDataBinding);
 
             $bindings = $schemaService->buildDefaultBindings($schema['entity_name']);
             $requiredRoutes = $schemaService->requiredRoutes();
@@ -220,18 +237,18 @@ class PageAiAssistantController extends Controller
         return $decoded;
     }
 
-    private function ensureBindingMarkers(string $html, CustomPageSchemaService $schemaService): string
+    private function ensureBindingMarkers(string $html, CustomPageSchemaService $schemaService, bool $requireDataBinding = true): string
     {
         $output = trim($html);
         if ($output === '') {
-            return $schemaService->renderStarterTemplate([
+            return $requireDataBinding ? $schemaService->renderStarterTemplate([
                 'page_title' => 'Custom Page',
                 'page_summary' => '',
                 'fields' => [],
-            ]);
+            ]) : '<section class="ai-empty-page"><h2>Custom Page</h2></section>';
         }
 
-        if (!preg_match('/<form\b/i', $output)) {
+        if ($requireDataBinding && !preg_match('/<form\b/i', $output)) {
             return $schemaService->renderStarterTemplate([
                 'page_title' => 'Custom Page',
                 'page_summary' => '',
@@ -239,15 +256,52 @@ class PageAiAssistantController extends Controller
             ])."\n".$output;
         }
 
-        if (!str_contains($output, 'data-ai-custom-form')) {
+        if ($requireDataBinding && !str_contains($output, 'data-ai-custom-form')) {
             $output = preg_replace('/<form\b/i', '<form data-ai-custom-form="1"', $output, 1) ?? $output;
         }
 
-        if (!str_contains($output, 'data-ai-custom-list')) {
+        if ($requireDataBinding && !str_contains($output, 'data-ai-custom-list')) {
             $output .= '<div class="ai-custom-page" style="margin-top:16px"><h3>Latest records</h3><table class="ai-table"><thead><tr><th>#</th><th>Data</th><th>Date</th></tr></thead><tbody data-ai-custom-list="1"></tbody></table></div>';
         }
 
         return $output;
+    }
+
+    private function shouldRequireDataBinding(string $prompt, string $mode, string $rawHtml = '', string $generationGoal = 'new_page'): bool
+    {
+        if ($generationGoal === 'section_edit') {
+            $text = mb_strtolower(trim($prompt.' '.$rawHtml));
+            if (str_contains($text, 'بدون فورم') || str_contains($text, 'without form') || str_contains($text, 'no form')) {
+                return false;
+            }
+        }
+
+        $text = mb_strtolower(trim($prompt.' '.$rawHtml));
+        if ($mode === 'raw_html' && preg_match('/<form\b/i', $rawHtml)) {
+            return true;
+        }
+
+        $positive = [
+            'form', 'order', 'submit', 'lead', 'booking', 'register', 'contact',
+            'نموذج', 'طلب', 'احجز', 'حجز', 'تسجيل', 'تواصل',
+        ];
+        foreach ($positive as $keyword) {
+            if (str_contains($text, $keyword)) {
+                return true;
+            }
+        }
+
+        $negative = [
+            'landing only', 'no form', 'without form', 'informational',
+            'تعريفي', 'بدون فورم', 'من غير فورم', 'بدون نموذج',
+        ];
+        foreach ($negative as $keyword) {
+            if (str_contains($text, $keyword)) {
+                return false;
+            }
+        }
+
+        return false;
     }
 
     private function aiTablesReady(): bool

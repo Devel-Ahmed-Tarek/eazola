@@ -84,6 +84,19 @@
                     <label class="form-label fw-semibold">{{ __('Describe what you want') }}</label>
                     <textarea class="form-control" id="page_ai_prompt" rows="4" placeholder="{{ __('Example: Build a custom booking page with name, email, date, service and status list') }}"></textarea>
                 </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">{{ __('Task type') }}</label>
+                        <select class="form-control" id="page_ai_generation_goal">
+                            <option value="new_page">{{ __('Generate/Regenerate full page') }}</option>
+                            <option value="section_edit">{{ __('Edit specific section only') }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">{{ __('Target section (optional)') }}</label>
+                        <input type="text" class="form-control" id="page_ai_target_section" placeholder="{{ __('Example: Hero, Features, FAQ, Footer') }}">
+                    </div>
+                </div>
                 <div class="mb-3 d-none" id="page_ai_html_wrap">
                     <label class="form-label fw-semibold">{{ __('Paste custom HTML') }}</label>
                     <textarea class="form-control" id="page_ai_raw_html" rows="8" placeholder="{{ __('Paste your HTML template here') }}"></textarea>
