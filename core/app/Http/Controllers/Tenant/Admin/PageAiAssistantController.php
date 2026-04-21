@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Tenant\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AiCustomPageBlueprint;
 use App\Models\AiCustomPageSubmission;
-use App\Models\Page;
 use App\Services\Ai\CustomPageSchemaService;
 use App\Services\Ai\Exceptions\OpenAIServiceException;
 use App\Services\Ai\OpenAIChatService;
@@ -130,7 +129,19 @@ class PageAiAssistantController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 502);
         } catch (\Throwable $e) {
             Log::error('Page AI assist exception', ['message' => $e->getMessage()]);
-            return response()->json(['success' => false, 'message' => __('AI could not generate a valid custom page. Please try again.')], 502);
+
+            if ($mode === 'raw_html' && trim($rawHtml) !== '') {
+                $fallback = $this->buildFallbackFromHtml($rawHtml, $schemaService, $validated, $mode, $prompt);
+                if ($fallback !== null) {
+                    return response()->json($fallback);
+                }
+            }
+
+            $msg = $e->getMessage() === 'invalid_json'
+                ? __('AI returned an invalid format. Try a shorter prompt or use Structured mode.')
+                : __('AI could not generate a valid custom page. Please try again.');
+
+            return response()->json(['success' => false, 'message' => $msg], 502);
         }
     }
 
@@ -174,6 +185,18 @@ class PageAiAssistantController extends Controller
         }
 
         $decoded = json_decode($raw, true);
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        // Fallback: extract first balanced JSON object from noisy model output.
+        $start = strpos($raw, '{');
+        $end = strrpos($raw, '}');
+        if ($start !== false && $end !== false && $end > $start) {
+            $candidate = substr($raw, $start, ($end - $start + 1));
+            $decoded = json_decode($candidate, true);
+        }
+
         if (!is_array($decoded)) {
             throw new \RuntimeException('invalid_json');
         }
@@ -209,5 +232,65 @@ class PageAiAssistantController extends Controller
         }
 
         return $output;
+    }
+
+    /**
+     * @param array<string, mixed> $validated
+     * @return array<string, mixed>|null
+     */
+    private function buildFallbackFromHtml(string $rawHtml, CustomPageSchemaService $schemaService, array $validated, string $mode, string $prompt): ?array
+    {
+        $sanitized = $schemaService->sanitizeRawHtml($rawHtml);
+        $fields = $schemaService->extractFieldsFromHtml($sanitized);
+        if ($fields === []) {
+            return null;
+        }
+
+        $schema = $schemaService->normalizeSchema([
+            'entity_name' => 'custom_html_page',
+            'page_title' => 'Custom HTML Page',
+            'page_summary' => 'Generated from your HTML with automatic data bindings.',
+            'fields' => $fields,
+            'sections' => [],
+            'actions' => ['create', 'list'],
+            'dashboard_view' => ['columns' => array_map(fn ($f) => $f['name'] ?? '', $fields), 'default_sort' => 'latest'],
+            'ui_bindings' => [],
+        ]);
+
+        $sanitizedHtml = $this->ensureBindingMarkers($sanitized, $schemaService);
+        $bindings = $schemaService->buildDefaultBindings($schema['entity_name']);
+        $requiredRoutes = $schemaService->requiredRoutes();
+
+        if (!empty($validated['page_id'])) {
+            AiCustomPageBlueprint::updateOrCreate(
+                ['page_id' => (int) $validated['page_id']],
+                [
+                    'mode' => $mode,
+                    'entity_name' => $schema['entity_name'],
+                    'schema_json' => $schema,
+                    'data_bindings' => $bindings,
+                    'required_routes' => $requiredRoutes,
+                    'sanitized_html' => $sanitizedHtml,
+                    'ai_prompt' => $prompt,
+                ]
+            );
+        }
+
+        return [
+            'success' => true,
+            'mode' => $mode,
+            'title' => $schema['page_title'],
+            'page_content' => $sanitizedHtml,
+            'meta_title' => $schema['page_title'],
+            'meta_description' => $schema['page_summary'],
+            'meta_fb_title' => $schema['page_title'],
+            'meta_fb_description' => $schema['page_summary'],
+            'meta_tw_title' => $schema['page_title'],
+            'meta_tw_description' => $schema['page_summary'],
+            'schema_json' => $schema,
+            'data_bindings' => $bindings,
+            'required_routes' => $requiredRoutes,
+            'fallback_used' => true,
+        ];
     }
 }
