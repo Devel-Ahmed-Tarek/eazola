@@ -267,6 +267,10 @@ Route::middleware([
 //        Route::get('/subscriber/email-verify/{token}','subscriber_verify')->name('tenant.subscriber.verify');
         Route::post('/subscribe-newsletter','subscribe_newsletter')->name('tenant.frontend.subscribe.newsletter');
         Route::post('/query-submit','query_submit')->name('tenant.frontend.query.submit');
+        Route::post('/ai-custom-page/submit', [\App\Http\Controllers\Tenant\Frontend\AiCustomPageDataController::class, 'store'])
+            ->name('tenant.frontend.ai_custom_page.submit');
+        Route::get('/ai-custom-page/records', [\App\Http\Controllers\Tenant\Frontend\AiCustomPageDataController::class, 'records'])
+            ->name('tenant.frontend.ai_custom_page.records');
 
         Route::get('/{slug}', 'dynamic_single_page')->name('tenant.dynamic.page');
         Route::get('home/advertisement/click/store','home_advertisement_click_store')->name('tenant.frontend.home.advertisement.click.store');

@@ -33,9 +33,15 @@
                 </x-admin.header-wrapper>
                 <x-error-msg/>
                 <x-flash-msg/>
+                @include('tenant.admin.partials.page-ai-assistant', ['page_id' => null, 'lang_slug' => $lang_slug])
                 <form class="forms-sample" method="post" action="{{route(route_prefix().'admin.pages.create')}}">
                     @csrf
                     <x-fields.input type="hidden" name="lang"  value="{{$lang_slug}}"/>
+                    <input type="hidden" name="ai_custom_mode" value=""/>
+                    <input type="hidden" name="ai_custom_schema_json" value=""/>
+                    <input type="hidden" name="ai_custom_bindings_json" value=""/>
+                    <input type="hidden" name="ai_custom_required_routes_json" value=""/>
+                    <textarea name="ai_custom_sanitized_html" class="d-none"></textarea>
 
                     <div class="row">
                         <div class="col-lg-9">
@@ -129,6 +135,7 @@
     <x-slug.js.add :module="'page'"/>
     <x-media-upload.js/>
     <x-summernote.js/>
+    @include('tenant.admin.partials.page-ai-assistant-script')
 
     <script>
         (function ($) {

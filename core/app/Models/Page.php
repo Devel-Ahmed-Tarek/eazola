@@ -29,6 +29,11 @@ class Page extends Model
         return $this->morphOne(MetaInfo::class,'metainfoable');
     }
 
+    public function aiCustomBlueprint()
+    {
+        return $this->hasOne(AiCustomPageBlueprint::class, 'page_id');
+    }
+
     protected $casts = [
         'visibility' => 'integer',
         'page_builder' => 'integer',

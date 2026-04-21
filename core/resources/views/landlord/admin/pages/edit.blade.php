@@ -35,10 +35,16 @@
                 </x-admin.header-wrapper>
                 <x-error-msg/>
                 <x-flash-msg/>
+                @include('tenant.admin.partials.page-ai-assistant', ['page_id' => $page->id, 'lang_slug' => $lang_slug])
                 <form class="forms-sample" method="post" action="{{route(route_prefix().'admin.pages.update')}}">
                     @csrf
                     <x-fields.input type="hidden" name="lang"  value="{{$lang_slug}}"/>
                     <x-fields.input type="hidden" name="id"  value="{{$page->id}}"/>
+                    <input type="hidden" name="ai_custom_mode" value="{{ optional($page->aiCustomBlueprint)->mode }}"/>
+                    <textarea name="ai_custom_schema_json" class="d-none">@json(optional($page->aiCustomBlueprint)->schema_json ?? new \stdClass())</textarea>
+                    <textarea name="ai_custom_bindings_json" class="d-none">@json(optional($page->aiCustomBlueprint)->data_bindings ?? new \stdClass())</textarea>
+                    <textarea name="ai_custom_required_routes_json" class="d-none">@json(optional($page->aiCustomBlueprint)->required_routes ?? [])</textarea>
+                    <textarea name="ai_custom_sanitized_html" class="d-none">{{ optional($page->aiCustomBlueprint)->sanitized_html }}</textarea>
 
                     <div class="row">
                         <div class="col-lg-9">
@@ -134,6 +140,7 @@
     <x-media-upload.js/>
     <x-summernote.js/>
     <x-slug.js.edit :module="'page'"/>
+    @include('tenant.admin.partials.page-ai-assistant-script')
     <script>
 
         $(document).ready(function(){

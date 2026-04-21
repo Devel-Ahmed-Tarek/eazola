@@ -256,6 +256,11 @@ Route::middleware([
         Route::post('/delete/{id}','delete')->name('admin.pages.delete');
         Route::get('/download/{id}', 'download')->name('admin.pages.download');
         Route::post('/upload', 'upload')->name('admin.pages.upload');
+        Route::post('/ai-assist', [\App\Http\Controllers\Tenant\Admin\PageAiAssistantController::class, 'assist'])
+            ->middleware('throttle:20,1')
+            ->name('admin.pages.ai.assist');
+        Route::get('/ai-submissions', [\App\Http\Controllers\Tenant\Admin\PageAiAssistantController::class, 'submissions'])
+            ->name('admin.pages.ai.submissions');
     });
 
 

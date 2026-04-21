@@ -33,5 +33,7 @@
 @endsection
 
 @section('scripts')
-
+    @if(optional($page_post->aiCustomBlueprint)->id)
+        @include('tenant.frontend.partials.ai-custom-page-bindings', ['page_post' => $page_post])
+    @endif
 @endsection

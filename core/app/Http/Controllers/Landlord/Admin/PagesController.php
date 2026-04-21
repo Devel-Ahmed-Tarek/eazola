@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Landlord\Admin;
 use App\Helpers\ResponseMessage;
 use App\Helpers\SanitizeInput;
 use App\Http\Controllers\Controller;
+use App\Models\AiCustomPageBlueprint;
 use App\Models\Page;
 use App\Models\PageBuilder;
+use App\Services\Ai\CustomPageSchemaService;
 use DebugBar\DebugBar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +46,7 @@ class PagesController extends Controller
 
     public function edit_page($id)
     {
-        $page = Page::with('metainfo')->findOrfail($id);
+        $page = Page::with(['metainfo', 'aiCustomBlueprint'])->findOrfail($id);
         return view('landlord.admin.pages.edit',compact('page'));
     }
 
@@ -67,6 +69,11 @@ class PagesController extends Controller
             'meta_tw_description' => 'nullable|string',
             'meta_fb_title' => 'nullable|string',
             'meta_fb_description' => 'nullable|string',
+            'ai_custom_mode' => 'nullable|string|in:structured,raw_html',
+            'ai_custom_schema_json' => 'nullable|string',
+            'ai_custom_bindings_json' => 'nullable|string',
+            'ai_custom_required_routes_json' => 'nullable|string',
+            'ai_custom_sanitized_html' => 'nullable|string',
         ]);
 
         if(tenant()) {
@@ -119,6 +126,7 @@ class PagesController extends Controller
 
         $page_data->save();
         $page_data->metainfo()->create($Metas);
+        $this->syncAiCustomBlueprint($page_data, $request);
 
         return response()->success(ResponseMessage::SettingsSaved());
     }
@@ -145,6 +153,11 @@ class PagesController extends Controller
             'meta_tw_description' => 'nullable|string',
             'meta_fb_title' => 'nullable|string',
             'meta_fb_description' => 'nullable|string',
+            'ai_custom_mode' => 'nullable|string|in:structured,raw_html',
+            'ai_custom_schema_json' => 'nullable|string',
+            'ai_custom_bindings_json' => 'nullable|string',
+            'ai_custom_required_routes_json' => 'nullable|string',
+            'ai_custom_sanitized_html' => 'nullable|string',
         ]);
 
         $page_data = Page::find($request->id);
@@ -192,7 +205,54 @@ class PagesController extends Controller
             $page_data->metainfo()->update($metaData);
         }
 
+        $this->syncAiCustomBlueprint($page_data, $request);
+
         return response()->success(ResponseMessage::SettingsSaved());
+    }
+
+    private function syncAiCustomBlueprint(Page $page, Request $request): void
+    {
+        $schema = $this->decodeJsonInput((string) $request->input('ai_custom_schema_json', ''));
+        $bindings = $this->decodeJsonInput((string) $request->input('ai_custom_bindings_json', ''));
+        $requiredRoutes = $this->decodeJsonInput((string) $request->input('ai_custom_required_routes_json', ''));
+        $mode = $request->input('ai_custom_mode');
+        $sanitizedHtml = $request->input('ai_custom_sanitized_html');
+
+        $hasAny = !empty($schema) || !empty($bindings) || !empty($requiredRoutes) || !empty($sanitizedHtml);
+        if (!$hasAny) {
+            return;
+        }
+
+        $schemaService = app(CustomPageSchemaService::class);
+        $normalizedSchema = is_array($schema) ? $schemaService->normalizeSchema($schema) : [];
+        $entityName = (string) ($normalizedSchema['entity_name'] ?? data_get($schema, 'entity_name', 'custom_page_record'));
+
+        AiCustomPageBlueprint::updateOrCreate(
+            ['page_id' => $page->id],
+            [
+                'mode' => in_array($mode, ['structured', 'raw_html'], true) ? $mode : 'structured',
+                'entity_name' => $entityName,
+                'schema_json' => $normalizedSchema ?: null,
+                'data_bindings' => is_array($bindings) ? $bindings : null,
+                'required_routes' => is_array($requiredRoutes) ? $requiredRoutes : null,
+                'sanitized_html' => is_string($sanitizedHtml) ? $schemaService->sanitizeRawHtml($sanitizedHtml) : null,
+                'ai_prompt' => null,
+            ]
+        );
+    }
+
+    /**
+     * @return array<mixed>|null
+     */
+    private function decodeJsonInput(string $raw): ?array
+    {
+        $raw = trim($raw);
+        if ($raw === '') {
+            return null;
+        }
+        $decoded = json_decode($raw, true);
+
+        return is_array($decoded) ? $decoded : null;
     }
 
     public function delete($id){
