@@ -204,6 +204,131 @@ HTML;
     }
 
     /**
+     * Prompt-aware template so structured mode is not static.
+     */
+    public function renderPromptAwareTemplate(array $schema, string $prompt = '', string $lang = 'en'): string
+    {
+        $text = mb_strtolower($prompt.' '.$schema['page_title'].' '.$schema['page_summary']);
+        $isRtl = str_contains($text, 'arabic') || str_contains($text, 'rtl') || preg_match('/[\x{0600}-\x{06FF}]/u', $text);
+
+        $title = e((string) ($schema['page_title'] ?? 'Custom Landing Page'));
+        $summary = e((string) ($schema['page_summary'] ?? ''));
+        $cta = $isRtl ? 'اطلب الآن' : 'Order Now';
+
+        $palette = ['#0f172a', '#f5f1e8', '#c8a96b'];
+        if (str_contains($text, 'green')) {
+            $palette = ['#064e3b', '#ecfdf5', '#10b981'];
+        } elseif (str_contains($text, 'blue')) {
+            $palette = ['#0b2447', '#eef4ff', '#2563eb'];
+        }
+
+        $gallery = '';
+        if (str_contains($text, 'gallery') || str_contains($text, 'image') || str_contains($text, 'صور')) {
+            $gallery = '
+            <section class="ai-section">
+              <h3>'.($isRtl ? 'صور المنتج' : 'Product Gallery').'</h3>
+              <div class="ai-gallery">
+                <div class="ai-img">Image 1</div><div class="ai-img">Image 2</div><div class="ai-img">Image 3</div><div class="ai-img">Image 4</div>
+              </div>
+            </section>';
+        }
+
+        $features = '';
+        if (str_contains($text, 'feature') || str_contains($text, 'مميزات')) {
+            $features = '
+            <section class="ai-section">
+              <h3>'.($isRtl ? 'مميزات المنتج' : 'Features').'</h3>
+              <div class="ai-cards">
+                <article class="ai-card">Feature 1</article>
+                <article class="ai-card">Feature 2</article>
+                <article class="ai-card">Feature 3</article>
+                <article class="ai-card">Feature 4</article>
+              </div>
+            </section>';
+        }
+
+        $faq = '';
+        if (str_contains($text, 'faq') || str_contains($text, 'الاسئلة') || str_contains($text, 'الأسئلة')) {
+            $faq = '
+            <section class="ai-section">
+              <h3>FAQ</h3>
+              <details><summary>Question 1</summary><p>Answer</p></details>
+              <details><summary>Question 2</summary><p>Answer</p></details>
+            </section>';
+        }
+
+        $fieldsHtml = '';
+        foreach ((array) ($schema['fields'] ?? []) as $field) {
+            $name = e((string) ($field['name'] ?? 'field'));
+            $label = e((string) ($field['label'] ?? $name));
+            $type = e((string) ($field['type'] ?? 'text'));
+            $placeholder = e((string) ($field['placeholder'] ?? ''));
+            $required = !empty($field['required']) ? 'required' : '';
+
+            if ($type === 'textarea') {
+                $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><textarea name=\"{$name}\" {$required} placeholder=\"{$placeholder}\"></textarea></div>";
+            } elseif ($type === 'select') {
+                $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><select name=\"{$name}\" {$required}></select></div>";
+            } else {
+                $fieldsHtml .= "<div class=\"ai-field\"><label>{$label}</label><input type=\"{$type}\" name=\"{$name}\" {$required} placeholder=\"{$placeholder}\"/></div>";
+            }
+        }
+
+        $dir = $isRtl ? 'rtl' : 'ltr';
+        $align = $isRtl ? 'right' : 'left';
+
+        return <<<HTML
+<div class="ai-custom-page ai-theme" data-ai-custom-page="1" dir="{$dir}">
+  <style>
+    .ai-theme{max-width:1080px;margin:24px auto;padding:24px;border-radius:18px;background:{$palette[1]};border:1px solid rgba(15,23,42,.08);text-align:{$align};font-family:Inter,system-ui,sans-serif}
+    .ai-hero{background:linear-gradient(135deg,{$palette[0]} 0%, #1f2937 60%);color:#fff;padding:26px;border-radius:14px}
+    .ai-hero .ai-btn{display:inline-block;background:{$palette[2]};color:#111827;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700}
+    .ai-section{margin-top:20px}
+    .ai-gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .ai-img{height:110px;border:1px dashed #94a3b8;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff}
+    .ai-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .ai-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px}
+    .ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .ai-field{display:flex;flex-direction:column;gap:6px}
+    .ai-field input,.ai-field textarea,.ai-field select{height:44px;border:1px solid #d1d5db;border-radius:10px;padding:0 12px;background:#fff}
+    .ai-field textarea{height:96px;padding-top:10px}
+    .ai-submit{margin-top:12px;background:{$palette[0]};color:#fff;border:0;border-radius:10px;padding:10px 16px}
+    .ai-table{width:100%;border-collapse:collapse;margin-top:10px;background:#fff}
+    .ai-table th,.ai-table td{border:1px solid #e5e7eb;padding:8px}
+    @media (max-width: 900px){.ai-gallery,.ai-cards,.ai-grid{grid-template-columns:1fr 1fr}}
+    @media (max-width: 640px){.ai-gallery,.ai-cards,.ai-grid{grid-template-columns:1fr}}
+  </style>
+
+  <section class="ai-hero">
+    <h2>{$title}</h2>
+    <p>{$summary}</p>
+    <a href="#ai-order-form" class="ai-btn">{$cta}</a>
+  </section>
+
+  {$gallery}
+  {$features}
+  {$faq}
+
+  <section class="ai-section" id="ai-order-form">
+    <h3>{$cta}</h3>
+    <form data-ai-custom-form="1">
+      <div class="ai-grid">{$fieldsHtml}</div>
+      <button type="submit" class="ai-submit">{$cta}</button>
+    </form>
+  </section>
+
+  <section class="ai-section">
+    <h3>Latest records</h3>
+    <table class="ai-table">
+      <thead><tr><th>#</th><th>Data</th><th>Date</th></tr></thead>
+      <tbody data-ai-custom-list="1"></tbody>
+    </table>
+  </section>
+</div>
+HTML;
+    }
+
+    /**
      * Try to extract full renderable HTML from model JSON payload.
      *
      * @param array<string, mixed> $payload
