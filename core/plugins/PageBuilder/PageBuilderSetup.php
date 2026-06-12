@@ -50,6 +50,7 @@ use Plugins\PageBuilder\Addons\Tenants\Common\misc\TestimonialFour;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\TestimonialThree;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\TestimonialTwo;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\VideoGalleryOne;
+use Plugins\PageBuilder\Addons\Tenants\Common\misc\AnnouncementBar;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\AppointmentCatalog;
 use Plugins\PageBuilder\Addons\Tenants\Common\misc\HotelCatalog;
 use Plugins\PageBuilder\Addons\Tenants\Construction\BlogArea;
@@ -286,6 +287,8 @@ class PageBuilderSetup
             \Plugins\PageBuilder\Addons\Tenants\SoftwareBusiness\BlogArea::class,
             \Plugins\PageBuilder\Addons\Tenants\SoftwareBusiness\TestimonialArea::class,
             \Plugins\PageBuilder\Addons\Tenants\SoftwareBusiness\ContactArea::class,
+
+            AnnouncementBar::class,
 
             //Appointment Services Catalog (Common)
             AppointmentCatalog::class,
