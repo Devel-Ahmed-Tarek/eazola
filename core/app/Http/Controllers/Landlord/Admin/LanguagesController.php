@@ -112,15 +112,11 @@ class LanguagesController extends Controller
         ]);
 
         $slug = $request->slug;
-        //todo get text json file
-        //todo get current key index and replace it in the json file
-        if (file_exists(resource_path('lang/') . $slug .'.json')) {
-            $default_lang_data = file_get_contents(resource_path('lang') . '/'.$slug .'.json');
-            $default_lang_data = (array)json_decode($default_lang_data);
-            $default_lang_data[$request->string_key] = $request->translate_word;
-            $default_lang_data = (object)$default_lang_data;
-            $default_lang_data = json_encode($default_lang_data);
-            file_put_contents(resource_path('lang/') . $slug . '.json', $default_lang_data);
+        if (!$this->writeLanguageString($slug, $request->string_key, $request->translate_word)) {
+            return response()->json([
+                'type' => 'error',
+                'msg' => __('Unable to save translation. Please check language file permissions.'),
+            ], 500);
         }
 
         return response()->json([
@@ -268,14 +264,14 @@ class LanguagesController extends Controller
             'translate_string' => 'required|string',
         ]);
 
-        if (file_exists(resource_path('lang/') . $request->lang_slug . '.json')) {
-            $default_lang_data = file_get_contents(resource_path('lang/') . $request->lang_slug .'.json');
-            $default_lang_data = (array)json_decode($default_lang_data);
-            $default_lang_data[$request->new_string] = $request->translate_string;
-            $default_lang_data = (object)$default_lang_data;
-            $default_lang_data = json_encode($default_lang_data);
-            file_put_contents(resource_path('lang/') . $request->lang_slug . '.json', $default_lang_data);
+        if (!$this->writeLanguageString($request->lang_slug, $request->new_string, $request->translate_string)) {
+            return back()->with([
+                'msg' => __('Unable to save translation. Please check language file permissions.'),
+                'type' => 'danger',
+            ]);
         }
+
+        $this->writeLanguageString('default', $request->new_string, $request->new_string);
 
         return back()->with(['msg' => __('New Word Added'), 'type' => 'success']);
     }
@@ -300,17 +296,87 @@ class LanguagesController extends Controller
             'string' => 'required',
             'translate_string' => 'required',
         ]);
-        if (file_exists(resource_path('lang/') . $request->slug . '.json')) {
-            $default_lang_data = file_get_contents(resource_path('lang') . '/' . $request->slug  . '.json');
-            $default_lang_data = (array) json_decode($default_lang_data);
-            $default_lang_data[$request->string] = $request->translate_string;
-            $default_lang_data = (object) $default_lang_data;
-            $default_lang_data =   json_encode($default_lang_data);
-            file_put_contents(resource_path('lang/') . $request->slug . '.json', $default_lang_data);
+
+        if (!$this->writeLanguageString($request->slug, $request->string, $request->translate_string)) {
+            return redirect()->back()->with([
+                'msg' => __('Unable to save translation. Please check language file permissions.'),
+                'type' => 'danger',
+            ]);
         }
+
+        $this->writeLanguageString('default', $request->string, $request->string);
+
         return redirect()->back()->with([
             'msg' => __('new translated string added..'),
             'type' => 'success'
         ]);
+    }
+
+    private function languageFilePath(string $slug): string
+    {
+        return resource_path('lang/' . $slug . '.json');
+    }
+
+    private function ensureLanguageFileExists(string $slug): bool
+    {
+        $filePath = $this->languageFilePath($slug);
+
+        if (file_exists($filePath)) {
+            return is_readable($filePath);
+        }
+
+        $defaultPath = $this->languageFilePath('default');
+        if (!file_exists($defaultPath)) {
+            return false;
+        }
+
+        $langDirectory = resource_path('lang');
+        if (!is_dir($langDirectory) && !@mkdir($langDirectory, 0775, true) && !is_dir($langDirectory)) {
+            return false;
+        }
+
+        return @copy($defaultPath, $filePath) || file_exists($filePath);
+    }
+
+    private function readLanguageFile(string $slug): array
+    {
+        if (!$this->ensureLanguageFileExists($slug)) {
+            return [];
+        }
+
+        $content = @file_get_contents($this->languageFilePath($slug));
+        if ($content === false || trim($content) === '') {
+            return [];
+        }
+
+        $data = json_decode($content, true);
+
+        return is_array($data) ? $data : [];
+    }
+
+    private function writeLanguageString(string $slug, string $key, string $value): bool
+    {
+        if (!$this->ensureLanguageFileExists($slug)) {
+            return false;
+        }
+
+        $filePath = $this->languageFilePath($slug);
+        if (!is_writable($filePath) && !is_writable(dirname($filePath))) {
+            return false;
+        }
+
+        $data = $this->readLanguageFile($slug);
+        $data[$key] = $value;
+
+        $encoded = json_encode(
+            $data,
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+        );
+
+        if ($encoded === false) {
+            return false;
+        }
+
+        return file_put_contents($filePath, $encoded . PHP_EOL) !== false;
     }
 }
