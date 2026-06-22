@@ -299,7 +299,7 @@ class LanguagesController extends Controller
 
         if (!$this->writeLanguageString($request->slug, $request->string, $request->translate_string)) {
             return redirect()->back()->with([
-                'msg' => __('Unable to save translation. Please check language file permissions.'),
+                'msg' => __('Unable to save translation. The language file may be invalid or not writable.'),
                 'type' => 'danger',
             ]);
         }
@@ -350,8 +350,36 @@ class LanguagesController extends Controller
         }
 
         $data = json_decode($content, true);
+        if (!is_array($data)) {
+            return [];
+        }
 
-        return is_array($data) ? $data : [];
+        return $data;
+    }
+
+    private function readLanguageFileOrFail(string $slug): ?array
+    {
+        $filePath = $this->languageFilePath($slug);
+
+        if (!file_exists($filePath)) {
+            return [];
+        }
+
+        $content = @file_get_contents($filePath);
+        if ($content === false) {
+            return null;
+        }
+
+        if (trim($content) === '') {
+            return [];
+        }
+
+        $data = json_decode($content, true);
+        if (!is_array($data)) {
+            return null;
+        }
+
+        return $data;
     }
 
     private function writeLanguageString(string $slug, string $key, string $value): bool
@@ -365,7 +393,11 @@ class LanguagesController extends Controller
             return false;
         }
 
-        $data = $this->readLanguageFile($slug);
+        $data = $this->readLanguageFileOrFail($slug);
+        if ($data === null) {
+            return false;
+        }
+
         $data[$key] = $value;
 
         $encoded = json_encode(
