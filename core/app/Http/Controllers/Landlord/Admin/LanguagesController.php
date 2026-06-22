@@ -377,6 +377,8 @@ class LanguagesController extends Controller
             return false;
         }
 
-        return file_put_contents($filePath, $encoded . PHP_EOL) !== false;
+        $written = @file_put_contents($filePath, $encoded . PHP_EOL, LOCK_EX);
+
+        return $written !== false;
     }
 }
