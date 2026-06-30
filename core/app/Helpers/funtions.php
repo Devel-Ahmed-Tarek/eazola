@@ -1585,7 +1585,7 @@ function create_slug($sluggable_text, $model_name, $is_module = false, $module_n
     $check = true;
 
     do {
-        $old_category = (new $model_path)->where($column_name, $slug)->orderBy('id', 'desc')->first();
+        $old_category = (new $model_path)->withTrashed()->where($column_name, $slug)->orderBy('id', 'desc')->first();
 
         if ($old_category != null) {
             $old_category_name = $old_category->slug;

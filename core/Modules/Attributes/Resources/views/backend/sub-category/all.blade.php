@@ -103,7 +103,7 @@
                                                    data-status="{{$category->status_id}}"
                                                    data-slug="{{$category->slug}}"
                                                    data-description="{{$category->getTranslation('description',$default_lang)}}"
-                                                   data-imageid="{{$category->image}}"
+                                                   data-imageid="{{$category->image_id}}"
                                                    data-image="{{$img_path}}"
                                                 >
                                                     <i class="mdi mdi-lead-pencil"></i>
@@ -129,7 +129,7 @@
                         <button type="button" class="close" data-bs-dismiss="modal"><span>×</span></button>
                     </div>
                     <form action="{{ route('tenant.admin.product.subcategory.update') }}" method="post">
-                        <input type="hidden" name="id" id="category_id">
+                        <input type="hidden" name="id" id="edit_sub_category_id">
                         <input type="hidden" name="lang" value="{{$default_lang}}">
                         <div class="modal-body">
                             @csrf
@@ -147,8 +147,8 @@
 
                             <div class="form-group edit-category-wrapper">
                                 <label for="name">{{__('Category')}}</label>
-                                <select type="text" class="form-control" id="category_id" name="category_id">
-                                    <option value="">Select Category</option>
+                                <select type="text" class="form-control" id="edit_parent_category_id" name="category_id">
+                                    <option value="">{{ __('Select Category') }}</option>
                                     @foreach($data['all_category'] as $category)
                                         <option value="{{ $category->id }}">{{ $category->getTranslation('name',$default_lang) }}</option>
                                     @endforeach
@@ -208,7 +208,7 @@
                             <div class="form-group">
                                 <label for="name">{{__('Category')}}</label>
                                 <select type="text" class="form-control" id="create_category_id" name="category_id">
-                                    <option value="">Select Category</option>
+                                    <option value="">{{ __('Select Category') }}</option>
                                     @foreach($data['all_category'] as $category)
                                         <option value="{{ $category->id }}">{{ $category->getTranslation('name',$default_lang) }}</option>
                                     @endforeach
@@ -270,13 +270,13 @@
                 let status = el.data('status');
                 let modal = $('#category_edit_modal');
 
-                modal.find('#category_id').val(id);
+                modal.find('#edit_sub_category_id').val(id);
                 modal.find('#edit_status option[value="' + status + '"]').attr('selected', true);
                 modal.find('#edit_name').val(name);
                 modal.find('#edit_slug').val(slug);
                 modal.find('#edit_description').val(description);
                 modal.find(".edit-status-wrapper .list li[data-value='" + status + "']").click();
-                modal.find(".edit-category-wrapper select option[value="+ category + "]").attr('selected', true);
+                modal.find("#edit_parent_category_id option[value="+ category + "]").attr('selected', true);
                 modal.find(".modal-footer").click();
 
                 let image = el.data('image');

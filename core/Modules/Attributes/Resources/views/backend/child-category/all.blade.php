@@ -153,7 +153,7 @@
                             <div class="form-group edit-category-wrapper">
                                 <label for="category">{{__('Category')}}</label>
                                 <select class="form-control" id="edit_category_id" name="category_id">
-                                    <option>{{ __('Select Category') }}</option>
+                                    <option value="">{{ __('Select Category') }}</option>
                                     @foreach ($data['all_category'] as $category)
                                         <option value="{{ $category->id }}">{{ $category->getTranslation('name',$default_lang) }}</option>
                                     @endforeach
@@ -163,7 +163,7 @@
                             <div class="form-group edit-sub-category-wrapper">
                                 <label for="category">{{__('Sub Category')}}</label>
                                 <select class="form-control" id="edit_sub_category" name="sub_category_id">
-                                    <option>{{ __('Select Sub Category') }}</option>
+                                    <option value="">{{ __('Select Sub Category') }}</option>
                                 </select>
                             </div>
 
@@ -216,7 +216,7 @@
                             <div class="form-group category-wrapper">
                                 <label for="category_id">{{__('Category')}}</label>
                                 <select class="form-control" id="create_category_id" name="category_id">
-                                    <option>{{ __('Select Category') }}</option>
+                                    <option value="">{{ __('Select Category') }}</option>
                                     @foreach ($data['all_category'] as $category)
                                         <option value="{{ $category->id }}">{{ $category->getTranslation('name',$default_lang) }}</option>
                                     @endforeach
@@ -226,7 +226,7 @@
                             <div class="form-group create-sub-category-wrapper">
                                 <label for="category">{{__('Sub Category')}}</label>
                                 <select class="form-control" id="create_sub_category" name="sub_category_id">
-                                    <option>{{ __('Select Sub Category') }}</option>
+                                    <option value="">{{ __('Select Sub Category') }}</option>
                                 </select>
                             </div>
 
@@ -286,8 +286,11 @@
                 });
             });
 
-            $(document).on("change", "#edit_sub_category_id", function () {
+            $(document).on("change", "#edit_category_id", function () {
                 let category_id = $(this).val();
+                if (!category_id) {
+                    return;
+                }
 
                 $.ajax({
                     url: '{{ route("tenant.admin.product.subcategory.all") }}/of-category/select/' + category_id,
@@ -317,7 +320,6 @@
                 $('#edit_slug').val(convertToSlug(title_text))
             });
             $(document).on('click', '.child-category_edit_btn', function () {
-                $("#edit_sub_category_id").attr("id", "edit_category_id");
                 let el = $(this);
                 let id = el.data('id');
                 let name = el.data('name');
@@ -340,7 +342,6 @@
 
                         modal.find(".edit-sub-category-wrapper .list li[data-value='" + sub_category_id + "']").click();
                         modal.find(".modal-footer").click();
-                        $("#edit_category_id").attr("id", "edit_sub_category_id");
                     },
                     error: function (err) {
 
