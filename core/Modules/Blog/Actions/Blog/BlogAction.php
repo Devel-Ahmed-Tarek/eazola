@@ -2,13 +2,11 @@
 
 namespace Modules\Blog\Actions\Blog;
 use App\Facades\GlobalLanguage;
-use App\Helpers\ResponseMessage;
 use App\Helpers\SanitizeInput;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\Blog\Entities\Blog;
-use mysql_xdevapi\Exception;
 
 class BlogAction
 {
@@ -32,8 +30,8 @@ class BlogAction
             $blog->admin_id = Auth::guard('admin')->user()->id;
             $blog->user_id = Auth::guard('admin')->user()->id;
             $blog->author = Auth::guard('admin')->user()->name;
-            $blog->image = $request->image;
-            $blog->image_gallery = $request->image_gallery;
+            $blog->image = $request->image ?? '';
+            $blog->image_gallery = $request->image_gallery ?? null;
             $blog->views = 0;
             $blog->tags = $request->tags;
             $blog->created_by = 'admin';
@@ -57,10 +55,9 @@ class BlogAction
             $this->mergeAiBulkTranslationsIfPresent($blog, $request);
             \DB::commit();
 
-        }catch (\Exception $e){
-
+        } catch (\Throwable $e) {
             \DB::rollBack();
-            return response()->danger($e->getMessage());
+            throw $e;
         }
     }
 
@@ -127,6 +124,7 @@ class BlogAction
     public function update_execute(Request $request ,$id)
     {
         try {
+            \DB::beginTransaction();
 
             $blog_update =  Blog::findOrFail($id);
             $blog_update->setTranslation('title',$request->lang, SanitizeInput::esc_html($request->title))
@@ -140,8 +138,8 @@ class BlogAction
             $blog_update->category_id = $request->category_id;
             $blog_update->visibility = $request->visibility;
             $blog_update->status = $request->status;
-            $blog_update->image = $request->image;
-            $blog_update->image_gallery = $request->image_gallery;
+            $blog_update->image = $request->image ?? '';
+            $blog_update->image_gallery = $request->image_gallery ?? null;
             $blog_update->tags = $request->tags;
             $blog_update->save();
 
@@ -170,9 +168,9 @@ class BlogAction
 
             \DB::commit();
 
-        }catch (\Exception $e){
+        } catch (\Throwable $e) {
             \DB::rollBack();
-            return response()->danger($e->getMessage());
+            throw $e;
         }
     }
 
@@ -215,9 +213,9 @@ class BlogAction
             $cloned_data->metainfo()->create($Metas);
             \DB::commit();
 
-        }catch (\Exception $e){
+        } catch (\Throwable $e) {
             \DB::rollBack();
-            return response()->danger($e->getMessage());
+            throw $e;
         }
 
     }

@@ -115,8 +115,8 @@ class LanguagesController extends Controller
         if (!$this->writeLanguageString($slug, $request->string_key, $request->translate_word)) {
             return response()->json([
                 'type' => 'error',
-                'msg' => __('Unable to save translation. Please check language file permissions.'),
-            ], 500);
+                'msg' => $this->languageWriteFailureMessage($slug),
+            ], 422);
         }
 
         return response()->json([
@@ -258,22 +258,31 @@ class LanguagesController extends Controller
     public function add_new_words(Request $request)
     {
 
-        $this->validate($request, [
-            'lang_slug' => 'required|string',
-            'new_string' => 'required|string',
-            'translate_string' => 'required|string',
-        ]);
+        try {
+            $this->validate($request, [
+                'lang_slug' => 'required|string|max:191',
+                'new_string' => 'required|string|max:5000',
+                'translate_string' => 'required|string|max:5000',
+            ]);
 
-        if (!$this->writeLanguageString($request->lang_slug, $request->new_string, $request->translate_string)) {
+            if (! $this->writeLanguageString($request->lang_slug, $request->new_string, $request->translate_string)) {
+                return back()->with([
+                    'msg' => $this->languageWriteFailureMessage($request->lang_slug),
+                    'type' => 'danger',
+                ]);
+            }
+
+            $this->writeLanguageString('default', $request->new_string, $request->new_string);
+
+            return back()->with(['msg' => __('New Word Added'), 'type' => 'success']);
+        } catch (\Throwable $e) {
+            report($e);
+
             return back()->with([
-                'msg' => __('Unable to save translation. Please check language file permissions.'),
+                'msg' => $this->languageWriteFailureMessage($request->input('lang_slug', 'default')),
                 'type' => 'danger',
             ]);
         }
-
-        $this->writeLanguageString('default', $request->new_string, $request->new_string);
-
-        return back()->with(['msg' => __('New Word Added'), 'type' => 'success']);
     }
 
     public function regenerate_source_text(Request $request){
@@ -291,25 +300,34 @@ class LanguagesController extends Controller
 
     public function add_new_string(Request $request)
     {
-        $this->validate($request, [
-            'slug' => 'required',
-            'string' => 'required',
-            'translate_string' => 'required',
-        ]);
+        try {
+            $this->validate($request, [
+                'slug' => 'required|string|max:191',
+                'string' => 'required|string|max:5000',
+                'translate_string' => 'required|string|max:5000',
+            ]);
 
-        if (!$this->writeLanguageString($request->slug, $request->string, $request->translate_string)) {
+            if (! $this->writeLanguageString($request->slug, $request->string, $request->translate_string)) {
+                return redirect()->back()->with([
+                    'msg' => $this->languageWriteFailureMessage($request->slug),
+                    'type' => 'danger',
+                ]);
+            }
+
+            $this->writeLanguageString('default', $request->string, $request->string);
+
             return redirect()->back()->with([
-                'msg' => __('Unable to save translation. The language file may be invalid or not writable.'),
+                'msg' => __('new translated string added..'),
+                'type' => 'success',
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->back()->with([
+                'msg' => $this->languageWriteFailureMessage($request->input('slug', 'default')),
                 'type' => 'danger',
             ]);
         }
-
-        $this->writeLanguageString('default', $request->string, $request->string);
-
-        return redirect()->back()->with([
-            'msg' => __('new translated string added..'),
-            'type' => 'success'
-        ]);
     }
 
     private function languageFilePath(string $slug): string
@@ -384,12 +402,17 @@ class LanguagesController extends Controller
 
     private function writeLanguageString(string $slug, string $key, string $value): bool
     {
-        if (!$this->ensureLanguageFileExists($slug)) {
+        if (! $this->ensureLanguageFileExists($slug)) {
             return false;
         }
 
         $filePath = $this->languageFilePath($slug);
-        if (!is_writable($filePath) && !is_writable(dirname($filePath))) {
+        if (! is_writable($filePath) && ! is_writable(dirname($filePath))) {
+            return false;
+        }
+
+        $data = $this->readLanguageFileOrFail($slug);
+        if ($data === null && ! $this->repairLanguageFileFromDefault($slug)) {
             return false;
         }
 
@@ -402,15 +425,68 @@ class LanguagesController extends Controller
 
         $encoded = json_encode(
             $data,
-            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_INVALID_UTF8_SUBSTITUTE
         );
 
         if ($encoded === false) {
             return false;
         }
 
-        $written = @file_put_contents($filePath, $encoded . PHP_EOL, LOCK_EX);
+        return $this->writeLanguageFileContents($filePath, $encoded);
+    }
 
-        return $written !== false;
+    private function repairLanguageFileFromDefault(string $slug): bool
+    {
+        if ($slug === 'default') {
+            return false;
+        }
+
+        $defaultPath = $this->languageFilePath('default');
+        $filePath = $this->languageFilePath($slug);
+
+        if (! file_exists($defaultPath)) {
+            return false;
+        }
+
+        return @copy($defaultPath, $filePath) && is_readable($filePath);
+    }
+
+    private function writeLanguageFileContents(string $filePath, string $encoded): bool
+    {
+        $payload = $encoded.PHP_EOL;
+        $tempPath = $filePath.'.tmp.'.uniqid('', true);
+
+        $written = @file_put_contents($tempPath, $payload, LOCK_EX);
+        if ($written === false) {
+            @unlink($tempPath);
+
+            return @file_put_contents($filePath, $payload, LOCK_EX) !== false;
+        }
+
+        if (@rename($tempPath, $filePath)) {
+            return true;
+        }
+
+        $copied = @copy($tempPath, $filePath);
+        @unlink($tempPath);
+
+        return $copied;
+    }
+
+    private function languageWriteFailureMessage(string $slug): string
+    {
+        $filePath = $this->languageFilePath($slug);
+
+        if (! file_exists($filePath)) {
+            return __('Unable to save translation. Language file :file is missing.', ['file' => $filePath]);
+        }
+
+        if (! is_writable($filePath) && ! is_writable(dirname($filePath))) {
+            return __('Unable to save translation. Language directory is not writable: :path', [
+                'path' => dirname($filePath),
+            ]);
+        }
+
+        return __('Unable to save translation. The language file may be invalid or not writable.');
     }
 }

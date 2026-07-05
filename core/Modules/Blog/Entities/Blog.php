@@ -7,11 +7,12 @@ use App\Models\MetaInfo;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 class Blog extends Model
 {
-    use HasTranslations;
+    use HasTranslations, SoftDeletes;
 
     protected $table = 'blogs';
     protected $fillable = ['category_id',

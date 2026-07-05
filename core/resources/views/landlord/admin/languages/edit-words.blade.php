@@ -189,10 +189,24 @@
                             }
                         },
                         error: function (data) {
-                            let response = JSON.parse(data.responseText);
-                            $.each( response.errors, function( key, value) {
-                                toastr.error(value);
-                            });
+                            let response = {};
+                            try {
+                                response = JSON.parse(data.responseText);
+                            } catch (e) {
+                                toastr.error('{{ __("Unable to save translation. Please check language file permissions.") }}');
+                                return;
+                            }
+
+                            if (response.msg) {
+                                toastr.error(response.msg);
+                                return;
+                            }
+
+                            if (response.errors) {
+                                $.each(response.errors, function (key, value) {
+                                    toastr.error(value);
+                                });
+                            }
                         }
                     });
                 })

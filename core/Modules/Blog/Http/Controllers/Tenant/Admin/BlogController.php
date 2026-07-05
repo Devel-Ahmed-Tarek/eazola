@@ -112,17 +112,16 @@ class BlogController extends Controller
     }
     public function store_new_blog(BlogInsertRequest $request, BlogAction $blogAction)
     {
-        if(tenant()){
-            $current_package = tenant()->user()->first()->payment_log()->firstOrFail()->package ?? [];
-            $pages_count = Blog::count();
-            $permission_page = @$current_package->blog_permission_feature;
-
-            if(!empty($permission_page) && $pages_count >= $permission_page){
-                return response()->danger(ResponseMessage::delete(sprintf('You can not create blog above %d in this package',$permission_page)));
-            }
+        if ($limitResponse = $this->tenantBlogLimitReached()) {
+            return $limitResponse;
         }
 
-        $blogAction->store_execute($request);
+        try {
+            $blogAction->store_execute($request);
+        } catch (\Throwable $e) {
+            return response()->danger($e->getMessage());
+        }
+
         return response()->success(ResponseMessage::SettingsSaved());
     }
 
@@ -142,7 +141,12 @@ class BlogController extends Controller
 
     public function update_blog(BlogUpdateRequest $request, BlogAction $blogAction, $id)
     {
-        $blogAction->update_execute($request,$id);
+        try {
+            $blogAction->update_execute($request, $id);
+        } catch (\Throwable $e) {
+            return response()->danger($e->getMessage());
+        }
+
         return response()->success(ResponseMessage::SettingsSaved());
     }
 
@@ -161,16 +165,16 @@ class BlogController extends Controller
 
     public function clone_blog(Request $request, BlogAction $blogAction)
     {
-        if(tenant()) {
-            $current_package = tenant()->user()->first()->payment_log()->firstOrFail()->package ?? [];
-            $permission_page = $current_package->blog_permission_feature;
-            $pages_count = Blog::count();
-            if (!empty($permission_page) && $pages_count >= $permission_page) {
-                return response()->danger(ResponseMessage::delete(sprintf('You can not create blog above %d in this package', $permission_page)));
-            }
+        if ($limitResponse = $this->tenantBlogLimitReached()) {
+            return $limitResponse;
         }
 
-        $blogAction->clone_blog_execute($request);
+        try {
+            $blogAction->clone_blog_execute($request);
+        } catch (\Throwable $e) {
+            return response()->danger($e->getMessage());
+        }
+
         return response()->success(ResponseMessage::SettingsSaved('Blog Cloned Successfylly..'));
     }
 
@@ -221,5 +225,26 @@ class BlogController extends Controller
         return response()->success(ResponseMessage::SettingsSaved());
     }
 
+    private function tenantBlogLimitReached(): ?\Illuminate\Http\RedirectResponse
+    {
+        if (! tenant()) {
+            return null;
+        }
+
+        $limit = tenant()->user()->first()?->payment_log()->first()?->package?->blog_permission_feature;
+
+        if ($limit === null || (int) $limit === -1) {
+            return null;
+        }
+
+        if (Blog::count() >= (int) $limit) {
+            return response()->danger(ResponseMessage::delete(sprintf(
+                'You can not create blog above %d in this package',
+                $limit
+            )));
+        }
+
+        return null;
+    }
 
 }
