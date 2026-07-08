@@ -165,6 +165,11 @@ class MediaUploaderController extends Controller
             $image_query->where(['user_type' => 1, 'user_id' => \Auth::guard('web')->id()]);
         }
         $get_image_details = $image_query->where('id', $request->img_id)->first();
+
+        if (! $get_image_details) {
+            return redirect()->back();
+        }
+
         $this->deleteOldFile($get_image_details);
 
         $get_image_details->delete();

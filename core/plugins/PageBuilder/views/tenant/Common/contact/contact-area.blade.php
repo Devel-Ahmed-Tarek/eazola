@@ -76,11 +76,11 @@
 
                     <h2 class="tittle">{{$data['title']}}</h2>
 
-                    @if(!empty($data['custom_form_id']))
-                        @php
-                            $form_details = \App\Models\FormBuilder::find($data['custom_form_id']);
-                        @endphp
-                    @endif
+                    @php
+                        $form_details = !empty($data['custom_form_id'])
+                            ? \App\Models\FormBuilder::find($data['custom_form_id'])
+                            : null;
+                    @endphp
 
                     {!! \App\Helpers\FormBuilderCustom::render_form(optional($form_details)->id,null,null,'btn-default') !!}
 

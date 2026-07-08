@@ -21,9 +21,9 @@ class ProductStoreRequest extends FormRequest
             "description" => "required",
             "lang" => "nullable",
             "brand" => "nullable",
-            "cost" => "required",
-            "price" => "nullable",
-            "sale_price" => "required",
+            "cost" => "required|numeric|min:0",
+            "price" => "nullable|numeric|min:0",
+            "sale_price" => "required|numeric|min:0",
             "sku" => ["required", ($this->id ?? null) ? Rule::unique("product_inventories")->ignore($this->id,"product_id") :  Rule::unique("product_inventories")],
             "quantity" => "nullable",
             "unit_id" => "required",
@@ -74,7 +74,10 @@ class ProductStoreRequest extends FormRequest
     {
         return [
             "cost.required" => "Cost filed is required for your accounting...",
+            "cost.numeric" => "Cost must be a valid number.",
             "price.required" => "Regular price is required.",
+            "price.numeric" => "Regular price must be a valid number.",
+            "sale_price.numeric" => "Sale price must be a valid number.",
             "sku.required" => "SKU Stock Kipping Unit is required",
             "uni.required" => "Please Select a unit type",
             "uom.required" => "UOM Unit of measurement field is required."

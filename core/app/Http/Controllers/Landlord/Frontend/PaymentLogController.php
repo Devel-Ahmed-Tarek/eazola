@@ -189,7 +189,7 @@ class PaymentLogController extends Controller
         try {
             $amount_to_charge = $createNewWebsiteTenantHelper->checkCouponFromResponse();
         } catch (\Exception $e) {
-            return response()->back(['msg' => $e->getMessage(), 'type' => 'danger']);
+            return back()->with(['msg' => $e->getMessage(), 'type' => 'danger']);
         }
 //        $selected_payment_gateway = $createNewWebsiteTenantHelper->getSelectedPaymentGatewayFromRequest($amount_to_charge);
 

@@ -56,10 +56,10 @@ class SubCategoryController extends Controller
 
         $subcategory = new SubCategory();
         $subcategory->setTranslation('name',$request->lang,$data['name']);
-        $subcategory->setTranslation('description',$request->lang,$data['description']);
+        $subcategory->setTranslation('description',$request->lang,$data['description'] ?? '');
         $subcategory->slug = $data['slug'];
         $subcategory->status_id = $data['status_id'];
-        $subcategory->image_id = $data['image_id'];
+        $subcategory->image_id = $data['image_id'] ?? null;
         $subcategory->category_id = $data['category_id'];
         $subcategory->save();
 
@@ -81,10 +81,10 @@ class SubCategoryController extends Controller
         }
 
         $subcategory->setTranslation('name',$request->lang,$data['name']);
-        $subcategory->setTranslation('description',$request->lang,$data['description']);
+        $subcategory->setTranslation('description',$request->lang,$data['description'] ?? '');
         $subcategory->slug = $data['slug'];
         $subcategory->status_id = $data['status_id'];
-        $subcategory->image_id = $data['image_id'];
+        $subcategory->image_id = $data['image_id'] ?? null;
         $subcategory->category_id = $data['category_id'];
         $subcategory->save();
 

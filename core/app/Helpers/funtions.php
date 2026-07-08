@@ -1584,8 +1584,19 @@ function create_slug($sluggable_text, $model_name, $is_module = false, $module_n
     $slug = \Illuminate\Support\Str::slug($sluggable_text);
     $check = true;
 
+    $uses_soft_deletes = in_array(
+        \Illuminate\Database\Eloquent\SoftDeletes::class,
+        class_uses_recursive($model_path),
+        true
+    );
+
     do {
-        $old_category = (new $model_path)->withTrashed()->where($column_name, $slug)->orderBy('id', 'desc')->first();
+        $query = (new $model_path)->newQuery();
+        if ($uses_soft_deletes) {
+            $query->withTrashed();
+        }
+
+        $old_category = $query->where($column_name, $slug)->orderBy('id', 'desc')->first();
 
         if ($old_category != null) {
             $old_category_name = $old_category->slug;

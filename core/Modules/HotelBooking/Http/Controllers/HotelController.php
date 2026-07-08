@@ -44,7 +44,7 @@ class HotelController extends Controller
     public function all_hotel_review(Request $request)
     {
         $all_hotel_reviews = HotelReview::orderBy('id','desc')->get();
-        return view('hotelbooking::admin.HotelReview.index',compact('all_hotel_reviews'));
+        return view('hotelbooking::admin.hotelReview.index',compact('all_hotel_reviews'));
     }
 
     public function create()
