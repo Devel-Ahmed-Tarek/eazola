@@ -4,12 +4,13 @@ namespace App\Http\Middleware\Tenant;
 
 use Closure;
 use Illuminate\Http\Request;
-
 use Stancl\Tenancy\Contracts\Tenant;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByRequestDataException;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use Stancl\Tenancy\Middleware\IdentificationMiddleware;
 use Stancl\Tenancy\Resolvers\DomainTenantResolver;
 use Stancl\Tenancy\Tenancy;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class InitializeTenancyByDomainCustomisedMiddleware extends IdentificationMiddleware
 {
@@ -37,19 +38,44 @@ class InitializeTenancyByDomainCustomisedMiddleware extends IdentificationMiddle
      */
     public function handle($request, Closure $next)
     {
-        $eploded_url = explode(".",$request->getHost());
-        $remove_unwanted_string_from_domain_url = $request->getHost();
-        if(current($eploded_url) === "www"){
-            $remove_unwanted_string_from_domain_url = substr(implode(".",$eploded_url),4);
-        }
+        $host = $this->normalizeHost($request->getHost());
 
-       
-        try{
-            return $this->initializeTenancy(
-            $request, $next, $remove_unwanted_string_from_domain_url
-        );
-        }catch(\Exception $e){
+        if (in_array($host, config('tenancy.central_domains', []), true)) {
             return $next($request);
         }
+
+        if (! Domain::query()->where('domain', $host)->exists()) {
+            return $this->handleUnknownDomain($request, $next);
+        }
+
+        try {
+            return $this->initializeTenancy($request, $next, $host);
+        } catch (\Throwable $e) {
+            return $this->handleUnknownDomain($request, $next, $e);
+        }
+    }
+
+    private function normalizeHost(string $host): string
+    {
+        $parts = explode('.', $host);
+
+        if (current($parts) === 'www') {
+            return substr(implode('.', $parts), 4);
+        }
+
+        return $host;
+    }
+
+    private function handleUnknownDomain(Request $request, Closure $next, ?\Throwable $exception = null)
+    {
+        if (is_callable(static::$onFail)) {
+            return (static::$onFail)(
+                $exception ?? new TenantCouldNotBeIdentifiedOnDomainException($request->getHost()),
+                $request,
+                $next
+            );
+        }
+
+        return redirect()->route('landlord.homepage');
     }
 }
