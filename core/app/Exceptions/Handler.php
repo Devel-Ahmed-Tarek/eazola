@@ -6,15 +6,12 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\URL;
 use Throwable;
 use Illuminate\Auth\AuthenticationException;
-use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByRequestDataException;
-use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 
 class Handler extends ExceptionHandler
 {
 
     protected $dontReport = [
-        TenantCouldNotBeIdentifiedOnDomainException::class,
-        TenantCouldNotBeIdentifiedByRequestDataException::class,
+        //
     ];
 
 

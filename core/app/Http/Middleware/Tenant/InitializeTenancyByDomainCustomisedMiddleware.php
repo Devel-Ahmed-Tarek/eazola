@@ -4,13 +4,13 @@ namespace App\Http\Middleware\Tenant;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Stancl\Tenancy\Contracts\Tenant;
-use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByRequestDataException;
-use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use Stancl\Tenancy\Middleware\IdentificationMiddleware;
 use Stancl\Tenancy\Resolvers\DomainTenantResolver;
 use Stancl\Tenancy\Tenancy;
 use Stancl\Tenancy\Database\Models\Domain;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 
 class InitializeTenancyByDomainCustomisedMiddleware extends IdentificationMiddleware
 {
@@ -68,9 +68,18 @@ class InitializeTenancyByDomainCustomisedMiddleware extends IdentificationMiddle
 
     private function handleUnknownDomain(Request $request, Closure $next, ?\Throwable $exception = null)
     {
+        $host = $request->getHost();
+        $message = $exception?->getMessage() ?? "Tenant could not be identified on domain {$host}";
+
+        Log::error($message, [
+            'domain' => $host,
+            'url' => $request->fullUrl(),
+            'exception' => $exception ? $exception::class : TenantCouldNotBeIdentifiedOnDomainException::class,
+        ]);
+
         if (is_callable(static::$onFail)) {
             return (static::$onFail)(
-                $exception ?? new TenantCouldNotBeIdentifiedOnDomainException($request->getHost()),
+                $exception ?? new TenantCouldNotBeIdentifiedOnDomainException($host),
                 $request,
                 $next
             );
