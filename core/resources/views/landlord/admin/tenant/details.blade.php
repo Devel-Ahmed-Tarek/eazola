@@ -160,19 +160,18 @@
                                             @if(!empty($tenant->domain))
                                                 @php
                                                     $local_url = $tenant->id .'.'.env('CENTRAL_DOMAIN');
-                                                    $url = tenant_url_with_protocol($local_url);
+                                                    $domain_url = optional($tenant->domain)->domain ?: $local_url;
+                                                    $url = tenant_url_with_protocol($domain_url);
                                                     $hash_token = hash_hmac('sha512',$user->username.'_'.$tenant->id,$tenant->unique_key);
                                                 @endphp
-                                                <a href="{{tenant_url_with_protocol(optional($tenant->domain)->domain)}}"
-                                                   target="_blank">{{tenant_url_with_protocol(optional($tenant->domain)->domain)}}</a>
+                                                <a href="{{$url}}"
+                                                   target="_blank">{{$url}}</a>
                                                 <br> <br>
                                                 <a class="badge rounded-pill bg-info px-4 mt-2"
-                                                   href="{{tenant_url_with_protocol(optional($tenant->domain)->domain).'/token-wise-login/'.$hash_token}}"
+                                                   href="{{$url.'/token-wise-login/'.$hash_token}}"
                                                    target="_blank"
                                                    style="text-decoration: none">{{__('Login as super admin')}}</a>
                                             @else
-                                                <a href="{{tenant_url_with_protocol(optional($tenant->domain)->domain)}}"
-                                                   target="_blank">{{tenant_url_with_protocol(optional($tenant->domain)->domain)}}</a>
                                                 <br>
                                                 <small
                                                     class="text-danger mt-2">{{__('Database and domain not generated yet')}}</small>

@@ -503,8 +503,13 @@
 
 
             <li class="nav-item nav-logout d-none d-lg-block">
+                @php
+                    $tenantWebsiteUrl = tenant_url_with_protocol(
+                        tenant()->domain?->domain ?: tenant()->id.'.'.current(config('tenancy.central_domains'))
+                    );
+                @endphp
                 <a class="btn btn-outline-danger btn-icon-text"
-                    href="{{ tenant_url_with_protocol(tenant()->domain?->domain) }}" target="_blank">
+                    href="{{ $tenantWebsiteUrl }}" target="_blank">
                     <i class="mdi mdi-upload btn-icon-prepend"></i> {{ __('Visit Your Website') }}
                 </a>
             </li>

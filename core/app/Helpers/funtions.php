@@ -1564,6 +1564,14 @@ function purify_html($html)
 
 function tenant_url_with_protocol($url)
 {
+    if (empty($url)) {
+        return '';
+    }
+
+    if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
+        return $url;
+    }
+
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
         $protocol = "https://";
     } else {
